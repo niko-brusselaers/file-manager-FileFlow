@@ -1,51 +1,65 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
+import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
+import { path } from "@tauri-apps/api";
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  const [filesAndFolders, setFilesAndFolders] = useState<string[]| undefined>();
+  const [currentPath, setCurrentPath] = useState<string>("");
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setGreetMsg(await invoke("greet", { name }));
+  useEffect(() => {
+    if(filesAndFolders === undefined){
+      getdrives()
+    }
+  });
+ 
+  async function getdrives() {
+    try {
+      await invoke("get_drives")
+      .then((drives) => drives as string[])
+      .then((drives) => {
+        drives = drives.map((drive) => drive.replace("\\",""))
+        setFilesAndFolders(drives)
+      })
+      setCurrentPath("");
+    } catch (error) {
+      console.error("Error fetching drives:", error);
+    }
+  }
+
+  async function getFilesAndFolders(directoryPath: string) {
+    console.log("directoryPath:", directoryPath);
+    
+    try {
+      await invoke("read_folder_content", { path: directoryPath })
+      .then((filesAndFolders) =>  filesAndFolders as string[])
+      .then((filesAndFolders) => {
+        // set the files and folders available in the current directory
+        setFilesAndFolders(filesAndFolders);
+        //set the current path
+        setCurrentPath(directoryPath);
+        
+      });
+
+    } catch (error) {
+      //display error
+      console.error("Error fetching files and folders:", error);
+    }
   }
 
   return (
-    <div className="container">
-      <h1>Welcome to Tauri!</h1>
-
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-
-      <p>{greetMsg}</p>
+    <div>
+        <ul>
+          {filesAndFolders?.map((fileOrFolder,index) => {
+            let absolutePath = ""
+            if (currentPath === "") {
+              absolutePath = fileOrFolder+"\\";
+            } else {
+              absolutePath = currentPath +"\\"+ fileOrFolder;
+            }
+            return <button onClick={() => {getFilesAndFolders(absolutePath)}} key={index}>{fileOrFolder.replace(currentPath!,"")}</button>
+          })}
+        </ul>
     </div>
   );
 }
