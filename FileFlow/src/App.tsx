@@ -4,7 +4,8 @@ import "./App.css";
 
 interface File{
   file_name: string,
-  file_path: string
+  file_path: string,
+  is_file: boolean
 }
 
 function App() {
@@ -24,7 +25,7 @@ function App() {
       .then((drives) => {
         drives = drives.map((drive) => drive.replace("\\",""))
         
-        setFilesAndFolders(drives.map((drive) => {return {file_name: drive, file_path: drive}}));
+        setFilesAndFolders(drives.map((drive) => {return {file_name: drive, file_path: drive, is_file:false}}));
       })
       setCurrentPath("");
     } catch (error) {
@@ -54,12 +55,26 @@ function App() {
     }
   }
 
+  async function openFile(directoryPath:string) {
+    console.log("Opening file:", directoryPath);
+    try {
+      await invoke("open_file", { path: directoryPath })
+    } catch (error) {
+      console.error("Error opening file:", error);
+    }
+    
+  }
+
   return (
     <div>
         <ul>
           {filesAndFolders?.map((fileOrFolder,index) => {
-            
-            return <button onClick={() => {getFilesAndFolders(fileOrFolder.file_path)}} key={index}>{fileOrFolder.file_name}</button>
+            if(fileOrFolder.is_file){
+              return <button onClick={() => {openFile(fileOrFolder.file_path)}} key={index}>{fileOrFolder.file_name}</button>
+
+            } else{
+              return <button onClick={() => {getFilesAndFolders(fileOrFolder.file_path)}} key={index}>{fileOrFolder.file_name}</button>
+            }
           })}
         </ul>
     </div>
