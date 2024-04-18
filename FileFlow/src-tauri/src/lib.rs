@@ -1,25 +1,30 @@
-use std::fs;
-use std::path::Path;
+use std::{env, fs::{self}, path::PathBuf};
+use serde::{Serialize, Deserialize};
 use sysinfo::Disks;
+
+#[derive(Serialize, Deserialize)]
+struct File{
+    file_name:String,
+    file_path:PathBuf
+}
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn read_folder_content(path: &Path) -> Vec<String> {
-    let paths = fs::read_dir(path)
-        .unwrap()
-        .map(|res| res.map(|e| e.path()))
-        .collect::<Result<Vec<_>, std::io::Error>>()
-        .unwrap();
+fn read_directory(path: String) -> Result<Vec<File>, String> {
+    let paths = fs::read_dir(&path)
+        .map_err(|e| e.to_string())?;
 
-    let mut files = Vec::new();
-    for path in paths {
-        let file_name = path.file_name().unwrap().to_str().unwrap().to_string();
-        files.push(file_name);
-    }
+    let paths = paths
+        .map(|res| res.map(|e| File{
+            file_name: e.file_name().to_string_lossy().into_owned(),
+            file_path: e.path()
+        }))
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|e| e.to_string())?;
 
-
-    files
+    Ok(paths)
 }
+
 
 #[tauri::command]
 fn get_drives() -> Vec<String>{
@@ -33,11 +38,12 @@ fn get_drives() -> Vec<String>{
     disks
 }
 
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![read_folder_content,get_drives])
+        .invoke_handler(tauri::generate_handler![read_directory,get_drives])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

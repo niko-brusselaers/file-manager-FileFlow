@@ -2,8 +2,13 @@ import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 
+interface File{
+  file_name: string,
+  file_path: string
+}
+
 function App() {
-  const [filesAndFolders, setFilesAndFolders] = useState<string[]| undefined>();
+  const [filesAndFolders, setFilesAndFolders] = useState<File[]| undefined>();
   const [currentPath, setCurrentPath] = useState<string>("");
 
   useEffect(() => {
@@ -18,7 +23,8 @@ function App() {
       .then((drives) => drives as string[])
       .then((drives) => {
         drives = drives.map((drive) => drive.replace("\\",""))
-        setFilesAndFolders(drives)
+        
+        setFilesAndFolders(drives.map((drive) => {return {file_name: drive, file_path: drive}}));
       })
       setCurrentPath("");
     } catch (error) {
@@ -26,13 +32,15 @@ function App() {
     }
   }
 
-  async function getFilesAndFolders(directoryPath: string) {
-    console.log("directoryPath:", directoryPath);
+  async function getFilesAndFolders(directoryPath: string) {    
+        console.log(directoryPath);
     
     try {
-      await invoke("read_folder_content", { path: directoryPath })
-      .then((filesAndFolders) =>  filesAndFolders as string[])
+      await invoke("read_directory", { path: directoryPath })
+      .then((filesAndFolders) =>  filesAndFolders as File[])
       .then((filesAndFolders) => {
+        console.log(filesAndFolders);
+        
         // set the files and folders available in the current directory
         setFilesAndFolders(filesAndFolders);
         //set the current path
@@ -50,13 +58,8 @@ function App() {
     <div>
         <ul>
           {filesAndFolders?.map((fileOrFolder,index) => {
-            let absolutePath = ""
-            if (currentPath === "") {
-              absolutePath = fileOrFolder+"\\";
-            } else {
-              absolutePath = currentPath +"\\"+ fileOrFolder;
-            }
-            return <button onClick={() => {getFilesAndFolders(absolutePath)}} key={index}>{fileOrFolder.replace(currentPath!,"")}</button>
+            
+            return <button onClick={() => {getFilesAndFolders(fileOrFolder.file_path)}} key={index}>{fileOrFolder.file_name}</button>
           })}
         </ul>
     </div>
