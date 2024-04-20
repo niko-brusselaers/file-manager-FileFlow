@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import rustService from "../services/rustService";
+import rustService from "../../services/rustService";
 import { IFile } from "../../shared/types/IFile";
+import DirectoryItem from "../../shared/components/directoryItem/DirectoryItem";
 
 function FolderView() {
     const [filesAndFolders, setFilesAndFolders] = useState<IFile[]| undefined>();
@@ -10,8 +11,7 @@ function FolderView() {
     if(filesAndFolders === undefined){
       rustService.getdrives().then((data) => {
         //check if data is undefined
-        if(!data?.filesAndFolders && !data?.directoryPath) return;
-
+        if(!data?.filesAndFolders && !data?.directoryPath) return;          
         //set files and folders and current path
         setFilesAndFolders(data.filesAndFolders);
         setCurrentPath(data.directoryPath);
@@ -41,11 +41,11 @@ function FolderView() {
     <div>
         <ul>
           {filesAndFolders?.map((fileOrFolder,index) => {
-            if(fileOrFolder.is_file){
-              return <button onClick={() => {rustService.openFile(fileOrFolder.file_path)}} key={index}>{fileOrFolder.file_name}</button>
-
+            if(fileOrFolder.file_type === "drive" || fileOrFolder.file_type === "folder"){
+              return <DirectoryItem handleClick={getFilesAndFolders} item={fileOrFolder} key={index}/>
             } else{
-              return <button onClick={() => {getFilesAndFolders(fileOrFolder.file_path)}} key={index}>{fileOrFolder.file_name}</button>
+              return <DirectoryItem handleClick={rustService.openFile} item={fileOrFolder} key={index}/>
+
             }
           })}
         </ul>

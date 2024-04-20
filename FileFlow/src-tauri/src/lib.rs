@@ -1,4 +1,4 @@
-use std::{env, fs::{self}, path::PathBuf};
+use std::{env, ffi::OsStr, fs, path::PathBuf};
 use serde::{Serialize, Deserialize};
 use sysinfo::Disks;
 
@@ -6,7 +6,7 @@ use sysinfo::Disks;
 struct File{
     file_name:String,
     file_path:PathBuf,
-    is_file:bool
+    file_type:String
 }
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -19,7 +19,7 @@ fn read_directory(path: String) -> Result<Vec<File>, String> {
         .map(|res| res.map(|e| File{
             file_name: e.file_name().to_string_lossy().into_owned(),
             file_path: e.path(),
-            is_file: e.file_type().unwrap().is_file()
+            file_type: e.path().extension().unwrap_or(OsStr::new("folder")).to_string_lossy().into_owned()
         }))
         .collect::<Result<Vec<_>, _>>()
         .map_err(|e| e.to_string())?;

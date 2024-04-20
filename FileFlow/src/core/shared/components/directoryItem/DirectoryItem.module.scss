@@ -1,0 +1,21 @@
+@import "../../../shared/style/variables.scss";
+
+.directoryItem{
+    margin: 1em;
+    padding: 1em;
+    background-color: $secondaryLightGrey;
+    border: none
+}
+
+.itemDetails{
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 0.5em;
+}
+
+.itemImage{
+    width: 5em;
+    height: 5em;
+}

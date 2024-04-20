@@ -1,11 +1,13 @@
 import FolderView from "./core/pages/folderView/FolderView";
+import Sidebar from "./core/shared/components/sidebar/Sidebar";
+import "./styles.scss";
 
 
 
 function App() {
   return (
-    <div>
-      <h1>FileFlow</h1>
+    <div className="applicationContainer">
+      <Sidebar/>
       <FolderView/>
     </div>
   )

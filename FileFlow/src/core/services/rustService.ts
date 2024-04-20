@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import { IFile } from "../../shared/types/IFile";
+import { IFile } from "../shared/types/IFile";
 
 
 class rustService{
@@ -15,7 +15,7 @@ class rustService{
                 let file: IFile = {
                     file_name: drive,
                     file_path: drive,
-                    is_file: false
+                    file_type: "drive"
                 }
 
                 return file
@@ -30,7 +30,8 @@ class rustService{
     async getFilesAndFolders(directoryPath: string) {        
         try {
         const filesAndFolders = await invoke("read_directory", { path: directoryPath })
-        .then((filesAndFolders) =>  filesAndFolders as IFile[])
+        .then((filesAndFolders) => filesAndFolders as IFile[])
+        console.log("Files and folders:", filesAndFolders);
         
         return {filesAndFolders, directoryPath}
 

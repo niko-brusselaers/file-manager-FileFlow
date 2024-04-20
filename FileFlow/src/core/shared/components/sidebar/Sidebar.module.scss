@@ -1,0 +1,9 @@
+@import "../../../shared/style/variables.scss";
+
+.sidebar{
+    width: 20em;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: $primaryDarkBlue;
+}
