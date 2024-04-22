@@ -1,21 +1,62 @@
 @import "../../../shared/style/variables.scss";
 
 .directoryItem{
-    margin: 1em;
-    padding: 1em;
-    background-color: $secondaryLightGrey;
-    border: none
-}
-
-.itemDetails{
+    width: 100%;
+    border: none;
+    background-color: inherit;
     display: flex;
-    align-items: flex-start;
     flex-direction: column;
-    justify-content: center;
-    padding-top: 0.5em;
+    justify-content: flex-start;
+    
+    &:hover{
+        background-color: $secondaryLightGrey;
+        opacity: 0.6;
+    } 
+
+    .itemDetails{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    p.fileName{
+        font-size: 12pt;
+        font-weight: bold;
+        word-break: break-all;
+    }
+
+    .fileTypeText{
+        font-size: 12pt;
+        opacity: 0.7;
+    }
+
+    .hidden{
+        display: none;
+    }
+
+    .imageContainer{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 10em;
+        height: 10em;
+        background-color: $secondaryDarkGray;
+
+        .itemImage{
+        display: flex;
+        max-width: 80%;
+        max-height: 80%;
+        object-fit: contain;
+        justify-content: center;
+        align-items: center;
+    }
+    }
+
+    
+
+    
 }
 
-.itemImage{
-    width: 5em;
-    height: 5em;
-}
+
+
+
