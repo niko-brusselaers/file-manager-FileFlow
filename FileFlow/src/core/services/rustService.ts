@@ -8,6 +8,12 @@ class rustService{
         try {
         let drives:IFile[] = await invoke("get_drives")
         
+        drives = drives.map((drive:IFile) => {
+            drive.file_path = drive.file_path.replace("\\\\", "\\")
+            drive.file_name = drive.file_name + `(${drive.file_path.replace("\\","")})`
+            return drive
+        })
+
         return {filesAndFolders: drives, directoryPath: ""}
         } catch (error) {
         console.error("Error fetching drives:", error);

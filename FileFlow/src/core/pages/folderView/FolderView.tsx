@@ -6,6 +6,7 @@ import styles from './FolderView.module.scss';
 import FolderOptionsBar from "../../shared/components/folderOptionsBar/FolderOptionsBar";
 
 function FolderView() {
+    const folderTypes = ["folder", "drive","Bin"];
     const [filesAndFolders, setFilesAndFolders] = useState<IFile[]| undefined>();
     const [currentPath, setCurrentPath] = useState<string>("");
 
@@ -50,7 +51,7 @@ function FolderView() {
 
       <div className={styles.directoryContainer}>
             {filesAndFolders?.map((fileOrFolder,index) => {
-              if(fileOrFolder.file_type === "drive" || fileOrFolder.file_type === "folder"){
+              if(folderTypes.includes(fileOrFolder.file_type)){
                 return <DirectoryItem handleClick={getFilesAndFolders} item={fileOrFolder} key={index}/>
               } else{
                 return <DirectoryItem handleClick={rustService.openFile} item={fileOrFolder} key={index}/>

@@ -2,19 +2,11 @@ import { IFile } from '../../types/IFile';
 import  styles from './DirectoryItem.module.scss';
 
 function DirectoryItem({item,handleClick}: {item:IFile, handleClick: Function}) {
+    const imageFileTypes = ["pdf","xslx","docx","svg", "folder","drive","Bin"]
 
     function setIcon(){
-        switch (item.file_type) {
-            case "drive":
-            case "folder":
-            case "pdf":
-            case "xslx":
-            case "docx":
-            case "svg":
-                return item.file_type + '_icon.png'
-            default:
-                return 'file_icon.png'        
-        }
+        if(imageFileTypes.includes(item.file_type)) return `${item.file_type}_icon.png`
+        else return `file_icon.png`
 
         
     }
@@ -30,7 +22,7 @@ function DirectoryItem({item,handleClick}: {item:IFile, handleClick: Function}) 
                 <img src={setIcon()} className={styles.itemImage}/>
             </div>
             <div className={styles.itemDetails}>
-                 <p className={styles.fileName}>{item.file_name}{(item.file_type === "drive" ? `(${item.file_path.replace("\\","")})` : "")}</p>
+                 <p className={styles.fileName} title={item.file_name}>{item.file_name}</p>
                  <p className={styles.fileTypeText} style={{display:setFileTypeHidden()}}>{item.file_type}</p>
             </div>
            
