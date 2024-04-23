@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { IFile } from '../../types/IFile';
 import  styles from './DirectoryItem.module.scss';
 
@@ -14,7 +13,10 @@ function DirectoryItem({item,handleClick}: {item:IFile, handleClick: Function}) 
             case "svg":
                 return item.file_type + '_icon.png'
             default:
-                return 'file_icon.png'        }
+                return 'file_icon.png'        
+        }
+
+        
     }
 
     function setFileTypeHidden(){
@@ -26,10 +28,9 @@ function DirectoryItem({item,handleClick}: {item:IFile, handleClick: Function}) 
         <button className={styles.directoryItem} onClick={() => {handleClick(item.file_path,item.file_name)}}>
             <div className={styles.imageContainer}>
                 <img src={setIcon()} className={styles.itemImage}/>
-
             </div>
             <div className={styles.itemDetails}>
-                 <p className={styles.fileName}>{item.file_name}</p>
+                 <p className={styles.fileName}>{item.file_name}{(item.file_type === "drive" ? `(${item.file_path.replace("\\","")})` : "")}</p>
                  <p className={styles.fileTypeText} style={{display:setFileTypeHidden()}}>{item.file_type}</p>
             </div>
            

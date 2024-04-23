@@ -11,9 +11,11 @@ function FolderView() {
 
   useEffect(() => {
     if(filesAndFolders === undefined){
+      
       rustService.getdrives().then((data) => {
         //check if data is undefined
         if(!data?.filesAndFolders && !data?.directoryPath) return;          
+
         //set files and folders and current path
         setFilesAndFolders(data.filesAndFolders);
         setCurrentPath("My device");
@@ -24,7 +26,6 @@ function FolderView() {
   });
  
   function getFilesAndFolders(directoryPath: string, pathName:string){
-    console.log(directoryPath, pathName);
     
     rustService.getFilesAndFolders(directoryPath).then((data) => {
       //check if data is undefined
