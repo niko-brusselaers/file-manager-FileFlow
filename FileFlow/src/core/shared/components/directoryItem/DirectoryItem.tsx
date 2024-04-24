@@ -17,12 +17,12 @@ function DirectoryItem({item,handleClick}: {item:IFile, handleClick: Function}) 
     }
 
     return (
-        <button className={styles.directoryItem} onClick={() => {handleClick(item.file_path,item.file_name)}}>
+        <button className={styles.directoryItem} onClick={() => {handleClick(item.file_path,item.file_name)}} title={item.file_name}>
             <div className={styles.imageContainer}>
                 <img src={setIcon()} className={styles.itemImage}/>
             </div>
             <div className={styles.itemDetails}>
-                 <p className={styles.fileName} title={item.file_name}>{item.file_name}</p>
+                 <p className={styles.fileName}>{item.file_name}</p>
                  <p className={styles.fileTypeText} style={{display:setFileTypeHidden()}}>{item.file_type}</p>
             </div>
            

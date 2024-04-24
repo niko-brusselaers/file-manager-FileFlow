@@ -10,7 +10,7 @@ class rustService{
         
         drives = drives.map((drive:IFile) => {
             drive.file_path = drive.file_path.replace("\\\\", "\\")
-            drive.file_name = drive.file_name + `(${drive.file_path.replace("\\","")})`
+            drive.file_name = (drive.file_name ? drive.file_name : "Drive") + ` (${drive.file_path.replace("\\","")})`
             return drive
         })
 

@@ -8,6 +8,49 @@
     width: 30%;
     height: 100vh;
     margin: 0;
-    padding: 0;
+    padding: 5em 0 0;
     background-color: $primaryDarkBlue;
+}
+
+.sidebarButtonGroup{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &:not(:last-child){
+        border-bottom: 1px solid $secondaryLightGrey;
+        padding-bottom: 2em;
+    }
+}
+
+.sidebarGroupTitle{
+    color: $secondaryLightGrey;
+    margin: 1em 0 .5em;
+    align-self: flex-start;
+    padding: 0 1em;
+}
+
+.sidebarButton{
+    display: flex;
+    flex-direction: row;
+    background-color: transparent;
+    border: none;
+    color: #F5F5F8;
+    width: 90%;
+    align-items: center;
+    
+    &:hover{
+        background-image: url("sidebar_button_background.png");
+        background-size: 100% 100%;
+    }
+
+    p{
+        text-align: left;
+    }
+
+    img{
+        width: 1.5em;
+        padding: 1em;
+        margin-right: 1em;
+    }
 }
