@@ -47,7 +47,7 @@ function FolderView() {
     <div className={styles.directoryView}>
       <FolderOptionsBar/>
 
-      <h2 className={styles.DirectoryName}>{currentPath}</h2>
+      <h2 className={styles.directoryName}>{currentPath}</h2>
 
       <div className={styles.directoryContainer}>
             {filesAndFolders?.map((fileOrFolder,index) => {

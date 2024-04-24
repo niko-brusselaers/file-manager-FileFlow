@@ -6,10 +6,10 @@ plugins {
 
 android {
     compileSdk = 33
-    namespace = "com.tauri.fileflow"
+    namespace = "com.example.fileflow"
     defaultConfig {
         manifestPlaceholders["usesCleartextTraffic"] = "false"
-        applicationId = "com.tauri.fileflow"
+        applicationId = "com.example.fileflow"
         minSdk = 24
         targetSdk = 33
         versionCode = 1

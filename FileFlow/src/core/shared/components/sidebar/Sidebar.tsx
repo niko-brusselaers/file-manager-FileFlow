@@ -72,7 +72,6 @@ function Sidebar() {
                     })
                 }
             </div>
-
             <div className={styles.sidebarButtonGroup}>
                 <h2 className={styles.sidebarGroupTitle}>Drives</h2>
                 {

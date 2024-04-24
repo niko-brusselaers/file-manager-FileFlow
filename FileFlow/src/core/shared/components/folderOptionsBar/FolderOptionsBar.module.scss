@@ -1,8 +1,9 @@
 @import "../../style/variables.scss";
 
 .folderOptionsBar{
-    position: sticky;
+    position: absolute;
     display: flex;
+    z-index: 1;
     align-items: center;
     top: 0;
     width: 100%;

@@ -1,3 +1,5 @@
+@import './core/shared/style/variables.scss';
+
 /* latin */
 @font-face {
   font-family: 'Calibri';
@@ -40,4 +42,11 @@
 .applicationContainer{
   display: flex;
   flex-direction: row;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 } 
+
+::-webkit-scrollbar {
+  width: 0px;
+}

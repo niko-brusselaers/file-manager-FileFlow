@@ -1,3 +1,3 @@
-package com.tauri.fileflow
+package com.example.fileflow
 
 class MainActivity : TauriActivity()
