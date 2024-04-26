@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from './Sidebar.module.scss';
 import rustService from '../../../services/rustService';
 import { IFile } from '../../types/IFile';
+import { Link } from 'react-router-dom';
 
 function Sidebar() {
     const recentFolders = ["example1", "example2", "example3", "example4"]
@@ -9,10 +10,8 @@ function Sidebar() {
     const [drives, setDrives] = useState<IFile[]| undefined>();
 
     useEffect(() => {
-      console.log("test1");
-
+        
     if(drives === undefined){
-      console.log("test2");
       
       rustService.getdrives().then((data) => {
         //check if data is undefined
@@ -29,22 +28,22 @@ function Sidebar() {
     return ( 
         <div className={styles.sidebar}>
             <div className={styles.sidebarButtonGroup}>
-                <button className={styles.sidebarButton} title='Home'>
+                <Link className={styles.sidebarButton} title='Home' to="/folderView" >
                     <img src="home_sidebar_icon.png"/>
                     <p>Home</p>
-                </button>
-                <button className={styles.sidebarButton} title='Pictures'>
+                </Link>
+                <Link className={styles.sidebarButton} title='Pictures' to="/folderView">
                     <img src="picture_sidebar_icon.png"/>
                     <p>Pictures</p>
-                </button>
-                <button className={styles.sidebarButton} title='Download'>
+                </Link>
+                <Link className={styles.sidebarButton} title='Download' to="/folderView/">
                     <img src="download_sidebar_icon.png"/>
                     <p>Download</p>
-                </button>
-                <button className={styles.sidebarButton} title='Documents'>
+                </Link>
+                <Link className={styles.sidebarButton} title='Documents' to="/folderView">
                     <img src="file_sidebar_icon.png"/>
                     <p>Documents</p>
-                </button>
+                </Link>
             </div>
             <div className={styles.sidebarButtonGroup}>
                 <h2 className={styles.sidebarGroupTitle}>Recent</h2>
@@ -77,10 +76,10 @@ function Sidebar() {
                 {
                      drives?.map((drive, index) => {
                         return (
-                            <button className={styles.sidebarButton} key={index} title={drive.file_name}>
+                            <Link className={styles.sidebarButton} key={index} to={"/folderView"} state={drive} title={drive.file_name}>
                                 <img src="drive_sidebar_icon.png"/>
                                 <p>{drive.file_name}</p>
-                            </button>
+                            </Link>
                         )
                     })
                 }
