@@ -5,44 +5,44 @@ function FolderOptionsBar() {
         <div className={styles.folderOptionsBar}>
             <div className={styles.folderOptionsBarButtonGroup}>
                 <button className={styles.folderOptionsBarButton}>
-                <img src="create_icon.png" alt="create file" />
+                <img src="/create_icon.png" alt="create file" />
                 </button>
                 <button className={styles.folderOptionsBarButton}>
-                    <img src="cut_icon.png" alt="create file" />
+                    <img src="/cut_icon.png" alt="create file" />
                 </button>
                 <button className={styles.folderOptionsBarButton}>
-                    <img src="copy_icon.png" alt="create file" />
+                    <img src="/copy_icon.png" alt="create file" />
                 </button>
                 <button className={styles.folderOptionsBarButton}>
-                    <img src="delete_icon.png" alt="create file" />
+                    <img src="/delete_icon.png" alt="create file" />
                 </button>
                 <button className={styles.folderOptionsBarButton}>
-                    <img src="rename_icon.png" alt="create file" />
-                </button>
-            </div>
-            <div className={styles.folderOptionsBarButtonGroup}>
-                <button className={styles.folderOptionsBarButton}>
-                    <img src="sort_icon.png" alt="create file" />
-                </button>
-                <button className={styles.folderOptionsBarButton}>
-                    <img src="showHidden_icon.png" alt="create file" />
-                </button>
-                <button className={styles.folderOptionsBarButton}>
-                    <img src="folderView_icon.png" alt="create file" />
+                    <img src="/rename_icon.png" alt="create file" />
                 </button>
             </div>
             <div className={styles.folderOptionsBarButtonGroup}>
                 <button className={styles.folderOptionsBarButton}>
-                    <img src="share_icon.png" alt="create file" />
+                    <img src="/sort_icon.png" alt="create file" />
                 </button>
                 <button className={styles.folderOptionsBarButton}>
-                    <img src="zip_icon.png" alt="create file" />
+                    <img src="/showHidden_icon.png" alt="create file" />
                 </button>
                 <button className={styles.folderOptionsBarButton}>
-                    <img src="unzip_icon.png" alt="create file" />
+                    <img src="/folderView_icon.png" alt="create file" />
+                </button>
+            </div>
+            <div className={styles.folderOptionsBarButtonGroup}>
+                <button className={styles.folderOptionsBarButton}>
+                    <img src="/share_icon.png" alt="create file" />
                 </button>
                 <button className={styles.folderOptionsBarButton}>
-                    <img src="convert_icon.png" alt="create file" />
+                    <img src="/zip_icon.png" alt="create file" />
+                </button>
+                <button className={styles.folderOptionsBarButton}>
+                    <img src="/unzip_icon.png" alt="create file" />
+                </button>
+                <button className={styles.folderOptionsBarButton}>
+                    <img src="/convert_icon.png" alt="create file" />
                 </button>
             </div>
                

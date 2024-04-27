@@ -32,7 +32,7 @@
     padding: 0 1em;
 }
 
-.sidebarButton{
+.sidebarLink{
     display: flex;
     flex-direction: row;
     background-color: transparent;
@@ -40,6 +40,7 @@
     color: #F5F5F8;
     width: 90%;
     align-items: center;
+    text-decoration: none;
     
     &:hover{
         background-image: url("sidebar_button_background.png");

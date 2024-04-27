@@ -30,7 +30,6 @@ class rustService{
             return fileOrFolder
         })
 
-        console.log("Files and folders:", filesAndFolders);
         
         return {filesAndFolders, directoryPath}
 
