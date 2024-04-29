@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from './Sidebar.module.scss';
 import rustService from '../../../services/rustService';
 import { IFile } from '../../types/IFile';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { documentDir, downloadDir, homeDir, pictureDir } from '@tauri-apps/api/path';
 
 function Sidebar() {

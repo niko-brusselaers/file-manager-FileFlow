@@ -1,4 +1,4 @@
-import { Navigate, unstable_HistoryRouter, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import rustService from '../../../services/rustService';
 import { IFile } from '../../types/IFile';
 import  styles from './DirectoryItem.module.scss';

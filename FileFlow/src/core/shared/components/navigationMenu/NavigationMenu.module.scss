@@ -1,0 +1,32 @@
+@import "../../style/variables.scss";
+
+.titlebar {
+  position: sticky;
+  display: flex;
+  justify-content: flex-end;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4em;
+  z-index: 1;
+  background-image: url("/topmenu_background.png");
+  background-size: auto;
+  
+
+}
+.titlebarButton {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 3.5em;
+  height: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  &:hover{
+    background: rgba($secondaryLightGrey, 0.1);
+  }
+}
+
+

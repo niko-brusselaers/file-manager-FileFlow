@@ -27,11 +27,11 @@ useEffect(() => {
         console.error("Error fetching drives:", error);
       });
     } else{
-      getFilesAndFolders(loaderData.file_path, loaderData.file_name);
+      getFilesAndFolders(loaderData.file_path);
     }
   },[loaderData]);
  
-  function getFilesAndFolders(directoryPath: string, pathName:string){
+  function getFilesAndFolders(directoryPath: string){
     
     rustService.getFilesAndFolders(directoryPath).then((data) => {
       //check if data is undefined

@@ -3,5 +3,12 @@
   "identifier": "main-capability",
   "description": "Capability for the main window",
   "windows": ["main"],
-  "permissions": ["path:default"]
+  "permissions": [
+    "path:default",
+    "window:default",
+    "window:allow-close",
+    "window:allow-toggle-maximize",
+    "window:allow-start-dragging",
+    "window:allow-minimize"
+  ]
 }

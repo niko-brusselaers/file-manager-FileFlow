@@ -9,8 +9,7 @@
     justify-content: flex-start;
     
     &:hover{
-        background-color: $secondaryLightGrey;
-        opacity: 0.6;
+        background-color: rgba($secondaryLightGrey,0.8);
     } 
 
     .itemDetails{
