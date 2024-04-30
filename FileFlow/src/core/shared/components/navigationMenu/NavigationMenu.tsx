@@ -1,9 +1,18 @@
+import { useEffect } from "react";
 import styles from "./NavigationMenu.module.scss"
 import { Window } from '@tauri-apps/api/window';
 
-const appWindow = new Window('main');
   
 function NavigationMenu() {
+    const appWindow = new Window('main');
+
+    useEffect(() => {
+        
+        
+        setNavBarHeightVariable();
+        window.addEventListener('resize', () => setNavBarHeightVariable());
+
+    },[])
 
     function minimizeWindow() {
         appWindow.minimize();
@@ -17,7 +26,13 @@ function NavigationMenu() {
         appWindow.close();
     }
 
+    function setNavBarHeightVariable() {
+            // Set the --navBarHeight variable to the height of the titlebar
+            let navBarHeight = document.querySelector("."+styles.titlebar)?.clientHeight;
+            document.documentElement.style.setProperty('--navBarHeight', navBarHeight + "px");
+    };
 
+    
     return ( 
             <div data-tauri-drag-region className={styles.titlebar}>
                 <button className={styles.titlebarButton} onClick={() => minimizeWindow()}>

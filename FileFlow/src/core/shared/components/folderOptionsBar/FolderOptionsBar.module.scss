@@ -2,13 +2,13 @@
 
 .folderOptionsBar{
     display: flex;
+    position: fixed;
     z-index: 0;
     align-items: center;
-    top: 0;
+    top: var(--navBarHeight);
     width: 100%;
     height: 4em;
     background-color: $secondaryDarkGray;
-    overflow: hidden;
 }
 
 .folderOptionsBarButtonGroup{
