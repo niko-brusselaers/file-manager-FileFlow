@@ -40,19 +40,19 @@ function Sidebar() {
     return ( 
         <div className={styles.sidebar}>
             <div className={styles.sidebarButtonGroup}>
-                <Link className={styles.sidebarLink} title="Home" to="/folderView"  state={homeDirectory}>
+                <Link className={styles.sidebarLink} title="Home" to={`/${homeDirectory?.file_name}`}  state={homeDirectory}>
                     <img src="/home_sidebar_icon.png"/>
                     <p>{homeDirectory?.file_name}</p>
                 </Link>
-                <Link className={styles.sidebarLink} title='Pictures' to="/folderView" state={pictureDirectory}>
+                <Link className={styles.sidebarLink} title='Pictures' to={`/${pictureDirectory?.file_name}`} state={pictureDirectory}>
                     <img src="/picture_sidebar_icon.png"/>
                     <p>Pictures</p>
                 </Link>
-                <Link className={styles.sidebarLink} title='Download' to="/folderView/" state={downloadDirectory}>
+                <Link className={styles.sidebarLink} title='Download' to={`/${downloadDirectory?.file_name}`} state={downloadDirectory}>
                     <img src="/download_sidebar_icon.png"/>
                     <p>Download</p>
                 </Link>
-                <Link className={styles.sidebarLink} title='Documents' to="/folderView" state={documentDirectory}>
+                <Link className={styles.sidebarLink} title='Documents' to={`/${documentDirectory?.file_name}`} state={documentDirectory}>
                     <img src="/file_sidebar_icon.png"/>
                     <p>Documents</p>
                 </Link>

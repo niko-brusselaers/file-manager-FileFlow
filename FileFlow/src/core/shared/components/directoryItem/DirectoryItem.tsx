@@ -18,10 +18,9 @@ function DirectoryItem({item,isDirectory = false}: {item:IFile,isDirectory?:bool
         else return "block"
     }
 
-    function handleFileClick(){
+    function handleFileClick(fileName:string){
         if(isDirectory){
-            console.log("Navigating to folder");
-            navigate(`/folderView`,{
+            navigate(`/${fileName}`,{
                 state: item
             })
         } else{
@@ -30,7 +29,7 @@ function DirectoryItem({item,isDirectory = false}: {item:IFile,isDirectory?:bool
     }
 
     return (
-        <button className={styles.directoryItem} onClick={(() => handleFileClick())} title={item.file_name}>
+        <button className={styles.directoryItem} onClick={(() => handleFileClick(item.file_name))} title={item.file_name}>
             <div className={styles.imageContainer}>
                 <img src={setIcon()} className={styles.itemImage}/>
             </div>

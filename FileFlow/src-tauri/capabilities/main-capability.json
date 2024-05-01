@@ -2,13 +2,17 @@
   "$schema": "./schemas/desktop-schema.json",
   "identifier": "main-capability",
   "description": "Capability for the main window",
-  "windows": ["main"],
+  "windows": [
+    "main"
+  ],
   "permissions": [
     "path:default",
     "window:default",
     "window:allow-close",
     "window:allow-toggle-maximize",
     "window:allow-start-dragging",
-    "window:allow-minimize"
+    "window:allow-minimize",
+    "dialog:default",
+    "dialog:allow-open"
   ]
 }

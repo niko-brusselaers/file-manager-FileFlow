@@ -48,6 +48,16 @@ class rustService{
         }
         
     }
+
+    async sentFiles(){
+        try {
+        await invoke("send_files").then((res) => {
+            console.log("response:", res);
+        })
+        } catch (error) {
+        console.error("Error sending files:", error);
+        }
+    }
 }
 
 export default new rustService();

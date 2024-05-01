@@ -13,6 +13,7 @@ function FolderView() {
 
     
 useEffect(() => {
+    console.log(window.location.pathname);
     
     if(loaderData === null){
 

@@ -1,6 +1,8 @@
+import { Link } from 'react-router-dom';
 import styles from './FolderOptionsBar.module.scss';
 
 function FolderOptionsBar() {
+    
     return (
         <div className={styles.folderOptionsBar}>
             <div className={styles.folderOptionsBarButtonGroup}>
@@ -32,9 +34,9 @@ function FolderOptionsBar() {
                 </button>
             </div>
             <div className={styles.folderOptionsBarButtonGroup}>
-                <button className={styles.folderOptionsBarButton}>
+                <Link className={styles.folderOptionsBarButton} to="/fileTransferPage">
                     <img src="/share_icon.png" alt="create file" />
-                </button>
+                </Link>
                 <button className={styles.folderOptionsBarButton}>
                     <img src="/zip_icon.png" alt="create file" />
                 </button>

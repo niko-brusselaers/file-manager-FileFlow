@@ -4,6 +4,7 @@ import App from "./App";
 import { createBrowserRouter,RouterProvider } from "react-router-dom";
 import FolderView from "./core/pages/folder/FolderViewPage";
 import ErrorPage from "./core/pages/error/ErrorPage";
+import FileTransferPage from "./core/pages/fileTransfer/FileTransferPage";
 
 const router = createBrowserRouter([
   {
@@ -16,8 +17,12 @@ const router = createBrowserRouter([
         element: <FolderView />,
       },
       {
-        path: "folderView",
+        path: ":folderName",
         element: <FolderView />,
+      },
+      {
+        path: "fileTransferPage",
+        element: <FileTransferPage />,
       },
     ]
   }
