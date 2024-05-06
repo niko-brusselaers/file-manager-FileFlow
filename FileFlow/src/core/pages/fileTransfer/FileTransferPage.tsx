@@ -23,7 +23,11 @@ function FileTransferPage() {
     }
 
     async function sentFiles() {
-        await rustService.sentFiles();
+        if(inputFilePath) await rustService.sentFiles(inputFilePath);
+        else{
+            console.error("please enter a file or folder")
+        }
+
     }
 
     return ( 

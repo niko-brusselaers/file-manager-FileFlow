@@ -49,9 +49,9 @@ class rustService{
         
     }
 
-    async sentFiles(){
+    async sentFiles(filePath:string){
         try {
-        await invoke("send_files").then((res) => {
+        await invoke("send_files", {filePath:filePath}).then((res) => {
             console.log("response:", res);
         })
         } catch (error) {
