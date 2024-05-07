@@ -10,7 +10,7 @@ pub fn transit_handler (info: TransitInfo, addr: SocketAddr) {
     }
 
 pub fn progress_handler (current: u64, total: u64) {
-    println!("Progress: {} out of {}", current, total);
+    // println!("Progress: {} out of {}", current, total);
 }
 
 pub fn cancel<'a>() -> BoxFuture<'a, ()> {

@@ -1,12 +1,12 @@
-use magic_wormhole::{transfer::APP_CONFIG, transit, Wormhole};
+use magic_wormhole::{transit, Wormhole};
 use super::{handler::{cancel,progress_handler,transit_handler}, helper::{gen_app_config, gen_relay_hints}, types::serverconfig::ServerConfig};
 
 #[tauri::command]
 pub async fn send_files(file_path:&str) -> Result<(), String>{
     // create server config, relay hints, transit abilities and app config
     let server_config: ServerConfig= ServerConfig{
-        rendezvous_url: String::from(APP_CONFIG.rendezvous_url),
-        transit_url: String::from(transit::DEFAULT_RELAY_SERVER)  
+        rendezvous_url: String::from("ws://relay.magic-wormhole.io:4000/v1"),
+        transit_url: String::from("tcp://transit.magic-wormhole.io:4001")  
     };
 
     let relay_hints = match gen_relay_hints(&server_config) {
@@ -29,14 +29,15 @@ pub async fn send_files(file_path:&str) -> Result<(), String>{
             return Err(error.to_string())}
     };    
 
-
     //get code from server welcome
     let code = server_welcome.code;
     println!("code: {:#?}",code);
 
+    let wormhole = connection.await.unwrap();
+    
     //start sending file or folder
     let result = magic_wormhole::transfer::send_file_or_folder(
-        connection.await.unwrap(), 
+        wormhole, 
         relay_hints, 
         file_path, 
         file_name, 

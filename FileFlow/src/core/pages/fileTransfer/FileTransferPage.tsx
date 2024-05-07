@@ -5,6 +5,7 @@ import rustService from '../../services/rustService';
 
 function FileTransferPage() {
     const [inputFilePath, setInputFilePath] = useState<string | null>(null);
+    const [code, setCode] = useState<string| null>(null);
 
     async function openDIalog() {
         await open({
@@ -30,13 +31,30 @@ function FileTransferPage() {
 
     }
 
+    async function downloadFiles() {
+        if(code) {
+            console.log("starting download with code", code);
+            
+            await rustService.downloadFiles(code)
+        }else{
+            console.error("please enter a code")
+        }
+    }
+
     return ( 
-        <div className={styles.filetransferView}>
-            <h1>FileTransferPage</h1>
-            <button onClick={() => openDIalog()}>open</button>
-            <button onClick={() => sentFiles()}>test</button>
-        </div>
-        
+        <>
+            <div className={styles.filetransferView}>
+                <h1>FileTransferPage</h1>
+                <button onClick={() => openDIalog()}>open</button>
+                <button onClick={() => sentFiles()}>send</button>
+            </div>
+
+            <div className={styles.filetransferView}>
+                <h1>FileTransferPage</h1>
+                <input type="text" onChange={(event) =>{setCode(event.currentTarget.value)} }/>
+                <button onClick={() => downloadFiles()}>download</button>
+            </div>
+        </>
      );
 }
 

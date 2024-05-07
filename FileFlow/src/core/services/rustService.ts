@@ -58,6 +58,16 @@ class rustService{
         console.error("Error sending files:", error);
         }
     }
+
+    async downloadFiles(PAKECode:string){
+        try {
+        await invoke("receive_files", {code:PAKECode}).then((res) => {
+            console.log("response:", res);
+        })
+        } catch (error) {
+        console.error("Error downloading files:", error);
+        }
+    }
 }
 
 export default new rustService();
