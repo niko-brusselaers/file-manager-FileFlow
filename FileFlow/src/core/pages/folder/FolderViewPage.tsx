@@ -5,11 +5,17 @@ import DirectoryItem from "../../shared/components/directoryItem/DirectoryItem";
 import styles from './FolderView.module.scss';
 import FolderOptionsBar from "../../shared/components/folderOptionsBar/FolderOptionsBar";
 import { useLocation } from "react-router-dom";
+import FileTransferPage from "../fileTransfer/FileTransferPage";
 
 function FolderView() {
     const folderTypes = ["folder", "drive","Bin"];
     const [filesAndFolders, setFilesAndFolders] = useState<IFile[]| undefined>();
     const loaderData:IFile = useLocation().state;
+    const [transferDialogOpen, setTransferDialogOpen] = useState<boolean>(false);
+
+   
+
+    useEffect(() => {},[transferDialogOpen])
 
     
 useEffect(() => {
@@ -51,7 +57,8 @@ useEffect(() => {
 
   return (
     <div className={styles.directoryView}>
-      <FolderOptionsBar/>
+      <FileTransferPage dialogOpened={transferDialogOpen} setDialogOpened={setTransferDialogOpen}  />
+      <FolderOptionsBar openTransferDialog={setTransferDialogOpen}/>
 
       <h2 className={styles.directoryName}>{(loaderData ? loaderData.file_name : "My device")}</h2>
 

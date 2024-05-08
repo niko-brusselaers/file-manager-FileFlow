@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import styles from './FolderOptionsBar.module.scss';
 
-function FolderOptionsBar() {
+function FolderOptionsBar({openTransferDialog}: {openTransferDialog: Function}){
     
     return (
         <div className={styles.folderOptionsBar}>
@@ -34,9 +34,9 @@ function FolderOptionsBar() {
                 </button>
             </div>
             <div className={styles.folderOptionsBarButtonGroup}>
-                <Link className={styles.folderOptionsBarButton} to="/fileTransferPage">
+                <button className={styles.folderOptionsBarButton} onClick={()=> openTransferDialog(true)}>
                     <img src="/share_icon.png" alt="create file" />
-                </Link>
+                </button>
                 <button className={styles.folderOptionsBarButton}>
                     <img src="/zip_icon.png" alt="create file" />
                 </button>

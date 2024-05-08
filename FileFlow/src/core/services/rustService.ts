@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { IFile } from "../shared/types/IFile";
+import { downloadDir } from "@tauri-apps/api/path";
 
 
 class rustService{
@@ -59,9 +60,11 @@ class rustService{
         }
     }
 
-    async downloadFiles(PAKECode:string){
+    async downloadFiles(PAKECode:string,downloadDirectory?:string){
         try {
-        await invoke("receive_files", {code:PAKECode}).then((res) => {
+            if(!downloadDirectory) downloadDirectory = await downloadDir();
+
+        await invoke("receive_files", {code:PAKECode, downloadDirectory:downloadDirectory}).then((res) => {
             console.log("response:", res);
         })
         } catch (error) {

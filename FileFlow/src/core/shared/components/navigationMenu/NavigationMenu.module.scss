@@ -3,6 +3,7 @@
 .titlebar {
   position: sticky;
   display: flex;
+  z-index: 3;
   justify-content: flex-end;
   position: fixed;
   top: 0;
