@@ -1,11 +1,8 @@
-import { useNavigate } from 'react-router-dom';
-import rustService from '../../../services/rustService';
 import { IFile } from '../../types/IFile';
 import  styles from './DirectoryItem.module.scss';
 
-function DirectoryItem({item,isDirectory = false}: {item:IFile,isDirectory?:boolean}) {
+function DirectoryItem({item, selectedItem, handleClick}: {item:IFile,selectedItem:IFile,handleClick:Function}) {
     const imageFileTypes = ["pdf","xslx","docx","svg", "folder","drive","Bin"]
-    const navigate = useNavigate();
     function setIcon(){
         if(imageFileTypes.includes(item.file_type)) return `/${item.file_type}_icon.png`
         else return `/file_icon.png`
@@ -18,24 +15,18 @@ function DirectoryItem({item,isDirectory = false}: {item:IFile,isDirectory?:bool
         else return "block"
     }
 
-    function handleFileClick(fileName:string){
-        if(isDirectory){
-            navigate(`/${fileName}`,{
-                state: item
-            })
-        } else{
-            rustService.openFile(item.file_path);
-        }
-    }
+
 
     return (
-        <button className={styles.directoryItem} onClick={(() => handleFileClick(item.file_name))} title={item.file_name}>
+        <button className={`${styles.directoryItem} ${selectedItem.file_name === item.file_name ? styles.isSelectedItem : ""}`} onClick={(() => handleClick(item))} title={item.file_name}>
             <div className={styles.imageContainer}>
                 <img src={setIcon()} className={styles.itemImage}/>
             </div>
             <div className={styles.itemDetails}>
                  <p className={styles.fileName}>{item.file_name}</p>
-                 <p className={styles.fileTypeText} style={{display:setFileTypeHidden()}}>{item.file_type}</p>
+                 <div>
+                 <p className={styles.fileTypeText} style={{display:setFileTypeHidden()}}>{item.file_size}</p>
+                 </div>
             </div>
            
         </button>

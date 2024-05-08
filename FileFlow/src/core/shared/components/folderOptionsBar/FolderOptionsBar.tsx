@@ -1,7 +1,14 @@
 import { Link } from 'react-router-dom';
 import styles from './FolderOptionsBar.module.scss';
+import { IFile } from '../../types/IFile';
 
-function FolderOptionsBar({openTransferDialog}: {openTransferDialog: Function}){
+function FolderOptionsBar({openTransferDialog, selectedItem}: {openTransferDialog: Function, selectedItem: IFile}){
+    
+
+    function openTransferSend(){
+        if(selectedItem.file_name != "") openTransferDialog(selectedItem);
+        else return;
+    }
     
     return (
         <div className={styles.folderOptionsBar}>
@@ -34,7 +41,7 @@ function FolderOptionsBar({openTransferDialog}: {openTransferDialog: Function}){
                 </button>
             </div>
             <div className={styles.folderOptionsBarButtonGroup}>
-                <button className={styles.folderOptionsBarButton} onClick={()=> openTransferDialog(true)}>
+                <button className={selectedItem ? styles.folderOptionsBarButton : styles.folderOptionsBarGreyedOut} onClick={() => {openTransferSend()}}>
                     <img src="/share_icon.png" alt="create file" />
                 </button>
                 <button className={styles.folderOptionsBarButton}>

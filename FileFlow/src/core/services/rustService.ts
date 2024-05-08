@@ -9,10 +9,21 @@ class rustService{
         try {
         let drives:IFile[] = await invoke("get_drives")
         
+        //remove double backslashes
         drives = drives.map((drive:IFile) => {
             drive.file_path = drive.file_path.replace("\\\\", "\\")
+            //set drive name
             drive.file_name = (drive.file_name ? drive.file_name : "Drive") + ` (${drive.file_path.replace("\\","")})`
+
+            let fileSize = parseInt(drive.file_size)
+            //convert file size to readable format
+            if(fileSize/Math.pow(1024, 4) > 1) drive.file_size = ((fileSize/Math.pow(1024, 4)).toFixed(2)).toString() +" TB";
+            else if(fileSize/Math.pow(1024, 3) > 1) drive.file_size = ((fileSize/Math.pow(1024, 3)).toFixed(2)) + " GB";
+            else if(fileSize/Math.pow(1024, 2) > 1) drive.file_size = ((fileSize/Math.pow(1024, 2)).toFixed(2))  +" MB";
+            else if(fileSize/1024 > 1) drive.file_size = ((fileSize/1024).toFixed(2))+ " KB";
+            else drive.file_size = fileSize + " B";
             return drive
+            
         })
 
         return {filesAndFolders: drives, directoryPath: ""}
@@ -27,7 +38,19 @@ class rustService{
         let filesAndFolders:IFile[] = await invoke("read_directory", { path: directoryPath })
     
         filesAndFolders = filesAndFolders.map((fileOrFolder:IFile) => {
+            //remove double backslashes
             fileOrFolder.file_path = fileOrFolder.file_path.replace("\\\\", "\\")
+
+
+            let fileSize = parseInt(fileOrFolder.file_size)
+            //convert file size to readable format
+            if(fileSize/Math.pow(1024, 4) > 1) fileOrFolder.file_size = ((fileSize/Math.pow(1024, 4)).toFixed(2)).toString() +" TB";
+            else if(fileSize/Math.pow(1024, 3) > 1) fileOrFolder.file_size = ((fileSize/Math.pow(1024, 3)).toFixed(2)) + " GB";
+            else if(fileSize/Math.pow(1024, 2) > 1) fileOrFolder.file_size = ((fileSize/Math.pow(1024, 2)).toFixed(2))  +" MB";
+            else if(fileSize/1024 > 1) fileOrFolder.file_size = ((fileSize/1024).toFixed(2))+ " KB";
+            else fileOrFolder.file_size = fileSize + " B";
+
+
             return fileOrFolder
         })
 

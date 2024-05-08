@@ -9,13 +9,23 @@
     justify-content: flex-start;
     
     &:hover{
-        background-color: rgba($secondaryLightGrey,0.8);
+        background-color: rgba($secondaryDarkGray,.8);
+        color: black;
     } 
 
     .itemDetails{
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+
+        div{
+            display: flex;
+            flex-direction: row;
+            padding-top: 1em;
+            *{
+                margin-right: 1em;
+            }
+        }
     }
 
     p.fileName{
@@ -55,6 +65,11 @@
 
     
 }
+
+.isSelectedItem{
+        background-color: rgba($secondaryDarkGray,.8);
+        color: black;
+    } 
 
 
 
