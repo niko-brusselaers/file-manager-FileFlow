@@ -22,8 +22,8 @@ pub async fn receive_files(code:String, download_directory:String)-> Result<(), 
     let app_config = gen_app_config(&server_config);
 
 
-    let (wormhole_welcome,connection) = match magic_wormhole::Wormhole::connect_with_code(app_config,Code(code)).await {
-        Ok(wormhole) => wormhole,
+    let connection = match magic_wormhole::Wormhole::connect_with_code(app_config,Code(code)).await {
+        Ok(wormhole) => wormhole.1,
         Err(error) => return Err(error.to_string())
     } ;
 

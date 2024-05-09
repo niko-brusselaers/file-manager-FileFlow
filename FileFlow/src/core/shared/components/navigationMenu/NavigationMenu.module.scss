@@ -2,6 +2,7 @@
 
 .titlebar {
   position: sticky;
+  flex-direction: column;
   display: flex;
   z-index: 3;
   justify-content: flex-end;
@@ -9,19 +10,127 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 2.2em;
   z-index: 1;
   background-image: url("/topmenu_background.png");
   background-size: auto;
   
+  .navBarTopContainer{
+
+    .windowsOptionsContainer{
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      height: 2.2em;
+      width: 100%;
+      padding-right: 1em;
+    }
+  }
+
+  .navBarBottomContainer{
+    background-color: white;
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+
+
+    .navigationMenuContainer{
+      display: flex;
+      height: 80%;
+      padding: 0.75em 0;
+      margin-right: 2%;
+      margin-left: 0.5%;
+      width: 10em;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-evenly;
+
+      .navigationMenuButton{
+        border: none;
+        box-sizing: content-box;
+        min-width: 3em;
+        max-width: 5em;
+        width: 25%;
+        height: 2em;
+        padding: 0.5em 0;
+        background-color: transparent;
+
+        .backArrow{
+          rotate: 180deg;
+        }
+
+        .downArrow{
+          rotate: 90deg;
+        }
+
+        .forwardArrow{
+          rotate: 0deg;
+        }
+
+        img{
+          height: 100%;
+        }
+      }
+    }
+
+    .navigationPathInput{
+      width: 100%;
+      height: 2em;
+      box-sizing: content-box;
+      margin-right: 1%;
+      border: none;
+
+      input{
+        width: 100%;
+        height: 100%;
+        padding-left: 1em;
+        border: gray 2px solid;
+
+
+      }
+    }
+
+    .searchInput{
+      min-width: 15em;
+      max-width: 20em;
+      width: 15%;
+      height: 2em;
+      margin-right: 1%;
+      
+
+      input{
+        width: 100%;
+        height: 100%;
+        padding-left: 1em;
+
+      }
+    }
+
+    .drownDownMenu{
+      width: 3em;
+      margin-right: 1em;
+      border: gray 2px solid;
+
+
+
+      img{
+        height: 100%;
+        width: 100%;
+      }
+    }
+
+  }
 
 }
+
+
+
 .titlebarButton {
   display: inline-flex;
   justify-content: center;
   align-items: center;
   width: 3.5em;
-  height: 100%;
   height: 100%;
   background: transparent;
   border: none;

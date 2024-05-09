@@ -19,10 +19,10 @@ function Sidebar() {
     useEffect(() => {    
     if(drives === undefined){
 
-        pictureDir().then((path) => setPictureDirectory({file_name: "Pictures", file_path: path, file_type: "folder"}))
-        downloadDir().then((path) => setDownloadDirectory({file_name: "Download", file_path: path , file_type: "folder"}))
-        documentDir().then((path) => setDocumentDirectory({file_name: "Documents", file_path: path, file_type: "folder"}))
-        homeDir().then((path) => setHomeDirectory({file_name: "Home", file_path: path, file_type: "folder"}))
+        pictureDir().then((path) => setPictureDirectory({file_name: "Pictures", file_path: path, file_type: "folder", file_size: ""}))
+        downloadDir().then((path) => setDownloadDirectory({file_name: "Download", file_path: path , file_type: "folder", file_size: ""}))
+        documentDir().then((path) => setDocumentDirectory({file_name: "Documents", file_path: path, file_type: "folder", file_size: ""}))
+        homeDir().then((path) => setHomeDirectory({file_name: "Home", file_path: path, file_type: "folder", file_size: ""}))
       
       rustService.getdrives().then((data) => {
         //check if data is undefined

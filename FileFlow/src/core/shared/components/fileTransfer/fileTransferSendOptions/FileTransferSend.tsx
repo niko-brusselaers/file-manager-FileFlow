@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styles from './FileTransferSend.module.scss';
-import { open } from "@tauri-apps/plugin-dialog"
 import rustService from '../../../../services/rustService';
 import { IFile } from '../../../types/IFile';
 

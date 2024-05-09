@@ -63,6 +63,15 @@ class rustService{
         }
     }
 
+    async checkPathIsValid(directoryPath:string){
+        try {
+        let isValid:string = await invoke("check_path", { path: directoryPath })
+        return isValid;
+        } catch (error) {
+        console.error( error);
+        }
+    }
+
     async openFile(directoryPath:string) {
         console.log("Opening file:", directoryPath);
         try {
