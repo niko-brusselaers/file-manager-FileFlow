@@ -11,12 +11,29 @@ function NavigationMenu() {
     const locationData:IFile = useLocation().state;
     const navigate = useNavigate()
     const [filePathInput, setFilePathInput] = useState<string>(locationData?.file_name || "");
+    const [dropDownBarIsOpen, setDropDownBarIsOpen] = useState<boolean>(false);
 
     useEffect(() => {
         // Set the --navBarHeight variable to the height of the titlebar
         setNavBarHeightVariable();
         window.addEventListener('resize', () => setNavBarHeightVariable());
 
+        //close the dropdown bar when the user clicks outside of the dropdown bar
+        document.addEventListener("mousedown", (event) => {
+            //classnames of the elements that should not close the dropdown bar
+            const dropDownTargets = [
+                document.querySelector("."+styles.dropDownMenuContainer)?.className,
+                document.querySelector("."+styles.dropDownMenuButton)?.className,
+                document.querySelector("."+styles.dropdownMenuImage)?.className
+            ]            
+            //get the class name of the selected element
+            let selectedClasname = (event.target as HTMLElement).className as string;                
+                
+            if(!dropDownTargets.includes(selectedClasname)) {
+                setDropDownBarIsOpen(false)
+            }
+            
+        })
     },[])
 
     //update the file path input when the location data changes
@@ -79,6 +96,12 @@ function NavigationMenu() {
         
     }
 
+    async function ToggleDropDownBar(){
+        setDropDownBarIsOpen(!dropDownBarIsOpen)
+        if(!dropDownBarIsOpen){
+        }
+    }
+
 
     return ( 
             <div  className={styles.titlebar}>
@@ -120,7 +143,12 @@ function NavigationMenu() {
 
                     </form>
                     <div  className={styles.drownDownMenu}>
-                        <img src="/acount_icon.png" alt="" />
+                        <img className={styles.dropdownMenuImage} src="/acount_icon.png" alt="" onClick={() => {ToggleDropDownBar()}} />
+                        <div className={styles.dropDownMenuContainer} style={dropDownBarIsOpen ? {display:"block"} : {display:"none"}}>
+                            <button className={styles.dropDownMenuButton}>
+                                wormhole downloads
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
