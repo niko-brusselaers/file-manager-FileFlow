@@ -4,13 +4,15 @@ import { IFile } from "../../shared/types/IFile";
 import DirectoryItem from "../../shared/components/directoryItem/DirectoryItem";
 import styles from './FolderView.module.scss';
 import FolderOptionsBar from "../../shared/components/folderOptionsBar/FolderOptionsBar";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import FileTransferSend from "../../shared/components/fileTransfer/fileTransferSendOptions/FileTransferSend";
 
 function FolderView() {
     const folderTypes = ["folder", "drive","Bin"];
     const [filesAndFolders, setFilesAndFolders] = useState<IFile[]| undefined>();
     const loaderData:IFile = useLocation().state;
+    const navigate = useNavigate()
+
     const [transferDialogOpen, setTransferDialogOpen] = useState<boolean>(false);
     const [selectedItem, setSelectedItem] = useState<IFile>({file_name:"",file_path:"",file_type:"",file_size:""});
 
@@ -18,11 +20,11 @@ function FolderView() {
 
 
     
-useEffect(() => {    
+useEffect(() => { 
+       
     if(loaderData === null){
 
-      rustService.getdrives().then((data) => {
-        
+      rustService.getdrives().then((data) => {        
         //check if data is undefined
         if(!data?.filesAndFolders && !data?.directoryPath) return;          
 
@@ -54,7 +56,7 @@ useEffect(() => {
 
   function handleClick(item:IFile){
         if(selectedItem === item){
-          if(item.file_type === "folder" || item.file_type === "drive") getFilesAndFolders(item.file_path);
+          if(item.file_type === "folder" || item.file_type === "drive") navigate(`/${item.file_name}`, {state: item});
           else rustService.openFile(item.file_path);
         }else{
           setSelectedItem(item);

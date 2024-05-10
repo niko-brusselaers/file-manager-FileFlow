@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::{ffi::OsStr, fs, path::PathBuf};
 use sysinfo::Disks;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize,Debug)]
 pub struct File {
     file_name: String,
     file_path: PathBuf,
@@ -59,16 +59,29 @@ pub fn open_file(path: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn check_path(path: String) -> Result<String, String> {
-    let check = std::path::Path::new(&path).metadata().map_err(|e| e.to_string())?;
-    let is_dir = check.is_dir();
-    let is_file = check.is_file();
+pub fn check_path(path: String) -> Result<File, String> {
+    let file_path = std::path::Path::new(&path);
+    
+    let file_name = file_path.file_name()
+        .ok_or_else(||"Path does not have a file name")?
+        .to_string_lossy()
+        .to_string();
 
-    if is_dir {
-    Ok(String::from("Folder"))
-    } else if is_file {
-        Ok(String::from("File"))
-    } else {
-        Err(String::from("Path is neither a file nor a directory"))
-    }
+    let file_type = file_path.extension()
+        .unwrap_or(OsStr::new("folder"))
+        .to_string_lossy()
+        .into_owned();
+
+    let file_size = file_path.metadata()
+        .map_err(|error| error.to_string())?
+        .len();
+
+    let file = File {
+        file_name,
+        file_type,
+        file_path: PathBuf::from(file_path),
+        file_size,
+    };
+
+    Ok(file)
 }

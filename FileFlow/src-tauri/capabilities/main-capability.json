@@ -13,6 +13,7 @@
     "window:allow-start-dragging",
     "window:allow-minimize",
     "dialog:default",
-    "dialog:allow-open"
+    "dialog:allow-open",
+    "event:default"
   ]
 }

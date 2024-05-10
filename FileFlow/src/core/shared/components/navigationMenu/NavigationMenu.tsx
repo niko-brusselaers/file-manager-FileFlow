@@ -1,25 +1,28 @@
 import { SyntheticEvent, useEffect, useState } from "react";
 import styles from "./NavigationMenu.module.scss"
 import { Window } from '@tauri-apps/api/window';
-import { Navigate, useLocation,useNavigate } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
 import { IFile } from "../../types/IFile";
 import rustService from "../../../services/rustService";
 
   
 function NavigationMenu() {
-    const appWindow = new Window('main');
+    const appWindow = Window.getCurrent();
     const locationData:IFile = useLocation().state;
     const navigate = useNavigate()
-    const [filePathInput, setFilePathInput] = useState<string>(locationData?.file_name ||  "This Device");
+    const [filePathInput, setFilePathInput] = useState<string>(locationData?.file_name || "");
 
     useEffect(() => {
-        
         // Set the --navBarHeight variable to the height of the titlebar
         setNavBarHeightVariable();
         window.addEventListener('resize', () => setNavBarHeightVariable());
 
     },[])
 
+    //update the file path input when the location data changes
+    useEffect(() => {
+        setFilePathInput(locationData?.file_name)
+    },[locationData])
 
     function minimizeWindow() {
         appWindow.minimize();
@@ -49,34 +52,38 @@ function NavigationMenu() {
 
     async function navigateToPath(event:SyntheticEvent){
         event.preventDefault();
-        console.log(filePathInput);
         
-        await rustService.checkPathIsValid(filePathInput).then((type) => {
-            console.log(type);
+        //check if path is valid, if it is a folder navigate to the folder, if it is a file open the file
+        await rustService.checkPathIsValid(filePathInput).then((fileOrFolder) => {            
+            if(fileOrFolder?.file_type === "" || !fileOrFolder) return
+            else if(fileOrFolder?.file_type ==="folder") return navigate(`/${fileOrFolder.file_name}`, {state: fileOrFolder})
+            else rustService.openFile(fileOrFolder.file_path)
             
-            switch (type) {
-                case "File":
-                    rustService.openFile(filePathInput);
-                    break;
-                case "Folder":
-                    let filepathName = filePathInput.split("\\")
-                    navigate(`/`, {state: {file_name:filepathName[filepathName.length-1] , file_path: filePathInput, file_type: "File", file_size: ""}})
-                    break;
-                case "":
-                default:
-                    console.log("invalid");
-                    setFilePathInput(locationData.file_name)
-                    break;
-            }
             
         })
     }
 
+    //navigate to parent folder
+    async function navigateToParentFolder(){
+        let parentDirectory = locationData?.file_path.split("\\").slice(0,-1).join("\\");
+        if (!parentDirectory.includes("\\")) parentDirectory += "\\\\";
+        console.log(parentDirectory);
+        if (!parentDirectory.includes("\\")) parentDirectory = parentDirectory + "\\";
+        await rustService.checkPathIsValid(parentDirectory).then((fileOrFolder) => {            
+            if(fileOrFolder?.file_type === "" || !fileOrFolder) return
+            else if(fileOrFolder?.file_type ==="folder") return navigate(`/${fileOrFolder.file_name}`, {state: fileOrFolder,replace: true})
+            else rustService.openFile(fileOrFolder.file_path)
+            
+            
+        })
+        
+    }
+
 
     return ( 
-            <div data-tauri-drag-region className={styles.titlebar}>
-                <div className={styles.navBarTopContainer}>
-                    <div className={styles.windowsOptionsContainer}>
+            <div  className={styles.titlebar}>
+                <div  className={styles.navBarTopContainer}>
+                    <div data-tauri-drag-region className={styles.windowsOptionsContainer}>
                         <button className={styles.titlebarButton} onClick={() => minimizeWindow()}>
                             <img
                             src="https://api.iconify.design/mdi:window-minimize.svg"
@@ -96,9 +103,9 @@ function NavigationMenu() {
                 </div>
                 <div className={styles.navBarBottomContainer}>
                     <div className={styles.navigationMenuContainer}>
-                        <button className={styles.navigationMenuButton}><img className={styles.backArrow} src="/arrow.png" alt="back" /></button>
-                        <button className={styles.navigationMenuButton}><img className={styles.forwardArrow} src="/arrow.png" alt="forward" /></button>
-                        <button className={styles.navigationMenuButton}><img className={styles.downArrow} src="/arrow.png" alt="" /></button>
+                        <button className={styles.navigationMenuButton}><img className={styles.backArrow} src="/arrow.png" alt="back" onClick={() => {history.back()}}/></button>
+                        <button className={styles.navigationMenuButton}><img className={styles.forwardArrow} src="/arrow.png" alt="forward" onClick={() => {history.forward()}}/></button>
+                        <button className={styles.navigationMenuButton}><img className={styles.downArrow} src="/arrow.png" alt="" onClick={async () => {await navigateToParentFolder()}}/></button>
                     </div>
                     <form onSubmit={(event)=>{navigateToPath(event)}} className={styles.navigationPathInput}>
                     <input  type="text"  

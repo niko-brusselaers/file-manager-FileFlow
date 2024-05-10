@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import styles from './FolderOptionsBar.module.scss';
 import { IFile } from '../../types/IFile';
 

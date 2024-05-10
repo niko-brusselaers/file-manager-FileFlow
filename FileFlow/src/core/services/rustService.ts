@@ -65,8 +65,8 @@ class rustService{
 
     async checkPathIsValid(directoryPath:string){
         try {
-        let isValid:string = await invoke("check_path", { path: directoryPath })
-        return isValid;
+        let fileOrFolder:IFile = await invoke("check_path", { path: directoryPath })
+        return fileOrFolder;
         } catch (error) {
         console.error( error);
         }
