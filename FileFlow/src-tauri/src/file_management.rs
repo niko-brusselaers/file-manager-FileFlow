@@ -2,12 +2,12 @@ use serde::{Deserialize, Serialize};
 use std::{ffi::OsStr, fs, path::PathBuf};
 use sysinfo::Disks;
 
-#[derive(Serialize, Deserialize,Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct File {
     file_name: String,
     file_path: PathBuf,
     file_type: String,
-    file_size: u64
+    file_size: u64,
 }
 
 #[tauri::command]
@@ -21,11 +21,11 @@ pub fn read_directory(path: String) -> Result<Vec<File>, String> {
                 file_path: entry.path(),
                 file_size: entry.metadata().unwrap().len(),
                 file_type: entry
-                            .path()
-                            .extension()
-                            .unwrap_or(OsStr::new("folder"))
-                            .to_string_lossy()
-                            .into_owned(),
+                    .path()
+                    .extension()
+                    .unwrap_or(OsStr::new("folder"))
+                    .to_string_lossy()
+                    .into_owned(),
             })
         })
         .collect::<Result<Vec<_>, _>>()
@@ -44,7 +44,7 @@ pub fn get_drives() -> Vec<File> {
             file_name: drive.name().to_string_lossy().into_owned(),
             file_type: String::from("drive"),
             file_path: drive.mount_point().to_path_buf(),
-            file_size: drive.total_space()
+            file_size: drive.total_space(),
         };
 
         disks.push(drive)
@@ -61,18 +61,21 @@ pub fn open_file(path: String) -> Result<(), String> {
 #[tauri::command]
 pub fn check_path(path: String) -> Result<File, String> {
     let file_path = std::path::Path::new(&path);
-    
-    let file_name = file_path.file_name()
-        .ok_or_else(||"Path does not have a file name")?
+
+    let file_name = file_path
+        .file_name()
+        .ok_or_else(|| "Path does not have a file name")?
         .to_string_lossy()
         .to_string();
 
-    let file_type = file_path.extension()
+    let file_type = file_path
+        .extension()
         .unwrap_or(OsStr::new("folder"))
         .to_string_lossy()
         .into_owned();
 
-    let file_size = file_path.metadata()
+    let file_size = file_path
+        .metadata()
         .map_err(|error| error.to_string())?
         .len();
 
