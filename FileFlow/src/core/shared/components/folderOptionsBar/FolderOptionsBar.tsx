@@ -1,11 +1,13 @@
 import styles from './FolderOptionsBar.module.scss';
 import { IFile } from '../../types/IFile';
+import { emit } from '@tauri-apps/api/event';
 
-function FolderOptionsBar({openTransferDialog, selectedItem}: {openTransferDialog: Function, selectedItem: IFile}){
+function FolderOptionsBar({selectedItem}: { selectedItem: IFile}){
     
 
     function openTransferSend(){
-        if(selectedItem.file_name != "") openTransferDialog(selectedItem);
+        
+        if(selectedItem.file_name != "") emit("sendFile", {file: selectedItem});
         else return;
     }
     

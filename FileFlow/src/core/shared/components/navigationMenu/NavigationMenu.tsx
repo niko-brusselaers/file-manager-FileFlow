@@ -4,6 +4,7 @@ import { Window } from '@tauri-apps/api/window';
 import { useLocation,useNavigate } from "react-router-dom";
 import { IFile } from "../../types/IFile";
 import rustService from "../../../services/rustService";
+import { emit } from "@tauri-apps/api/event";
 
   
 function NavigationMenu() {
@@ -34,6 +35,7 @@ function NavigationMenu() {
             }
             
         })
+
     },[])
 
     //update the file path input when the location data changes
@@ -90,8 +92,6 @@ function NavigationMenu() {
             if(fileOrFolder?.file_type === "" || !fileOrFolder) return
             else if(fileOrFolder?.file_type ==="folder") return navigate(`/${fileOrFolder.file_name}`, {state: fileOrFolder,replace: true})
             else rustService.openFile(fileOrFolder.file_path)
-            
-            
         })
         
     }
@@ -100,6 +100,11 @@ function NavigationMenu() {
         setDropDownBarIsOpen(!dropDownBarIsOpen)
         if(!dropDownBarIsOpen){
         }
+    }
+
+    function openFileTransferHub(){
+        emit("openFileTransferHub", {});
+        setDropDownBarIsOpen(false);
     }
 
 
@@ -145,8 +150,8 @@ function NavigationMenu() {
                     <div  className={styles.drownDownMenu}>
                         <img className={styles.dropdownMenuImage} src="/acount_icon.png" alt="" onClick={() => {ToggleDropDownBar()}} />
                         <div className={styles.dropDownMenuContainer} style={dropDownBarIsOpen ? {display:"block"} : {display:"none"}}>
-                            <button className={styles.dropDownMenuButton}>
-                                wormhole downloads
+                            <button className={styles.dropDownMenuButton} onClick={() => {openFileTransferHub()}}>
+                                File Transfer
                             </button>
                         </div>
                     </div>

@@ -47,6 +47,6 @@ pub async fn send_files(file_path:&str) -> Result<(), String>{
         cancel()
     ).await.map_err(|error| println!("{:#?}",error));
 
-    Ok(result.unwrap())
+    Ok(())
 }
 

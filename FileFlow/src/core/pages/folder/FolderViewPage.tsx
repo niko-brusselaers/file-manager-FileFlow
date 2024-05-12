@@ -5,7 +5,7 @@ import DirectoryItem from "../../shared/components/directoryItem/DirectoryItem";
 import styles from './FolderView.module.scss';
 import FolderOptionsBar from "../../shared/components/folderOptionsBar/FolderOptionsBar";
 import { useLocation, useNavigate } from "react-router-dom";
-import FileTransferSend from "../../shared/components/fileTransfer/fileTransferSendOptions/FileTransferSend";
+
 
 function FolderView() {
     const folderTypes = ["folder", "drive","Bin"];
@@ -13,7 +13,6 @@ function FolderView() {
     const loaderData:IFile = useLocation().state;
     const navigate = useNavigate()
 
-    const [transferDialogOpen, setTransferDialogOpen] = useState<boolean>(false);
     const [selectedItem, setSelectedItem] = useState<IFile>({file_name:"",file_path:"",file_type:"",file_size:""});
 
    
@@ -21,7 +20,7 @@ function FolderView() {
 
     
 useEffect(() => { 
-       
+      
     if(loaderData === null){
 
       rustService.getdrives().then((data) => {        
@@ -67,8 +66,7 @@ useEffect(() => {
 
   return (
     <div className={styles.directoryView}>
-      <FileTransferSend dialogOpened={transferDialogOpen} setDialogOpened={setTransferDialogOpen}  selectedItem={selectedItem}/>
-      <FolderOptionsBar openTransferDialog={setTransferDialogOpen} selectedItem={selectedItem}/>
+      <FolderOptionsBar selectedItem={selectedItem}/>
 
       <h2 className={styles.directoryName}>{(loaderData ? loaderData.file_name : "My device")}</h2>
 
