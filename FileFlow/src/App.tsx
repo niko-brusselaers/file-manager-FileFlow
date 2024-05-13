@@ -8,6 +8,7 @@ import { listen } from "@tauri-apps/api/event";
 import { IFile } from "./core/shared/types/IFile";
 import FileTransferHub from "./core/shared/components/fileTransfer/fileTransferHub/FileTransferHub";
 import { Store } from "@tauri-apps/plugin-store";
+import tauriStore from "./core/services/tauriStore";
 
 
 function App() {
@@ -34,18 +35,11 @@ function App() {
       
     })
 
-    readTauriStorage();
+    tauriStore.readLocalFile("fileTransfers.bin")
   },[])
 
 
-  function readTauriStorage() {
-    const store = new Store("fileTransfers.bin");
-
-    store.entries().then((entries) => {
-      console.log(entries);
-      
-    });
-  }
+  
 
   return (
     <>

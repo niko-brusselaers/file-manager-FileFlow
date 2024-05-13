@@ -59,6 +59,9 @@ pub async fn receive_files(code: String, download_directory: String,app: tauri::
 
     let progress_counter: AtomicUsize = AtomicUsize::new(0);
     let increment = 100;
+
+    // Clone the variables to be used in the progress handler
+    let file_name_progressHandler = receive_request.filename.clone().to_string_lossy().into_owned();
     
     let result = receive_request
         .accept(
@@ -73,7 +76,7 @@ pub async fn receive_files(code: String, download_directory: String,app: tauri::
                     let _ =progress_handler(
                         current, 
                         total,
-                        String::from("File"),
+                        &file_name_progressHandler,
                         String::from("Receive"),
                         app.clone());
                     progress_counter.store(0, Ordering::Relaxed)

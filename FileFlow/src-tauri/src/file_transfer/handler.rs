@@ -7,7 +7,7 @@ use serde_json::json;
 use tauri::{Manager, Wry};
 use tauri_plugin_store::StoreCollection;
 
-use super::types::FileProgress;
+use super::{helper::store_file_transfer_progress, types::FileProgress};
 
 
 pub fn transit_handler (info: TransitInfo, addr: SocketAddr) {
@@ -16,31 +16,24 @@ pub fn transit_handler (info: TransitInfo, addr: SocketAddr) {
     }
 
 
-#[tauri::command]
-pub fn progress_handler(current: u64, total: u64,file_name:String,direction:String,app: tauri::AppHandle) -> Result<(), String> {
-    
-    // Get the state of the StoreCollection from the app handle and define the path to the store file
-    let stores = app.app_handle().state::<StoreCollection<Wry>>();
-    let path = PathBuf::from("fileTransfers.bin");
+pub fn progress_handler(
+    current: u64, 
+    total: u64,
+    file_name:&String,
+    direction:String,
+    app: tauri::AppHandle) -> Result<(), String> {
 
-    
-    let result = tauri_plugin_store::with_store(app.app_handle().clone(), stores, path, |store| {
-        let file_progress = FileProgress {
-            file_name: String::from(file_name),
-            file_size: total,
-            progress: current,
-            direction: String::from(direction),
-        };
+    // Create a FileProgress struct to store the file transfer progress
+    let file_progress = FileProgress {
+        file_name: String::from(file_name),
+        file_size: total,
+        progress: current,
+        direction: String::from(direction),
+    };
+    // Store the file transfer progress
+    let result = store_file_transfer_progress(file_progress, app.clone()).map_err(|error|error.to_string())?;
 
-        store.insert(file_progress.file_name.clone(), json!(file_progress))?;
-
-        store.save()?;
-        Ok(())
-    });
-
-    result.map_err(|e| e.to_string())?;
-
-  Ok(())
+    Ok(result)
 }
 
 
