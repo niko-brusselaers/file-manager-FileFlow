@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { listen } from "@tauri-apps/api/event";
 import { IFile } from "./core/shared/types/IFile";
 import FileTransferHub from "./core/shared/components/fileTransfer/fileTransferHub/FileTransferHub";
+import listener from "./core/services/listener";
 
 
 
@@ -28,6 +29,8 @@ function App() {
     listen("openFileTransferHub", (event) => {
       setTransferHubDialogOpen(true);
     });
+
+    listener.storeOngoingFileTransfers();
 
   },[])
 

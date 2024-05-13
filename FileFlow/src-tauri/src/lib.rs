@@ -2,25 +2,17 @@
 mod file_management;
 mod file_transfer;
 
+use std::sync::Mutex;
+
 use file_management::{check_path, get_drives, open_file, read_directory};
 use file_transfer::{receive::receive_files, send::send_files};
-use tauri::{Manager, State, Window};
+use tauri::{App, Manager, State, Window};
 
-// This is your helper function
-#[tauri::command]
-fn emit_event(window: State<'_, Window>) {
-    // Use the helper function to emit an event
-    window.emit("my_event", "my_payload");
-}
+struct WebViewWindow(Mutex<Window>);
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-        .setup(|app| {
-            let window = app.get_webview_window("main").unwrap();
-            app.manage(window);
-            Ok(())
-        })
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
