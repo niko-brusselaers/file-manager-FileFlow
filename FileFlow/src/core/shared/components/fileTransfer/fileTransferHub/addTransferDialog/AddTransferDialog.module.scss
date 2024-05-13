@@ -1,0 +1,46 @@
+@import "../../../../style/variables.scss";
+
+.addTransferDialogContainer{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 5;
+    
+
+    .dialogInnerContainer{
+        display: flex;
+        width: 15em;
+        height: 5em;
+        padding: 1em;
+        background-color: #E3E3E3;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+
+        input{
+            width: 80%;
+        }
+
+        .dialogButtonsBottomContainer{
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1em;
+            width: 100%;
+
+            button{
+                width: 45%;
+                border: none;
+
+                &:hover{
+                    background-color: $secondaryDarkBlue;
+                    color: white;
+                }
+            }
+        }
+    }
+
+}

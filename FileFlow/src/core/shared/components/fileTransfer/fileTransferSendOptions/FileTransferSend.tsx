@@ -42,7 +42,7 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItem}:{dialogOp
     }
 
     return ( 
-        <div className={dialogOpened ? styles.fileTransferDialog : styles.hidden}>
+        <div className={dialogOpened ? styles.fileTransferDialog : "hidden"}>
             <div className={styles.filetransferViewSend}>
                 <div className={styles.itemDetailsContainer}>
                     <img src="/file_icon.png" alt="" />
