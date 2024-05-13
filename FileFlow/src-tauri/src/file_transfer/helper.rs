@@ -6,7 +6,7 @@ use magic_wormhole::{
     AppConfig,
 };
 
-use super::types::serverconfig::ServerConfig;
+use super::types::ServerConfig;
 
 //generate default relay hints
 pub fn gen_relay_hints(

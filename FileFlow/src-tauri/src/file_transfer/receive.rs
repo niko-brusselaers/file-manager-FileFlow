@@ -1,14 +1,16 @@
+use std::sync::atomic::{AtomicUsize, Ordering};
+
 use async_std::{fs::OpenOptions, path::Path};
 use magic_wormhole::{transfer::APP_CONFIG, transit, Code};
 
 use super::{
     handler::{cancel, progress_handler, transit_handler},
     helper::{gen_app_config, gen_relay_hints},
-    types::serverconfig::ServerConfig,
+    types::ServerConfig,
 };
 
 #[tauri::command]
-pub async fn receive_files(code: String, download_directory: String) -> Result<(), String> {
+pub async fn receive_files(code: String, download_directory: String,app: tauri::AppHandle) -> Result<(), String> {
     // create server config, relay hints, transit abilities and app config
     let server_config: ServerConfig = ServerConfig {
         rendezvous_url: String::from(APP_CONFIG.rendezvous_url),
@@ -55,8 +57,30 @@ pub async fn receive_files(code: String, download_directory: String) -> Result<(
         Err(error) => return Err(error.to_string()),
     };
 
+    let progress_counter: AtomicUsize = AtomicUsize::new(0);
+    let increment = 100;
+    
     let result = receive_request
-        .accept(transit_handler, progress_handler, &mut file, cancel())
+        .accept(
+            transit_handler,
+            move |current, total| {
+            // Increment the counter
+
+                let count = progress_counter.fetch_add(1, Ordering::Relaxed);
+
+                if count >= increment {
+                    // Call the original progress handler
+                    let _ =progress_handler(
+                        current, 
+                        total,
+                        String::from("File"),
+                        String::from("Receive"),
+                        app.clone());
+                    progress_counter.store(0, Ordering::Relaxed)
+                }
+            }, 
+            &mut file, 
+            cancel())
         .await;
 
     result.map_err(|e| e.to_string())?;

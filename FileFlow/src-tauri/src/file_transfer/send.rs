@@ -3,13 +3,12 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use super::{
     handler::{cancel, progress_handler, transit_handler},
     helper::{gen_app_config, gen_relay_hints},
-    types::serverconfig::ServerConfig,
+    types::ServerConfig,
 };
 use magic_wormhole::{transit, Wormhole};
-use tauri::window;
 
 #[tauri::command]
-pub async fn send_files(file_path: &str) -> Result<(), String> {
+pub async fn send_files(file_path: &str,app: tauri::AppHandle) -> Result<(), String> {
     // create server config, relay hints, transit abilities and app config
     let server_config: ServerConfig = ServerConfig {
         rendezvous_url: String::from("ws://relay.magic-wormhole.io:4000/v1"),
@@ -53,7 +52,7 @@ pub async fn send_files(file_path: &str) -> Result<(), String> {
         wormhole,
         relay_hints,
         file_path,
-        file_name,
+        &file_name,
         transit_abilities,
         transit_handler,
         move |current, total| {
@@ -63,14 +62,21 @@ pub async fn send_files(file_path: &str) -> Result<(), String> {
 
             if count >= increment {
                 // Call the original progress handler
-                progress_handler(current, total);
+                let _ = progress_handler(
+                    current, 
+                    total,
+                    String::from("fileNa"),
+                    String::from("Send"),
+                    app.clone()).map_err(|error| error.to_string());
+                
                 progress_counter.store(0, Ordering::Relaxed)
             }
         },
         cancel(),
     )
-    .await
-    .map_err(|error| println!("{:#?}", error));
+    .await;
 
-    Ok(())
+    let result = result.map_err(|error| println!("{:#?}", error));
+
+    Ok(result.unwrap())
 }

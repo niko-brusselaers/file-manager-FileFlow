@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { listen } from "@tauri-apps/api/event";
 import { IFile } from "./core/shared/types/IFile";
 import FileTransferHub from "./core/shared/components/fileTransfer/fileTransferHub/FileTransferHub";
-
+import { Store } from "@tauri-apps/plugin-store";
 
 
 function App() {
@@ -29,8 +29,23 @@ function App() {
       setTransferHubDialogOpen(true);
     });
 
+    listen("file_transferProgress", (event) => {
+      console.log(event);
+      
+    })
+
+    readTauriStorage();
   },[])
 
+
+  function readTauriStorage() {
+    const store = new Store("fileTransfers.bin");
+
+    store.entries().then((entries) => {
+      console.log(entries);
+      
+    });
+  }
 
   return (
     <>
