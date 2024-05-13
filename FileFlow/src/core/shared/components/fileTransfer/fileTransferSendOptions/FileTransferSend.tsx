@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styles from './FileTransferSend.module.scss';
-import rustService from '../../../../services/rustService';
 import { IFile } from '../../../types/IFile';
+import fileTransfer from '../../../../services/fileTransfer';
 
 function FileTransferSend({dialogOpened, setDialogOpened,selectedItem}:{dialogOpened: boolean, setDialogOpened: Function,selectedItem:IFile|null}) {
     const [selectedDestination, setSelectedDestination] = useState<string|null>(null);
@@ -36,7 +36,7 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItem}:{dialogOp
 
     async function sentFile() {
         if(!selectedItem) return;
-        await rustService.sentFiles(selectedItem.file_path);
+        await fileTransfer.sentFiles(selectedItem.file_path);
        
 
     }

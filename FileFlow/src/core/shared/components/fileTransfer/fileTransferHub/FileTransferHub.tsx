@@ -1,7 +1,4 @@
-import { useState } from 'react';
 import styles from './FileTransferHub.module.scss';
-import rustService from '../../../../services/rustService';
-import { IFile } from '../../../types/IFile';
 
 function FileTransferHub({dialogOpened, setDialogOpened}:{dialogOpened: boolean, setDialogOpened: Function}) {
     

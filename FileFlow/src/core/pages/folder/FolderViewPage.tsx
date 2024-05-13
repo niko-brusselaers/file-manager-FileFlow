@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import rustService from "../../services/rustService";
 import { IFile } from "../../shared/types/IFile";
 import DirectoryItem from "../../shared/components/directoryItem/DirectoryItem";
 import styles from './FolderView.module.scss';
 import FolderOptionsBar from "../../shared/components/folderOptionsBar/FolderOptionsBar";
 import { useLocation, useNavigate } from "react-router-dom";
+import fileManagement from "../../services/fileManagement";
 
 
 function FolderView() {
@@ -23,7 +23,7 @@ useEffect(() => {
       
     if(loaderData === null){
 
-      rustService.getdrives().then((data) => {        
+      fileManagement.getdrives().then((data) => {        
         //check if data is undefined
         if(!data?.filesAndFolders && !data?.directoryPath) return;          
 
@@ -39,7 +39,7 @@ useEffect(() => {
  
   function getFilesAndFolders(directoryPath: string){
     
-    rustService.getFilesAndFolders(directoryPath).then((data) => {
+    fileManagement.getFilesAndFolders(directoryPath).then((data) => {
       //check if data is undefined
       if(!data?.filesAndFolders && !data?.directoryPath) return;
 
@@ -56,7 +56,7 @@ useEffect(() => {
   function handleClick(item:IFile){
         if(selectedItem === item){
           if(item.file_type === "folder" || item.file_type === "drive") navigate(`/${item.file_name}`, {state: item});
-          else rustService.openFile(item.file_path);
+          else fileManagement.openFile(item.file_path);
         }else{
           setSelectedItem(item);
         }

@@ -6,7 +6,7 @@ pub struct ServerConfig {
 }
 
 #[derive(Serialize)]
-pub struct fileProgress{
+pub struct FileProgress{
     pub file_name: String,
     pub file_size: u64,
     pub progress: u64,

@@ -3,8 +3,8 @@ import styles from "./NavigationMenu.module.scss"
 import { Window } from '@tauri-apps/api/window';
 import { useLocation,useNavigate } from "react-router-dom";
 import { IFile } from "../../types/IFile";
-import rustService from "../../../services/rustService";
 import { emit } from "@tauri-apps/api/event";
+import fileManagement from "../../../services/fileManagement";
 
   
 function NavigationMenu() {
@@ -73,10 +73,10 @@ function NavigationMenu() {
         event.preventDefault();
         
         //check if path is valid, if it is a folder navigate to the folder, if it is a file open the file
-        await rustService.checkPathIsValid(filePathInput).then((fileOrFolder) => {            
+        await fileManagement.checkPathIsValid(filePathInput).then((fileOrFolder) => {            
             if(fileOrFolder?.file_type === "" || !fileOrFolder) return
             else if(fileOrFolder?.file_type ==="folder") return navigate(`/${fileOrFolder.file_name}`, {state: fileOrFolder})
-            else rustService.openFile(fileOrFolder.file_path)
+            else fileManagement.openFile(fileOrFolder.file_path)
             
             
         })
@@ -88,10 +88,10 @@ function NavigationMenu() {
         if (!parentDirectory.includes("\\")) parentDirectory += "\\\\";
         console.log(parentDirectory);
         if (!parentDirectory.includes("\\")) parentDirectory = parentDirectory + "\\";
-        await rustService.checkPathIsValid(parentDirectory).then((fileOrFolder) => {            
+        await fileManagement.checkPathIsValid(parentDirectory).then((fileOrFolder) => {            
             if(fileOrFolder?.file_type === "" || !fileOrFolder) return
             else if(fileOrFolder?.file_type ==="folder") return navigate(`/${fileOrFolder.file_name}`, {state: fileOrFolder,replace: true})
-            else rustService.openFile(fileOrFolder.file_path)
+            else fileManagement.openFile(fileOrFolder.file_path)
         })
         
     }

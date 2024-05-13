@@ -1,5 +1,5 @@
 use std::net::SocketAddr;
-use futures::future::{ok, BoxFuture};
+use futures::future::BoxFuture;
 use futures::FutureExt;
 use magic_wormhole::transit::TransitInfo;
 use async_std::{path::PathBuf, sync::{Arc, Condvar, Mutex}};
@@ -7,7 +7,7 @@ use serde_json::json;
 use tauri::{Manager, Wry};
 use tauri_plugin_store::StoreCollection;
 
-use super::types::fileProgress;
+use super::types::FileProgress;
 
 
 pub fn transit_handler (info: TransitInfo, addr: SocketAddr) {
@@ -25,7 +25,7 @@ pub fn progress_handler(current: u64, total: u64,file_name:String,direction:Stri
 
     
     let result = tauri_plugin_store::with_store(app.app_handle().clone(), stores, path, |store| {
-        let file_progress = fileProgress {
+        let file_progress = FileProgress {
             file_name: String::from(file_name),
             file_size: total,
             progress: current,

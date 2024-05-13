@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import styles from './Sidebar.module.scss';
-import rustService from '../../../services/rustService';
 import { IFile } from '../../types/IFile';
 import { Link } from 'react-router-dom';
 import { documentDir, downloadDir, homeDir, pictureDir } from '@tauri-apps/api/path';
+import fileManagement from '../../../services/fileManagement';
 
 function Sidebar() {
     const recentFolders = ["example1", "example2", "example3", "example4"]
@@ -24,15 +24,15 @@ function Sidebar() {
         documentDir().then((path) => setDocumentDirectory({file_name: "Documents", file_path: path, file_type: "folder", file_size: ""}))
         homeDir().then((path) => setHomeDirectory({file_name: "Home", file_path: path, file_type: "folder", file_size: ""}))
       
-      rustService.getdrives().then((data) => {
-        //check if data is undefined
-        if(!data?.filesAndFolders && !data?.directoryPath) return;          
+        fileManagement.getdrives().then((data) => {
+            //check if data is undefined
+            if(!data?.filesAndFolders && !data?.directoryPath) return;          
 
-        //set files and folders and current path
-        setDrives(data.filesAndFolders);
-      }).catch((error) => {
-        console.error("Error fetching drives:", error);
-      });
+            //set files and folders and current path
+            setDrives(data.filesAndFolders);
+        }).catch((error) => {
+            console.error("Error fetching drives:", error);
+        });
     }
     });
 
