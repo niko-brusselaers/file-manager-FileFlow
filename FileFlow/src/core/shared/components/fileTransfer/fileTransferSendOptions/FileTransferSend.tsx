@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styles from './FileTransferSend.module.scss';
 import { IFile } from '../../../types/IFile';
 import fileTransfer from '../../../../services/fileTransfer';
+import { emit, listen,UnlistenFn } from '@tauri-apps/api/event';
 
 function FileTransferSend({dialogOpened, setDialogOpened,selectedItem}:{dialogOpened: boolean, setDialogOpened: Function,selectedItem:IFile|null}) {
     const [selectedDestination, setSelectedDestination] = useState<string|null>(null);
@@ -32,17 +33,29 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItem}:{dialogOp
         else setFilteredContacts([]);
     }
 
-
-
     async function sentFile() {
         if(!selectedItem) return;
-        await fileTransfer.sentFiles(selectedItem.file_path);
-       
 
+        const listenEvent = listen("fileTransferCode", (event) => {
+            //send fileName and code to the file transfer progress dialog to display the progress
+            let data = {
+                code: event.payload as string,
+                fileName: selectedItem.file_name,
+            }
+
+            emit("openFileTransferProgressDialog",data)
+
+            listenEvent.then((unlisten:UnlistenFn) => unlisten())
+        })
+        
+        await fileTransfer.sentFiles(selectedItem.file_path);
+        
+        
+        
     }
 
     return ( 
-        <div className={dialogOpened ? styles.fileTransferDialog : "hidden"}>
+        <dialog className={dialogOpened ? styles.fileTransferDialog : "hidden"}>
             <div className={styles.filetransferViewSend}>
                 <div className={styles.itemDetailsContainer}>
                     <img src="/file_icon.png" alt="" />
@@ -84,7 +97,7 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItem}:{dialogOp
 
                 
             </div>
-        </div>
+        </dialog>
      );
 }
 

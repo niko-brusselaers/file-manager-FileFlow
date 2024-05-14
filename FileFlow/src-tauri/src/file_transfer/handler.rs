@@ -2,11 +2,7 @@ use std::net::SocketAddr;
 use futures::future::BoxFuture;
 use futures::FutureExt;
 use magic_wormhole::transit::TransitInfo;
-use async_std::{path::PathBuf, sync::{Arc, Condvar, Mutex}};
-use serde_json::json;
-use tauri::{Manager, Wry};
-use tauri_plugin_store::StoreCollection;
-
+use async_std::sync::{Arc, Condvar, Mutex};
 use super::{helper::store_file_transfer_progress, types::FileProgress};
 
 

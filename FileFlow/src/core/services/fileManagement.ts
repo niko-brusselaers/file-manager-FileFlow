@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { IFile } from "../shared/types/IFile";
+import conversion from "./conversion";
 
 
 class fileManagement {

@@ -1,11 +1,9 @@
-use std::sync::atomic::{AtomicUsize, Ordering};
-
 use async_std::{fs::OpenOptions, path::Path};
 use magic_wormhole::{transfer::APP_CONFIG, transit, Code};
 
 use super::{
     handler::{cancel, progress_handler, transit_handler},
-    helper::{gen_app_config, gen_relay_hints},
+    helper::{gen_app_config, gen_relay_hints,remove_file_transfer_progress},
     types::ServerConfig,
 };
 
@@ -46,6 +44,7 @@ pub async fn receive_files(code: String, download_directory: String,app: tauri::
     };
 
     let file_path = Path::new(&download_directory).join(&receive_request.filename);
+    let file_name = &receive_request.filename.to_string_lossy().into_owned();
 
     let mut file = match OpenOptions::new()
         .write(true)
@@ -57,36 +56,33 @@ pub async fn receive_files(code: String, download_directory: String,app: tauri::
         Err(error) => return Err(error.to_string()),
     };
 
-    let progress_counter: AtomicUsize = AtomicUsize::new(0);
-    let increment = 100;
 
     // Clone the variables to be used in the progress handler
-    let file_name_progressHandler = receive_request.filename.clone().to_string_lossy().into_owned();
+    let file_name_progress_handler = file_name.clone();
+    let app_progress_handler = app.clone();
     
     let result = receive_request
         .accept(
             transit_handler,
             move |current, total| {
-            // Increment the counter
 
-                let count = progress_counter.fetch_add(1, Ordering::Relaxed);
-
-                if count >= increment {
-                    // Call the original progress handler
-                    let _ =progress_handler(
-                        current, 
-                        total,
-                        &file_name_progressHandler,
-                        String::from("Receive"),
-                        app.clone());
-                    progress_counter.store(0, Ordering::Relaxed)
-                }
+                // Call progress handler
+                let _ =progress_handler(
+                    current, 
+                    total,
+                    &file_name_progress_handler,
+                    String::from("Receive"),
+                    app_progress_handler.clone());
             }, 
             &mut file, 
             cancel())
         .await;
 
-    result.map_err(|e| e.to_string())?;
+    let result = result.map_err(|error| error.to_string())?;
 
-    Ok(())
+    //remove file transfer progress from local tauri storage
+    remove_file_transfer_progress(&file_name, app.clone())?;
+    
+
+    Ok(result)
 }

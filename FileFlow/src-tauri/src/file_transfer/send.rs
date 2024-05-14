@@ -1,9 +1,7 @@
-use std::{collections::HashMap, sync::{atomic::{AtomicUsize, Ordering}, Arc, Mutex}};
-
 use super::{
     handler::{cancel, progress_handler, transit_handler},
-    helper::{gen_app_config, gen_relay_hints},
-    types::ServerConfig,
+    helper::{gen_app_config, gen_relay_hints,remove_file_transfer_progress,store_file_transfer_progress},
+    types::{ServerConfig,FileProgress},
 };
 use magic_wormhole::{transit, Wormhole};
 use tauri::Manager;
@@ -40,52 +38,55 @@ pub async fn send_files(file_path: &str,app: tauri::AppHandle) -> Result<(), Str
         }
     };
 
-    //get code from server welcome
+
+    //get code from server welcome and emit to frontend
     let code = server_welcome.code;
     println!("code: {:#?}", code);
-
-    //emit code to frontend
     app.emit("fileTransferCode", code.to_string()).unwrap();
 
-    let wormhole = connection.await.unwrap();
-    let mut progress_counters: HashMap<String, Arc<Mutex<AtomicUsize>>> = HashMap::new();
-    progress_counters.insert("counter".to_string(), Arc::new(Mutex::new(AtomicUsize::new(0))));
+    //store start of sending progress
+    // Create a FileProgress struct to store the file transfer progress
+    let file_progress = FileProgress {
+        file_name: String::from(&file_name),
+        file_size: std::path::Path::new(file_path).metadata().unwrap().len(),
+        progress: 0,
+        direction: String::from("Send"),
+    };
+    // Store the file transfer progress
+    store_file_transfer_progress(file_progress, app.clone()).map_err(|error|error.to_string())?;
 
-    let counter = progress_counters.get("counter").unwrap().clone();
+    let wormhole = connection.await.unwrap();
 
     // Clone the variables to be used in the progress handler
-    let file_name_progressHandler = file_name.clone();
+    let file_name_progress_handler = file_name.clone();
+    let app_progress_handler = app.clone();
     
 
-let result = magic_wormhole::transfer::send_file_or_folder(
-    wormhole,
-    relay_hints,
-    file_path,
-    &file_name,
-    transit_abilities,
-    transit_handler,
-    move |current, total| {
-        let count = counter.lock().unwrap().fetch_add(1, Ordering::Relaxed);
-        let increment = 100;
-        if count >= increment {
-            // Call the original progress handler
+    let result = magic_wormhole::transfer::send_file_or_folder(
+        wormhole,
+        relay_hints,
+        file_path,
+        &file_name,
+        transit_abilities,
+        transit_handler,
+        move |current, total| {
+            // Call progress handler
             let _ = progress_handler(
                 current, 
                 total,
-                &file_name_progressHandler,
+                &file_name_progress_handler,
                 String::from("Send"),
-                app.clone()).map_err(|error| error.to_string());
+                app_progress_handler.clone()).map_err(|error| error.to_string());
             
-            counter.lock().unwrap().store(0, Ordering::Relaxed)
-        }
-    },
-    cancel(),
-)
-.await;
+        },
+        cancel(),
+    )
+    .await;
 
-    let result = result.map_err(|error| println!("{:#?}", error));
+    let result = result.map_err(|error| error.to_string())?;
 
-    
+    //remove file transfer progress from local tauri storage
+    remove_file_transfer_progress(&file_name, app.clone())?;
 
-    Ok(result.unwrap())
+    Ok(result)
 }

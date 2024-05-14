@@ -1,13 +1,14 @@
 import { useState } from "react";
-import rustService from "../../../../../services/rustService";
+
 import styles from "./AddTransferDialog.module.scss";
+import fileTransfer from "../../../../../services/fileTransfer";
 
 function AddTransferDialog({transferDialogOpened, setTransferDialogOpened}:{transferDialogOpened: boolean, setTransferDialogOpened: Function}) {
     const [inputCode, setInputCode] = useState<string>("");
 
     async function startDownload() {
         //start the download
-        await rustService.downloadFiles(inputCode)
+        await fileTransfer.downloadFiles(inputCode)
         setTransferDialogOpened(false)
     }
 

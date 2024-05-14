@@ -1,130 +1,119 @@
-@import "../../../style/variables.scss";
+@import "../style/fileTransferDialog.module.scss";
 
-.fileTransferDialog{
-    position: fixed;
-    left: 0;
-    z-index: 2;
+
+
+.filetransferViewSend{
+    background-color: white;
+    padding: 1em 0;
+    min-height: 20em;
+    max-height: 40em;
+    max-width: 40em;
+    width: 30em;
+    height: 80%;
     display: flex;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    align-items: center;
-    justify-content: center;
-    
+    flex-direction: column;
+    justify-content: space-around;
+    overflow: scroll;
 
-    .filetransferViewSend{
-        background-color: white;
-        padding: 1em 0;
-        min-height: 20em;
-        max-height: 40em;
-        max-width: 40em;
-        width: 30em;
-        height: 80%;
+    > div{
+        padding: 0em 3em;
+
+    }
+
+    .itemDetailsContainer{
+        border-bottom: $primaryDarkBlue 1px solid;
+        padding-bottom: 1em;
         display: flex;
-        flex-direction: column;
-        justify-content: space-around;
+        align-items: center;
+
+        img{
+            height: 3em;
+            margin-right: 2em;
+        }
+
+        .fileSubDetailsContainer{
+            display: flex;
+            flex-direction: row;
+
+            *{
+                margin-right: 1em;
+            }
+        }
+        
+    }
+
+    .inputForm{
+        width: 100%;
+        margin-top: 0.5em;
+        height: 2em;
+        border: none;
+        border-radius: 20px;
+        background-color: $secondaryDarkGray;
+        padding-left: 1em;
+
+    }
+
+    .selectionItemsContainer{
+        
+        width: 100%;
+        min-height: 1em;
+        max-height: 5em;
+        margin-top: 0.5em;
+        margin-left: -0.25em;
         overflow: scroll;
 
-        > div{
-            padding: 0em 3em;
-
+        &::-webkit-scrollbar {
+        width: 2px;
         }
 
-        .itemDetailsContainer{
-            border-bottom: $primaryDarkBlue 1px solid;
-            padding-bottom: 1em;
-            display: flex;
-            align-items: center;
-
-            img{
-                height: 3em;
-                margin-right: 2em;
-            }
-
-            .fileSubDetailsContainer{
-                display: flex;
-                flex-direction: row;
-
-                *{
-                    margin-right: 1em;
-                }
-            }
-            
-        }
-
-        .inputForm{
-            width: 100%;
-            margin-top: 0.5em;
-            height: 2em;
-            border: none;
-            border-radius: 20px;
-            background-color: $secondaryDarkGray;
-            padding-left: 1em;
-
-        }
-
-        .selectionItemsContainer{
-            
-            width: 100%;
-            min-height: 1em;
-            max-height: 5em;
-            margin-top: 0.5em;
-            margin-left: -0.25em;
-            overflow: scroll;
-
-            &::-webkit-scrollbar {
-            width: 2px;
-            }
-
-            &::-webkit-scrollbar-thumb{
-                background-color: $secondaryDarkBlue;
-            }
-        }
-
-        .destination{
-            font-size: 10pt;
-            padding: .5em;
-            border: none;
-            border-radius: 20px;
-            margin: 0.25em;
-        }
-
-        .selectedDestination{
+        &::-webkit-scrollbar-thumb{
             background-color: $secondaryDarkBlue;
-            color: white;
         }
+    }
 
-        .otherShareOptionButton{
-            width: 100%;
-            height: 2em;
+    .destination{
+        font-size: 10pt;
+        padding: .5em;
+        border: none;
+        border-radius: 20px;
+        margin: 0.25em;
+    }
+
+    .selectedDestination{
+        background-color: $secondaryDarkBlue;
+        color: white;
+    }
+
+    .otherShareOptionButton{
+        width: 100%;
+        height: 2em;
+        border: none;
+        border-radius: 20px;
+    }
+
+    .dialogButtonsBottomContainer{
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1em;
+
+        button{
+            width: 45%;
+            height: 3em;
             border: none;
-            border-radius: 20px;
-        }
 
-        .dialogButtonsBottomContainer{
-            display: flex;
-            justify-content: space-between;
-            margin-top: 1em;
-
-            button{
-                width: 45%;
-                height: 3em;
-                border: none;
-
-                &:hover{
-                    background-color: $secondaryDarkBlue;
-                    color: white;
-                }
+            &:hover{
+                background-color: $secondaryDarkBlue;
+                color: white;
             }
         }
     }
-
-    button:hover{
-    background-color: $secondaryDarkBlue;
-    color: white;
-    }
-
-    
-    
 }
+
+button:hover{
+background-color: $secondaryDarkBlue;
+color: white;
+}
+
+    
+    
 

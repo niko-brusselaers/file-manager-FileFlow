@@ -7,8 +7,7 @@ import { useEffect, useState } from "react";
 import { listen } from "@tauri-apps/api/event";
 import { IFile } from "./core/shared/types/IFile";
 import FileTransferHub from "./core/shared/components/fileTransfer/fileTransferHub/FileTransferHub";
-import { Store } from "@tauri-apps/plugin-store";
-import tauriStore from "./core/services/tauriStore";
+import FileTransferProgress from "./core/shared/components/fileTransfer/fileTransferProgress/FileTransferProgress";
 
 
 function App() {
@@ -26,16 +25,11 @@ function App() {
     });
 
     //listen if the open file transfer hub event is triggered and open the file transfer hub dialog
-    listen("openFileTransferHub", (event) => {
+    listen("openFileTransferHub", () => {
       setTransferHubDialogOpen(true);
     });
+    
 
-    listen("file_transferProgress", (event) => {
-      console.log(event);
-      
-    })
-
-    tauriStore.readLocalFile("fileTransfers.bin")
   },[])
 
 
@@ -47,6 +41,7 @@ function App() {
       <div className="applicationContainer">
         <FileTransferSend dialogOpened={transferSendDialogOpen} setDialogOpened={setTransferSendDialogOpen}  selectedItem={selectedItem}/>
         <FileTransferHub dialogOpened={transferHubDialogOpen} setDialogOpened={setTransferHubDialogOpen}/>
+        <FileTransferProgress />
         <Sidebar />
         <Outlet/>
       </div>

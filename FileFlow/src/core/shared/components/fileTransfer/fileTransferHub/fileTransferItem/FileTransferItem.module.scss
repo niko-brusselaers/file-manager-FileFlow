@@ -1,61 +1,65 @@
-@import "../../../../style/variables.scss";
+@import "../../style/fileTransferDialog.module.scss";
 
 
-.fileTransferItemContainer{
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    margin-top: 1em;
-    align-items: center;
-    justify-content: space-around;
 
-    .fileTransferProgressData{
-       
-        div{
-            display: flex;
-            width: 100%;
-            justify-content: space-between;
-        }
 
-         progress{
-        // This will remove the default appearance
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
+h3{
+    size: 16pt;
+    text-align: center;
+    overflow: hidden;
+    height: 1em;
+}
 
-        // You can set the height, background, and border as you like
-        height: 10px;
+.fileTransferProgressData{
+    
+    div{
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+
+        
+    }
+    
+
+        progress{
+    // This will remove the default appearance
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    // You can set the height, background, and border as you like
+    height: 10px;
+    background-color: #eee;
+    border: none;
+    border-radius: 5px;
+
+    // This will set the color of the bar itself
+    &::-webkit-progress-bar {
         background-color: #eee;
-        border: none;
-        border-radius: 5px;
-
-        // This will set the color of the bar itself
-        &::-webkit-progress-bar {
-            background-color: #eee;
-        }
-
-    &::-webkit-progress-value {
-        background-color: $secondaryDarkBlue;
     }
 
-    &::-moz-progress-bar {
+&::-webkit-progress-value {
+    background-color: $secondaryDarkBlue;
+}
+
+&::-moz-progress-bar {
+    background-color: $secondaryDarkBlue;
+}
+}
+    
+}
+
+button{
+    width: fit-content;
+    height: fit-content;
+    padding: 0.5em;
+    border: none;
+
+    &:hover{
         background-color: $secondaryDarkBlue;
+        color: white;
     }
 }
-      
-    }
 
-    button{
-        width: fit-content;
-        height: fit-content;
-        padding: 0.5em;
-        border: none;
-
-        &:hover{
-            background-color: $secondaryDarkBlue;
-            color: white;
-        }
-    }
-}
 
  

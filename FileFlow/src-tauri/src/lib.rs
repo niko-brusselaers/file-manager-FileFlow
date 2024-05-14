@@ -2,11 +2,8 @@
 mod file_management;
 mod file_transfer;
 
-use std::sync::Mutex;
-
 use file_management::{check_path, get_drives, open_file, read_directory};
 use file_transfer::{receive::receive_files, send::send_files};
-use tauri::Manager;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {

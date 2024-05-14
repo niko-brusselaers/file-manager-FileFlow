@@ -1,35 +1,42 @@
 import { useEffect, useState } from "react";
-import { IFileTransferData } from "../../../../types/IFileTransferData";
 import styles from "./FileTransferItem.module.scss";
 import conversion from "../../../../../services/conversion";
+import { ITransferProgress } from "../../../../types/ITransferProgress";
+import { emit } from "@tauri-apps/api/event";
 
-function FileTransferItem({fileTransferData}:{fileTransferData:IFileTransferData}) {
+function FileTransferItem({fileTransferData}:{fileTransferData:ITransferProgress}) {
     const [fileTranferSize, setFileTransferSize] = useState<string>("");
     const [fileTransferProgress, setFileTransferProgress] = useState<string>("");
 
     useEffect(() => {
         //set the file transfer size and progress
-        setFileTransferSize(conversion.convertFileSizeIdentifier(fileTransferData.file_size));
+        setFileTransferSize(conversion.convertFileSizeIdentifier(fileTransferData.file_size as number));
 
-        //remove all non numeric characters from the file transfer progress
-        let progress = conversion.convertFileSizeIdentifier(fileTransferData.file_transfer_progress);
-        progress = progress.replace(/[^0-9.]/g,"")
-        setFileTransferProgress(progress);
+        setFileTransferProgress(conversion.convertFileSizeIdentifier(fileTransferData.progress as number))
 
-    },[])
+    },[fileTransferData])
+
+    function openFileTransferProgressDialog() {        
+         let data = {
+                code: "",
+                fileName: fileTransferData.file_name,
+            }
+
+            emit("openFileTransferProgressDialog",data)
+    }
+
 
     return ( 
-        <div className={styles.fileTransferItemContainer}>
+        <button className={styles.fileTransferItemContainer} onClick={() => {openFileTransferProgressDialog()}}>
             <h3>{fileTransferData.file_name}</h3>
             <div className={styles.fileTransferProgressData}>
             <div>
-                <p>{fileTransferData.file__transfer_direction}</p>
+                <p>{fileTransferData.direction}</p>
                 <p>{fileTransferProgress}/{fileTranferSize}</p>
             </div>
-            <progress value={fileTransferData.file_transfer_progress} max={fileTransferData.file_size}></progress>
+            <progress value={fileTransferData.progress} max={fileTransferData.file_size}></progress>
             </div>
-            <button>cancel</button>
-        </div>
+        </button>
      );
 }
 
