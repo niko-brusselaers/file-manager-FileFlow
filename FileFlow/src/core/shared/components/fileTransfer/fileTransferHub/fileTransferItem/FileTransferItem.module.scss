@@ -21,31 +21,29 @@ h3{
     }
     
 
-        progress{
-    // This will remove the default appearance
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+    progress{
+        // This will remove the default appearance
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
 
-    // You can set the height, background, and border as you like
-    height: 10px;
-    background-color: #eee;
-    border: none;
-    border-radius: 5px;
-
-    // This will set the color of the bar itself
-    &::-webkit-progress-bar {
+        // You can set the height, background, and border as you like
         background-color: #eee;
+        border: none;
+
+        // This will set the color of the bar itself
+        &::-webkit-progress-bar {
+            background-color: #eee;
+        }
+
+        &::-webkit-progress-value {
+            background-color: $secondaryDarkBlue;
+        }
+
+        &::-moz-progress-bar {
+            background-color: $secondaryDarkBlue;
+        }
     }
-
-&::-webkit-progress-value {
-    background-color: $secondaryDarkBlue;
-}
-
-&::-moz-progress-bar {
-    background-color: $secondaryDarkBlue;
-}
-}
     
 }
 

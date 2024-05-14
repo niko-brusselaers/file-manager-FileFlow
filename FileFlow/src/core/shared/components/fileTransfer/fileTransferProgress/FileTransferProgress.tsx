@@ -8,6 +8,8 @@ import { ITransferProgress } from "../../../types/ITransferProgress";
 function fileTransferProgress() {
     const [fileTransferData,setFileTransferData] = useState<ITransferProgress>();
     const [fileName, setFileName] = useState<string>("")
+    const [fileSize, setFileSize] = useState<string>("")
+    const [progress, setProgress] = useState<string>("")
     const [code, setCode] = useState<string>("")
 
     const [dialogOpened, setDialogOpened] = useState<boolean>(false);
@@ -47,14 +49,10 @@ function fileTransferProgress() {
             console.log(data);
 
             if(data){
-                let fileSize = conversion.convertFileSizeIdentifier(data.file_size as number);
-                let progress = conversion.convertFileSizeIdentifier(data.progress as number);
+                setFileSize(conversion.convertFileSizeIdentifier(data.file_size as number));
+                setProgress(conversion.convertFileSizeIdentifier(data.progress as number));
 
-                setFileTransferData({
-                    ...data,
-                    file_size: fileSize,
-                    progress: progress as string,
-                })
+                setFileTransferData(data);
             }else setFileTransferData(undefined);
 
             
@@ -69,18 +67,23 @@ function fileTransferProgress() {
 
     return ( 
         <div className={dialogOpened ? styles.fileTransferDialog : "hidden"}>
-            <div className={styles.fileTransferDialogInnerContent}>
-                <h3>{fileTransferData?.file_name}</h3>
-            <div className={styles.fileTransferProgressData}>
-            <div>
-                <p>{fileTransferData?.direction}</p>
-                <p>{fileTransferData?.progress}/{fileTransferData?.file_size}</p>
-            </div>
-            <progress value={fileTransferData?.progress} max={fileTransferData?.file_size}></progress>
-            </div>
-            <button onClick={()=> { closeDialog()}}>close</button>
-            </div>
-            
+            <div className={styles.fileTranferProgressInnerContainer}>
+                <div className={styles.fileTransferProgressData}>
+                    <h3>{fileTransferData?.file_name}</h3>
+                    <p>{(code ? `code: ${code}`: "")}</p>
+                </div>
+                <div className={styles.fileTransferProgressBar}>
+                <div>
+                    <p>{fileTransferData?.direction}</p>
+                    <p>{progress}/{fileSize}</p>
+                </div>
+                <progress value={fileTransferData?.progress} max={fileTransferData?.file_size}></progress>
+                </div>
+                <div className={styles.fileTransferProgressButtonContainer}>
+                    <button>abort</button>
+                    <button onClick={()=> { closeDialog()}}>close</button>
+                </div>
+                </div>
         </div>
      );
 }

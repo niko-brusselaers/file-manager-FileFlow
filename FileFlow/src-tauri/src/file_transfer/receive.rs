@@ -79,9 +79,6 @@ pub async fn receive_files(code: String, download_directory: String,app: tauri::
         .await;
 
     let result = result.map_err(|error| error.to_string())?;
-
-    //remove file transfer progress from local tauri storage
-    remove_file_transfer_progress(&file_name, app.clone())?;
     
 
     Ok(result)

@@ -2,3 +2,65 @@
 
 
 
+.fileTranferProgressInnerContainer{
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30em;
+    height: 20em;
+    justify-content: space-evenly;
+
+    h3{
+        width: 80%;
+        height: fit-content;
+        margin-bottom: 1em;
+    }
+
+    
+}
+
+.fileTransferProgressData{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fileTransferProgressBar{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+
+    div{
+        display: flex;
+        width: 80%;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    progress{
+        width: 80%;
+        height: 2rem;
+        background-color: #eee;
+        border: none;
+
+        &::-webkit-progress-value {
+            background-color: $secondaryDarkBlue;
+        }
+
+        &::-moz-progress-bar {
+            background-color: $secondaryDarkBlue;
+        }
+        
+    }
+
+    
+}
+
+.fileTransferProgressButtonContainer{
+    width: 80%;
+    display: flex;
+    justify-content: space-around;
+}
