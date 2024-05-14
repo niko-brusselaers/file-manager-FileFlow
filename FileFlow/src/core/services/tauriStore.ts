@@ -33,6 +33,17 @@ class tauriStore{
             console.error(error);
         }
     }
+
+    async removeKeyFromLocalFile(filePath:string, key:string) {
+        try {
+            const store = new Store(filePath);
+
+            await store.delete(key)
+            .catch((error) => {throw Error(error)});             
+        } catch (error) {
+            console.error(error);
+        }
+    }
 }
 
 export default new tauriStore();

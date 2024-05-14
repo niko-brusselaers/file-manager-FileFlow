@@ -27,6 +27,7 @@ function DirectoryItem({item, selectedItem, handleClick}: {item:IFile,selectedIt
                  <div>
                  <p className={styles.fileTypeText} style={{display:setFileTypeHidden()}}>{item.file_size}</p>
                  </div>
+
             </div>
            
         </button>

@@ -3,18 +3,10 @@ import styles from "./FileTransferItem.module.scss";
 import conversion from "../../../../../services/conversion";
 import { ITransferProgress } from "../../../../types/ITransferProgress";
 import { emit } from "@tauri-apps/api/event";
+import tauriStore from "../../../../../services/tauriStore";
 
 function FileTransferItem({fileTransferData}:{fileTransferData:ITransferProgress}) {
-    const [fileTranferSize, setFileTransferSize] = useState<string>("");
-    const [fileTransferProgress, setFileTransferProgress] = useState<string>("");
 
-    useEffect(() => {
-        //set the file transfer size and progress
-        setFileTransferSize(conversion.convertFileSizeIdentifier(fileTransferData.file_size as number));
-
-        setFileTransferProgress(conversion.convertFileSizeIdentifier(fileTransferData.progress as number))
-
-    },[fileTransferData])
 
     function openFileTransferProgressDialog() {        
          let data = {
@@ -22,21 +14,29 @@ function FileTransferItem({fileTransferData}:{fileTransferData:ITransferProgress
                 fileName: fileTransferData.file_name,
             }
 
-            emit("openFileTransferProgressDialog",data)
+        emit("openFileTransferProgressDialog",data)
+    }
+
+    
+    async function removeTransferData(){
+        await tauriStore.removeKeyFromLocalFile("fileTransfers.bin",fileTransferData.file_name)
     }
 
 
     return ( 
-        <button className={styles.fileTransferItemContainer} onClick={() => {openFileTransferProgressDialog()}}>
+        <div className={styles.fileTransferItemContainer} >
             <h3>{fileTransferData.file_name}</h3>
-            <div className={styles.fileTransferProgressData}>
-            <div>
-                <p>{fileTransferData.direction}</p>
-                <p>{fileTransferProgress}/{fileTranferSize}</p>
+            <div className={styles.FileTransferItemProgressData}>
+                <progress value={fileTransferData.progress} max={fileTransferData.file_size}/>
+                <div>
+                    <button onClick={async() => await removeTransferData()}>remove</button>
+                    <button onClick={() => {openFileTransferProgressDialog()}}>open</button>
+                </div>
             </div>
-            <progress value={fileTransferData.progress} max={fileTransferData.file_size}></progress>
-            </div>
-        </button>
+            
+            
+
+        </div>
      );
 }
 

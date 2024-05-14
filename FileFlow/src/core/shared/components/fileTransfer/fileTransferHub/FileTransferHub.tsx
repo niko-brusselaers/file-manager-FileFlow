@@ -33,7 +33,7 @@ function FileTransferHub({dialogOpened, setDialogOpened}:{dialogOpened: boolean,
 
             if(data) setFileTransferData(data);            
 
-            if(dialogOpened) setTimeout(() => {getTransferData()}, 1000)
+            if(dialogOpened) setTimeout(() => {getTransferData()}, 100)
 
         })
     }
