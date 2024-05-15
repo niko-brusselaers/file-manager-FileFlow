@@ -13,6 +13,7 @@
     "window:allow-start-dragging",
     "window:allow-minimize",
     "dialog:default",
+    "dialog:allow-ask",
     "dialog:allow-open",
     "event:default",
     "store:default",
