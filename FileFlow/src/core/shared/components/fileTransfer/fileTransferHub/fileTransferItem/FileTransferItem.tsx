@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
 import styles from "./FileTransferItem.module.scss";
-import conversion from "../../../../../services/conversion";
 import { ITransferProgress } from "../../../../types/ITransferProgress";
 import { emit } from "@tauri-apps/api/event";
 import tauriStore from "../../../../../services/tauriStore";

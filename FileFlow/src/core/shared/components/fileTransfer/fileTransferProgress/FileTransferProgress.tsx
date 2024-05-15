@@ -15,7 +15,7 @@ function fileTransferProgress() {
     const [dialogOpened, setDialogOpened] = useState<boolean>(false);
 
     useEffect(() => {
-        let intervalId: number | undefined;
+        let intervalId: NodeJS.Timeout | undefined;
         getTransferData();
         // Start fetching transfer progress when dialog is opened
         if (dialogOpened) {
@@ -46,8 +46,6 @@ function fileTransferProgress() {
         
         //get the transfer data from the local file
         await tauriStore.readKeyFromLocalFile<ITransferProgress>("fileTransfers.bin",fileName).then((data) => {
-            console.log(data);
-
             if(data){
                 setFileSize(conversion.convertFileSizeIdentifier(data.file_size as number));
                 setProgress(conversion.convertFileSizeIdentifier(data.progress as number));

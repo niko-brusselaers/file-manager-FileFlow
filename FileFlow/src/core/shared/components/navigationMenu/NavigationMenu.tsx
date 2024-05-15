@@ -84,10 +84,19 @@ function NavigationMenu() {
 
     //navigate to parent folder
     async function navigateToParentFolder(){
-        let parentDirectory = locationData?.file_path.split("\\").slice(0,-1).join("\\");
-        if (!parentDirectory.includes("\\")) parentDirectory += "\\\\";
+        
+        let directoryPathArray = locationData?.file_path.split("\\");
+
+        let parentDirectory
+
+        if(directoryPathArray.length === 0) return
+        else if(directoryPathArray.length === 2) parentDirectory = directoryPathArray[0].toLowerCase() + "\\"
+        else parentDirectory = directoryPathArray.slice(0,directoryPathArray.length-1).join("\\")
+        console.log(directoryPathArray.length);
+        
         console.log(parentDirectory);
-        if (!parentDirectory.includes("\\")) parentDirectory = parentDirectory + "\\";
+        
+
         await fileManagement.checkPathIsValid(parentDirectory).then((fileOrFolder) => {            
             if(fileOrFolder?.file_type === "" || !fileOrFolder) return
             else if(fileOrFolder?.file_type ==="folder") return navigate(`/${fileOrFolder.file_name}`, {state: fileOrFolder,replace: true})
@@ -137,11 +146,11 @@ function NavigationMenu() {
                     </div>
                     <form onSubmit={(event)=>{navigateToPath(event)}} className={styles.navigationPathInput}>
                     <input  type="text"  
-                            value={filePathInput} 
-                            onClick={() => {showFullPath()}}
-                            onBlur={() => {showPathName()}}
-                            onChange={(event) => {setFilePathInput(event.currentTarget.value)}}
-                            />
+                        value={filePathInput || ""} 
+                        onClick={() => {showFullPath()}}
+                        onBlur={() => {showPathName()}}
+                        onChange={(event) => {setFilePathInput(event.currentTarget.value)}}
+                    />
                     </form>
                     <form className={styles.searchInput} >
                         <input type="text" placeholder="Search This pc"/>

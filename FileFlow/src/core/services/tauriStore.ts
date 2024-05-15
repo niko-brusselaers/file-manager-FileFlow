@@ -23,12 +23,24 @@ class tauriStore{
             const store = new Store(filePath);
 
             let result = await store.get(key)
-            .then((entry) => {
+            .then((entry) => {                
                 if(entry) return entry as T;
-                else throw Error("key not found");
                 })
             .catch((error) => {throw Error(error)});             
             return result;   
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async setKeyToLocalFile(filePath:string, key:string, value:any) {
+        try {
+            const store = new Store(filePath);
+            
+            await store.set(key,value)
+            .catch((error) => {throw Error(error)});             
+
+            store.save();
         } catch (error) {
             console.error(error);
         }

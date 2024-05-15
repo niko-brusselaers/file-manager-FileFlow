@@ -3,7 +3,7 @@ use magic_wormhole::{transfer::APP_CONFIG, transit, Code};
 
 use super::{
     handler::{cancel, progress_handler, transit_handler},
-    helper::{gen_app_config, gen_relay_hints,remove_file_transfer_progress},
+    helper::{gen_app_config, gen_relay_hints},
     types::ServerConfig,
 };
 

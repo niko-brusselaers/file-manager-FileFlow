@@ -12,7 +12,7 @@ pub struct File {
 
 #[tauri::command]
 pub fn read_directory(path: String) -> Result<Vec<File>, String> {
-    let paths = fs::read_dir(path + "\\").map_err(|e| e.to_string())?;
+    let paths = fs::read_dir(path).map_err(|e| e.to_string())?;
 
     let paths = paths
         .map(|res| {
@@ -61,10 +61,10 @@ pub fn open_file(path: String) -> Result<(), String> {
 #[tauri::command]
 pub fn check_path(path: String) -> Result<File, String> {
     let file_path = std::path::Path::new(&path);
-
+    
     let file_name = file_path
         .file_name()
-        .ok_or_else(|| "Path does not have a file name")?
+        .unwrap_or(OsStr::new(&path))
         .to_string_lossy()
         .to_string();
 
