@@ -60,7 +60,6 @@ pub async fn send_files(file_path: &str,app: tauri::AppHandle) -> Result<(), Str
     // Clone the variables to be used in the progress handler
     let file_name_progress_handler = file_name.clone();
     let app_progress_handler = app.clone();
-    
 
     let result = magic_wormhole::transfer::send_file_or_folder(
         wormhole,
