@@ -6,79 +6,97 @@ import FolderOptionsBar from "../../shared/components/folderOptionsBar/FolderOpt
 import { useLocation, useNavigate } from "react-router-dom";
 import fileManagement from "../../services/fileManagement";
 
-
 function FolderView() {
-    const folderTypes = ["folder", "drive","Bin"];
-    const [filesAndFolders, setFilesAndFolders] = useState<IFile[]| undefined>();
-    const loaderData:IFile = useLocation().state;
-    const navigate = useNavigate()
+  const folderTypes = ["folder", "drive", "Bin"];
+  const [filesAndFolders, setFilesAndFolders] = useState<IFile[]>([]);
+  const loaderData: IFile = useLocation().state;
+  const navigate = useNavigate();
+  const [selectedItem, setSelectedItem] = useState<IFile>({
+    file_name: "",
+    file_path: "",
+    file_type: "",
+    file_size: "",
+    newItem: false,
+  });
 
-    const [selectedItem, setSelectedItem] = useState<IFile>({file_name:"",file_path:"",file_type:"",file_size:""});
+  
 
-   
+  function getFilesAndFolders(directoryPath: string){
+    fileManagement.getFilesAndFolders(directoryPath).then((data) => {
+      if (!data?.filesAndFolders && !data?.directoryPath) return;
+      setFilesAndFolders(data.filesAndFolders);
+      setSelectedItem({
+        file_name: "",
+        file_path: "",
+        file_type: "",
+        file_size: "",
+        newItem: false,
+      });
+    }).catch((error) => {
+      console.error("Error fetching files and folders:", error);
+    });    
+  };
 
+  const handleClick = (item: IFile) => {
+    if (selectedItem === item) {
+      if (item.file_type === "folder" || item.file_type === "drive") {
+        navigate(`/${item.file_name}`, { state: item });
+      } else {
+        fileManagement.openFile(item.file_path);
+      }
+    } else {
+      setSelectedItem(item);
+    }
+  };
 
-    
-useEffect(() => { 
-      
-    if(loaderData === null){
+  async function createNewFile(fileType: string){
+    const newFile: IFile = {
+      file_name: "newFile",
+      file_path: loaderData.file_path,
+      file_type: fileType,
+      file_size: "",
+      newItem: true,
+    };
+    setFilesAndFolders((prevFilesAndFolders) => [newFile, ...prevFilesAndFolders]);
+    setSelectedItem(newFile);
+  };
 
-      fileManagement.getdrives().then((data) => {        
-        //check if data is undefined
-        if(!data?.filesAndFolders && !data?.directoryPath) return;          
+  function deleteFileOrFolder(selectedItem: IFile){
+    if (!selectedItem.file_name) return;
+    fileManagement.deleteFileOrFolder(selectedItem.file_path)
+  }; 
 
-        //set files and folders and current path
+  useEffect(() => {
+    if (loaderData === null || loaderData.file_name === "My Device") {
+      fileManagement.getdrives().then((data) => {
+        if (!data?.filesAndFolders && !data?.directoryPath) return;
         setFilesAndFolders(data.filesAndFolders);
       }).catch((error) => {
         console.error("Error fetching drives:", error);
       });
-    } else{
+    } else {
       getFilesAndFolders(loaderData.file_path);
     }
-  },[loaderData]);
- 
-  function getFilesAndFolders(directoryPath: string){
-    
-    fileManagement.getFilesAndFolders(directoryPath).then((data) => {
-      //check if data is undefined
-      if(!data?.filesAndFolders && !data?.directoryPath) return;
-
-      //set files and folders and current path
-      setFilesAndFolders(data.filesAndFolders);
-      setSelectedItem({file_name:"",file_path:"",file_type:"",file_size:""});
-
-    }).catch((error) => {
-      console.error("Error fetching files and folders:", error);
-  
-    });
-  }
-
-  function handleClick(item:IFile){
-        if(selectedItem === item){
-          if(item.file_type === "folder" || item.file_type === "drive") navigate(`/${item.file_name}`, {state: item});
-          else fileManagement.openFile(item.file_path);
-        }else{
-          setSelectedItem(item);
-        }
-    }
-
-  
+  }, [loaderData]);
 
   return (
     <div className={styles.directoryView}>
-      <FolderOptionsBar selectedItem={selectedItem}/>
+      <FolderOptionsBar selectedItem={selectedItem} deleteItem={deleteFileOrFolder} createItem={createNewFile} />
 
-      <h2 className={styles.directoryName}>{(loaderData ? loaderData.file_name : "My device")}</h2>
+      <h2 className={styles.directoryName}>
+        {loaderData ? loaderData.file_name : "My device"}
+      </h2>
 
       <div className={styles.directoryContainer}>
-            {filesAndFolders?.map((fileOrFolder,index) => {
-              if(folderTypes.includes(fileOrFolder.file_type)){
-                return <DirectoryItem  item={fileOrFolder} handleClick={handleClick}  selectedItem={selectedItem} key={index}/>
-              } else{
-                return <DirectoryItem  item={fileOrFolder} handleClick={handleClick} selectedItem={selectedItem} key={index}/>
-
-              }
-            })}
+        {filesAndFolders.map((fileOrFolder, index) => (
+          <DirectoryItem
+            item={fileOrFolder}
+            newItem={fileOrFolder.newItem}
+            handleClick={handleClick}
+            selectedItem={selectedItem}
+            key={index}
+          />
+        ))}
       </div>
     </div>
   );

@@ -55,24 +55,3 @@ pub fn store_file_transfer_progress(
     Ok(result)
 }
 
-pub fn remove_file_transfer_progress(
-    file_name: &String,
-    app: tauri::AppHandle,
-) -> Result<(), String> {
-    //Get the state of the StoreCollection from the app handle and define the path to the store file
-    let stores = app.app_handle().state::<StoreCollection<Wry>>();
-    let path = PathBuf::from("fileTransfers.bin");
-
-    //remove stored value based on the key
-    let result = tauri_plugin_store::with_store(app.app_handle().clone(), stores, path, |store| {
-        store.delete(file_name)?;
-
-        store.save()?;
-
-        Ok(())
-    });
-
-    let result = result.map_err(|e| e.to_string())?;
-
-    Ok(result)
-}

@@ -86,16 +86,21 @@ function NavigationMenu() {
     async function navigateToParentFolder(){
         
         let directoryPathArray = locationData?.file_path.split("\\");
-
+        directoryPathArray = directoryPathArray.filter((path) => path !== "")
         let parentDirectory
 
-        if(directoryPathArray.length === 0) return
+        const deviceRoot:IFile= {
+            file_name: "My Device",
+            file_path: "",
+            file_size: "",
+            file_type: "folder"
+        }
+
+        //if directory path is equals or less than 1 navigate to device root
+        if(directoryPathArray.length <= 1) return navigate(`/${deviceRoot.file_name}`, {state: deviceRoot,replace: true})
         else if(directoryPathArray.length === 2) parentDirectory = directoryPathArray[0].toLowerCase() + "\\"
         else parentDirectory = directoryPathArray.slice(0,directoryPathArray.length-1).join("\\")
-        console.log(directoryPathArray.length);
-        
-        console.log(parentDirectory);
-        
+        console.log(directoryPathArray);        
 
         await fileManagement.checkPathIsValid(parentDirectory).then((fileOrFolder) => {            
             if(fileOrFolder?.file_type === "" || !fileOrFolder) return

@@ -25,10 +25,9 @@ function FileTransferItem({fileTransferData}:{fileTransferData:ITransferProgress
         <div className={styles.fileTransferItemContainer} >
             <h3>{fileTransferData.file_name}</h3>
             <div className={styles.FileTransferItemProgressData}>
-                <progress value={fileTransferData.progress} max={fileTransferData.file_size}/>
-                <div>
+                <progress onClick={() => {openFileTransferProgressDialog()}} value={fileTransferData.progress} max={fileTransferData.file_size}/>
+                <div >
                     <button onClick={async() => await removeTransferData()}>remove</button>
-                    <button onClick={() => {openFileTransferProgressDialog()}}>open</button>
                 </div>
             </div>
             

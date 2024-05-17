@@ -68,13 +68,37 @@ class fileManagement {
     }
 
     async openFile(directoryPath:string) {
-        console.log("Opening file:", directoryPath);
         try {
         await invoke("open_file", { path: directoryPath })
         } catch (error) {
         console.error("Error opening file:", error);
         }
         
+    }
+
+    async createFile(filePath:string, fileName:string) {
+        console.log("Creating file:", { filePath:filePath, fileName:fileName });
+        try {
+        await invoke("create_file", { filePath:filePath, fileName:fileName }).catch((error) => {throw error})
+        } catch (error) {
+        console.error("Error creating file:", error);
+        }
+    }
+
+    async createFolder(folderPath:String){
+        try {
+        await invoke("create_folder", { folderPath: folderPath }).catch((error) => {throw error})
+        } catch (error) {
+        console.error("Error creating folder:", error);
+        }
+    }
+
+    async deleteFileOrFolder(filePath:string){
+        try {
+        await invoke("delete_file_or_folder", { filePath: filePath }).catch((error) => {throw error})
+        } catch (error) {
+        console.error("Error deleting file or folder:", error);
+        }
     }
 
 }

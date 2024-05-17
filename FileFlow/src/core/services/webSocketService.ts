@@ -5,11 +5,10 @@ import { ITransferRequest } from "../shared/types/ITransferRequest"
 import tauriStore from "./tauriStore"
 import { ask } from "@tauri-apps/plugin-dialog"
 import fileTransfer from "./fileTransfer"
-import { downloadDir } from "@tauri-apps/api/path"
  
 class websocketService{
 
-    async connectToWebsocket(socketURL: string,deviceName:string){
+    async connectToWebsocket(socketURL: string){
         const socket = io(socketURL,{
             autoConnect:true,
             reconnection: true,
@@ -20,21 +19,24 @@ class websocketService{
         socket.on("connect", async () => {
             
             let deviceData:IConnectedDevice
+            let deviceName = await tauriStore.readKeyFromLocalFile<string>("credentials.bin","deviceName").then((data) => data).catch((error) => {throw Error(error)});
+            let userName = await tauriStore.readKeyFromLocalFile<string>("credentials.bin","userName").then((data) => data).catch((error) => {throw Error(error)});
+
             deviceData = {
                 socketId: socket.id as string,
-                deviceName: deviceName,
+                deviceName: deviceName || "Unknown Device",
                 publicIPAdress: await publicIpv4(),
-                userName: await tauriStore.readKeyFromLocalFile<string>("credentials.bin","userName").then((data) => data).catch((error) => {throw Error(error)})
+                userName: userName
             } 
             
             socket.emit("addConnectedDevice",deviceData)
         });
 
-        socket.on("transferFileRequest",(data:ITransferRequest)=>{
+        socket.on("transferFileRequest",async(data:ITransferRequest)=>{
             console.log(data);
             ask(`Do you want to accept the file transfer request from ${data.fileDetails.fileName}?`).then(async(response) => {
                 if(response){
-                    fileTransfer.downloadFiles(data.code,await downloadDir())
+                    await fileTransfer.downloadFiles(data.code)
                 }
             })
         });

@@ -10,6 +10,7 @@ import FileTransferHub from "./core/shared/components/fileTransfer/fileTransferH
 import FileTransferProgress from "./core/shared/components/fileTransfer/fileTransferProgress/FileTransferProgress";
 import webSocketService from "./core/services/webSocketService";
 import tauriStore from "./core/services/tauriStore";
+import { invoke } from "@tauri-apps/api/core";
 
 
 function App() {
@@ -31,10 +32,14 @@ function App() {
     listen("openFileTransferHub", () => {
       setTransferHubDialogOpen(true);
     });
-    tauriStore.setKeyToLocalFile("credentials.bin","userName","DeskNiko")
 
-    webSocketService.connectToWebsocket("94.110.26.98:3000","Des")
-    .then((data) => setWebSocketServer(data))
+    invoke("get_device_name").then((data) => {
+      tauriStore.setKeyToLocalFile("credentials.bin","userName",data)
+      tauriStore.setKeyToLocalFile("credentials.bin","deviceName",data)
+    })
+
+    webSocketService.connectToWebsocket("https://fileflow-backend.onrender.com/")
+    .then((data) => {setWebSocketServer(data); console.log(data)})
     .catch((error) => {throw Error(error)});
     
 

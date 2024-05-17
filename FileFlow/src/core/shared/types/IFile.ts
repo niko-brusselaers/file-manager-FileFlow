@@ -3,4 +3,5 @@ export interface IFile{
   file_path: string,
   file_type: string
   file_size: string
+  newItem: boolean
 }
