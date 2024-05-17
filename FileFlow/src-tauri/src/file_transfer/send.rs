@@ -1,13 +1,13 @@
 use super::{
     handler::{cancel, progress_handler, transit_handler},
-    helper::{gen_app_config, gen_relay_hints,store_file_transfer_progress},
-    types::{ServerConfig,FileProgress},
+    helper::{gen_app_config, gen_relay_hints, store_file_transfer_progress},
+    types::{FileProgress, ServerConfig},
 };
 use magic_wormhole::{transit, Wormhole};
 use tauri::Manager;
 
 #[tauri::command]
-pub async fn send_files(file_path: &str,app: tauri::AppHandle) -> Result<(), String> {
+pub async fn send_files(file_path: &str, app: tauri::AppHandle) -> Result<(), String> {
     // create server config, relay hints, transit abilities and app config
     let server_config: ServerConfig = ServerConfig {
         rendezvous_url: String::from("ws://relay.magic-wormhole.io:4000/v1"),
@@ -27,7 +27,8 @@ pub async fn send_files(file_path: &str,app: tauri::AppHandle) -> Result<(), Str
     let file_name = std::path::Path::new(file_path)
         .file_name()
         .unwrap()
-        .to_string_lossy().into_owned();
+        .to_string_lossy()
+        .into_owned();
 
     //create wormhole connection and show error if any
     let (server_welcome, connection) = match Wormhole::connect_without_code(app_config, 3).await {
@@ -37,7 +38,6 @@ pub async fn send_files(file_path: &str,app: tauri::AppHandle) -> Result<(), Str
             return Err(error.to_string());
         }
     };
-
 
     //get code from server welcome and emit to frontend
     let code = server_welcome.code;
@@ -53,7 +53,7 @@ pub async fn send_files(file_path: &str,app: tauri::AppHandle) -> Result<(), Str
         direction: String::from("Send"),
     };
     // Store the file transfer progress
-    store_file_transfer_progress(file_progress, app.clone()).map_err(|error|error.to_string())?;
+    store_file_transfer_progress(file_progress, app.clone()).map_err(|error| error.to_string())?;
 
     let wormhole = connection.await.unwrap();
 
@@ -71,12 +71,13 @@ pub async fn send_files(file_path: &str,app: tauri::AppHandle) -> Result<(), Str
         move |current, total| {
             // Call progress handler
             let _ = progress_handler(
-                current, 
+                current,
                 total,
                 &file_name_progress_handler,
                 String::from("Send"),
-                app_progress_handler.clone()).map_err(|error| error.to_string());
-            
+                app_progress_handler.clone(),
+            )
+            .map_err(|error| error.to_string());
         },
         cancel(),
     )

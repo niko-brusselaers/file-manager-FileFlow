@@ -1,14 +1,6 @@
-use serde::{Deserialize, Serialize};
+use super::types::File;
 use std::{ffi::OsStr, fs, path::PathBuf};
 use sysinfo::Disks;
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct File {
-    file_name: String,
-    file_path: PathBuf,
-    file_type: String,
-    file_size: u64,
-}
 
 #[tauri::command]
 pub fn read_directory(path: String) -> Result<Vec<File>, String> {
@@ -54,14 +46,9 @@ pub fn get_drives() -> Vec<File> {
 }
 
 #[tauri::command]
-pub fn open_file(path: String) -> Result<(), String> {
-    opener::open(String::from(path)).map_err(|e| e.to_string())
-}
-
-#[tauri::command]
 pub fn check_path(path: String) -> Result<File, String> {
     let file_path = std::path::Path::new(&path);
-    
+
     let file_name = file_path
         .file_name()
         .unwrap_or(OsStr::new(&path))
@@ -87,4 +74,9 @@ pub fn check_path(path: String) -> Result<File, String> {
     };
 
     Ok(file)
+}
+
+#[tauri::command]
+pub fn open_file(path: String) -> Result<(), String> {
+    opener::open(String::from(path)).map_err(|e| e.to_string())
 }

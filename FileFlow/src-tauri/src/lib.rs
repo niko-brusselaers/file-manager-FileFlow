@@ -3,8 +3,11 @@ mod file_management;
 mod file_transfer;
 mod miscellaneous;
 
-use file_management::{check_path, get_drives, open_file, read_directory};
-use file_transfer::{receive::receive_files, send::send_files};
+use file_management::create::*;
+use file_management::read::*;
+use file_management::delete::*;
+use file_transfer::receive::*;
+use file_transfer::send::*;
 use miscellaneous::get_device_name;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -17,12 +20,14 @@ pub fn run() {
             read_directory,
             get_drives,
             open_file,
-            send_files,
             check_path,
+            create_file,
+            create_folder,
+            send_files,
             receive_files,
-            get_device_name
+            get_device_name,
+            delete_file_or_folder
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
-
