@@ -8,6 +8,7 @@ use file_management::read::*;
 use file_management::delete::*;
 use file_transfer::receive::*;
 use file_transfer::send::*;
+use file_management::update::*;
 use miscellaneous::get_device_name;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -17,15 +18,16 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
+            get_device_name,
             read_directory,
             get_drives,
             open_file,
             check_path,
             create_file,
             create_folder,
+            rename_file_or_folder,
             send_files,
             receive_files,
-            get_device_name,
             delete_file_or_folder
         ])
         .run(tauri::generate_context!())

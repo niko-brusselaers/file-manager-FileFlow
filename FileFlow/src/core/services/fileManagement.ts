@@ -35,22 +35,21 @@ class fileManagement {
     async getFilesAndFolders(directoryPath: string) {        
         try {
 
-        let filesAndFolders:IFile[] = await invoke("read_directory", { path: directoryPath })
-    
-        filesAndFolders = filesAndFolders.map((fileOrFolder:IFile) => {
-            //remove double backslashes
-            fileOrFolder.file_path = fileOrFolder.file_path.replace("\\\\", "\\")
-
-
-            //set file size
-            fileOrFolder.file_size = conversion.convertFileSizeIdentifier(parseInt(fileOrFolder.file_size))
-
-
-            return fileOrFolder
-        })
-
+            let filesAndFolders:IFile[] = await invoke("read_directory", { path: directoryPath })
         
-        return {filesAndFolders, directoryPath}
+            filesAndFolders = filesAndFolders.map((fileOrFolder:IFile) => {
+                //remove double backslashes
+                fileOrFolder.file_path = fileOrFolder.file_path.replace("\\\\", "\\")
+
+
+                //set file size
+                fileOrFolder.file_size = conversion.convertFileSizeIdentifier(parseInt(fileOrFolder.file_size))
+
+
+                return fileOrFolder
+            })
+
+            return {filesAndFolders, directoryPath}
 
         } catch (error) {
         //display error
@@ -77,9 +76,9 @@ class fileManagement {
     }
 
     async createFile(filePath:string, fileName:string) {
-        console.log("Creating file:", { filePath:filePath, fileName:fileName });
         try {
-        await invoke("create_file", { filePath:filePath, fileName:fileName }).catch((error) => {throw error})
+        await invoke("create_file", { filePath:filePath, fileName:fileName })
+        .catch((error) => {throw error})
         } catch (error) {
         console.error("Error creating file:", error);
         }
@@ -87,15 +86,26 @@ class fileManagement {
 
     async createFolder(folderPath:String){
         try {
-        await invoke("create_folder", { folderPath: folderPath }).catch((error) => {throw error})
+        await invoke("create_folder", { folderPath: folderPath })
+        .catch((error) => {throw error})
         } catch (error) {
         console.error("Error creating folder:", error);
         }
     }
 
+    async renameFileOrFolder(filePath:string,oldName:string, newName:string){        
+        try {
+        await invoke("rename_file_or_folder", { filePath: filePath,oldName:oldName, newName: newName })
+        .catch((error) => {throw error})
+        } catch (error) {
+        console.error("Error renaming file or folder:", error);
+        }
+    }
+
     async deleteFileOrFolder(filePath:string){
         try {
-        await invoke("delete_file_or_folder", { filePath: filePath }).catch((error) => {throw error})
+        await invoke("delete_file_or_folder", { filePath: filePath })
+        .catch((error) => {throw error})
         } catch (error) {
         console.error("Error deleting file or folder:", error);
         }

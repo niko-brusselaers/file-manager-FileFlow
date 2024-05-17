@@ -16,7 +16,7 @@ function FolderView() {
     file_path: "",
     file_type: "",
     file_size: "",
-    newItem: false,
+    edit: false,
   });
 
   
@@ -30,7 +30,7 @@ function FolderView() {
         file_path: "",
         file_type: "",
         file_size: "",
-        newItem: false,
+        edit: false,
       });
     }).catch((error) => {
       console.error("Error fetching files and folders:", error);
@@ -53,9 +53,9 @@ function FolderView() {
     const newFile: IFile = {
       file_name: "newFile",
       file_path: loaderData.file_path,
-      file_type: fileType,
+      file_type: "",
       file_size: "",
-      newItem: true,
+      edit: true,
     };
     setFilesAndFolders((prevFilesAndFolders) => [newFile, ...prevFilesAndFolders]);
     setSelectedItem(newFile);
@@ -65,6 +65,14 @@ function FolderView() {
     if (!selectedItem.file_name) return;
     fileManagement.deleteFileOrFolder(selectedItem.file_path)
   }; 
+
+  function renameFileOrFolder(selectedItem: IFile){
+    if (!selectedItem.file_name) return;
+    const updatedFilesAndFolders = filesAndFolders.map((fileOrFolder) => {
+      if (fileOrFolder.file_name === selectedItem.file_name) fileOrFolder.edit = true;
+      return fileOrFolder;});
+    setFilesAndFolders(updatedFilesAndFolders);
+  }
 
   useEffect(() => {
     if (loaderData === null || loaderData.file_name === "My Device") {
@@ -81,7 +89,7 @@ function FolderView() {
 
   return (
     <div className={styles.directoryView}>
-      <FolderOptionsBar selectedItem={selectedItem} deleteItem={deleteFileOrFolder} createItem={createNewFile} />
+      <FolderOptionsBar selectedItem={selectedItem} deleteItem={deleteFileOrFolder} createItem={createNewFile} editItem={renameFileOrFolder} />
 
       <h2 className={styles.directoryName}>
         {loaderData ? loaderData.file_name : "My device"}
@@ -91,7 +99,7 @@ function FolderView() {
         {filesAndFolders.map((fileOrFolder, index) => (
           <DirectoryItem
             item={fileOrFolder}
-            newItem={fileOrFolder.newItem}
+            edit={fileOrFolder.edit}
             handleClick={handleClick}
             selectedItem={selectedItem}
             key={index}

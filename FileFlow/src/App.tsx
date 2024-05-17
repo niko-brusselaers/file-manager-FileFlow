@@ -39,7 +39,7 @@ function App() {
     })
 
     webSocketService.connectToWebsocket("https://fileflow-backend.onrender.com/")
-    .then((data) => {setWebSocketServer(data); console.log(data)})
+    .then((data) => {setWebSocketServer(data)})
     .catch((error) => {throw Error(error)});
     
 

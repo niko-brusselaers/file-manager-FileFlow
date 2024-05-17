@@ -3,9 +3,10 @@ import fileManagement from '../../../services/fileManagement';
 import { IFile } from '../../types/IFile';
 import  styles from './DirectoryItem.module.scss';
 
-function DirectoryItem({item, selectedItem, handleClick,newItem}: {item:IFile,selectedItem:IFile,handleClick:Function,newItem:boolean }) {
+function DirectoryItem({item, selectedItem, handleClick,edit}: {item:IFile,selectedItem:IFile,handleClick:Function,edit:boolean }) {
     const imageFileTypes = ["pdf","xslx","docx","svg", "folder","drive","Bin"]
-    const [isNewItem, setIsNewItem] = useState(newItem)
+    const [EditMode, setEditMode] = useState(edit)
+    const [newFileName, setNewFileName] = useState("")
     function setIcon(){
         if(imageFileTypes.includes(item.file_type)) return `/${item.file_type}_icon.png`
         else return `/file_icon.png`
@@ -14,34 +15,55 @@ function DirectoryItem({item, selectedItem, handleClick,newItem}: {item:IFile,se
     }
 
     useEffect(() => {
-        setIsNewItem(newItem)
-    }, [newItem])
+        setEditMode(edit)
+    }, [edit])
 
     function setFileTypeHidden(){
         if(item.file_type === "folder" || item.file_type === "drive") return "none"
         else return "block"
     }
 
-    function createNewFile(){
-        console.log(newItem);
+    function createNewFile(){     
+
+        let destructeredName = newFileName.split(".")
         
-        if(newItem === false) return
-        setIsNewItem(false)
-        let destructeredName = item.file_name.split(".")
         if(destructeredName.length === 1){
-            fileManagement.createFolder(item.file_path + "\\" + item.file_name )
+            fileManagement.createFolder(item.file_path + "\\" + newFileName )
         } else if( destructeredName.length === 2){
-            fileManagement.createFile(item.file_path + "\\", item.file_name)
+            fileManagement.createFile(item.file_path + "\\", newFileName)
         } else{
             console.error("Invalid file name")
         }
     }
 
+    function renameItem(){        
+        let file_path = selectedItem.file_path.split("\\")
+        file_path.pop()
+        let parentDirectory = file_path.join("\\")
+        fileManagement.renameFileOrFolder(parentDirectory, selectedItem.file_name, newFileName)
+    }
+
     function handleItemClick(item:IFile){
-        if(item.newItem) return
+        if(item.edit) return
 
         handleClick(item)
     }   
+
+
+    function updateItem(){
+        try{
+            console.log(item.file_type !== "");
+            
+            if(!EditMode) return
+            if(newFileName === "") return
+            if(newFileName === item.file_name) return
+            if(item.file_type !== "")return renameItem()
+            
+            createNewFile()
+        }catch(error){
+            console.error(error)
+        }
+    }
 
 
     return (
@@ -50,9 +72,9 @@ function DirectoryItem({item, selectedItem, handleClick,newItem}: {item:IFile,se
                 <img src={setIcon()} className={styles.itemImage}/>
             </div>
             <div className={styles.itemDetails}>
-                {(isNewItem ?
-                    <form onSubmit={(event) => {event.preventDefault();createNewFile()}}>
-                        <input type="text" defaultValue={item.file_name} onChange={(event)  => {item.file_name = event.currentTarget.value}} onBlur={(event) => {event.preventDefault(); createNewFile()}}/>
+                {(EditMode ?
+                    <form onSubmit={(event) => {event.preventDefault(); updateItem()}}>
+                        <input type="text" defaultValue={item.file_name} onChange={(event)  => {setNewFileName(event.currentTarget.value)}} onBlur={(event) => {event.preventDefault(); updateItem()}}/>
                     </form>
                      : 
                      <p className={styles.fileName}>{item.file_name}</p>)}

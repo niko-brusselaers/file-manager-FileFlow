@@ -2,11 +2,10 @@ import styles from './FolderOptionsBar.module.scss';
 import { IFile } from '../../types/IFile';
 import { emit } from '@tauri-apps/api/event';
 
-function FolderOptionsBar({selectedItem,deleteItem,createItem}: { selectedItem: IFile,createItem:Function,deleteItem:Function}){
+function FolderOptionsBar({selectedItem,deleteItem,createItem,editItem}: { selectedItem: IFile,createItem:Function,deleteItem:Function,editItem:Function}){
     
 
     function openTransferSend(){
-        
         if(selectedItem.file_name != "") emit("sendFile", {file: selectedItem});
         else return;
     }
@@ -27,7 +26,7 @@ function FolderOptionsBar({selectedItem,deleteItem,createItem}: { selectedItem: 
                     <img src="/delete_icon.png" alt="create file" />
                 </button>
                 <button className={styles.folderOptionsBarButton}>
-                    <img src="/rename_icon.png" alt="create file" />
+                    <img src="/rename_icon.png" alt="create file"  onClick={() => {editItem(selectedItem)}}/>
                 </button>
             </div>
             <div className={styles.folderOptionsBarButtonGroup}>
