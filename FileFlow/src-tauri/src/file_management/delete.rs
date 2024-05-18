@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use async_std::{fs::{remove_dir_all, remove_file}};
 
 #[tauri::command]
-pub async fn delete_file_or_folder(file_path: String) -> Result<(), String> {
+pub async fn delete_item(file_path: String) -> Result<(), String> {
     let file_pathbuf = PathBuf::from(file_path);
 
     if file_pathbuf.is_dir() {

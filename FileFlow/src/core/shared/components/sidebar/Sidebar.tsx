@@ -19,10 +19,10 @@ function Sidebar() {
     useEffect(() => {    
     if(drives === undefined){
 
-        pictureDir().then((path) => setPictureDirectory({file_name: "Pictures", file_path: path, file_type: "folder", file_size: ""}))
-        downloadDir().then((path) => setDownloadDirectory({file_name: "Download", file_path: path , file_type: "folder", file_size: ""}))
-        documentDir().then((path) => setDocumentDirectory({file_name: "Documents", file_path: path, file_type: "folder", file_size: ""}))
-        homeDir().then((path) => setHomeDirectory({file_name: "Home", file_path: path, file_type: "folder", file_size: ""}))
+        pictureDir().then((path) => setPictureDirectory({file_name: "Pictures", file_path: path, file_type: "folder", file_size: "", edit: false}))
+        downloadDir().then((path) => setDownloadDirectory({file_name: "Download", file_path: path , file_type: "folder", file_size: "", edit: false}))
+        documentDir().then((path) => setDocumentDirectory({file_name: "Documents", file_path: path, file_type: "folder", file_size: "", edit: false}))
+        homeDir().then((path) => setHomeDirectory({file_name: "Home", file_path: path, file_type: "folder", file_size: "", edit: false}))
       
         fileManagement.getdrives().then((data) => {
             //check if data is undefined

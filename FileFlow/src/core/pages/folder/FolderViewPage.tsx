@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import fileManagement from "../../services/fileManagement";
 
 function FolderView() {
-  const folderTypes = ["folder", "drive", "Bin"];
+  // const folderTypes = ["folder", "drive", "Bin"];
   const [filesAndFolders, setFilesAndFolders] = useState<IFile[]>([]);
   const loaderData: IFile = useLocation().state;
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ function FolderView() {
   
 
   function getFilesAndFolders(directoryPath: string){
-    fileManagement.getFilesAndFolders(directoryPath).then((data) => {
+    fileManagement.getDirectoryItems(directoryPath).then((data) => {
       if (!data?.filesAndFolders && !data?.directoryPath) return;
       setFilesAndFolders(data.filesAndFolders);
       setSelectedItem({
@@ -49,7 +49,7 @@ function FolderView() {
     }
   };
 
-  async function createNewFile(fileType: string){
+  async function createNewFile(){
     const newFile: IFile = {
       file_name: "newFile",
       file_path: loaderData.file_path,
@@ -63,7 +63,7 @@ function FolderView() {
 
   function deleteFileOrFolder(selectedItem: IFile){
     if (!selectedItem.file_name) return;
-    fileManagement.deleteFileOrFolder(selectedItem.file_path)
+    fileManagement.deleteItem(selectedItem.file_path)
   }; 
 
   function renameFileOrFolder(selectedItem: IFile){
@@ -89,7 +89,7 @@ function FolderView() {
 
   return (
     <div className={styles.directoryView}>
-      <FolderOptionsBar selectedItem={selectedItem} deleteItem={deleteFileOrFolder} createItem={createNewFile} editItem={renameFileOrFolder} />
+      <FolderOptionsBar selectedItem={selectedItem} currentPath={loaderData ? loaderData.file_path : ""} deleteItem={deleteFileOrFolder} createItem={createNewFile} editItem={renameFileOrFolder} />
 
       <h2 className={styles.directoryName}>
         {loaderData ? loaderData.file_name : "My device"}

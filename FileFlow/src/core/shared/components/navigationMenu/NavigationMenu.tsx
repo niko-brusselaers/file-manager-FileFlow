@@ -93,7 +93,8 @@ function NavigationMenu() {
             file_name: "My Device",
             file_path: "",
             file_size: "",
-            file_type: "folder"
+            file_type: "folder", 
+            edit: false
         }
 
         //if directory path is equals or less than 1 navigate to device root

@@ -25,10 +25,12 @@ pub fn run() {
             check_path,
             create_file,
             create_folder,
-            rename_file_or_folder,
+            rename_item,
+            move_item,
+            copy_item,
             send_files,
             receive_files,
-            delete_file_or_folder
+            delete_item
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

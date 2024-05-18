@@ -32,7 +32,7 @@ class fileManagement {
         }
     }
 
-    async getFilesAndFolders(directoryPath: string) {        
+    async getDirectoryItems(directoryPath: string) {        
         try {
 
             let filesAndFolders:IFile[] = await invoke("read_directory", { path: directoryPath })
@@ -93,18 +93,36 @@ class fileManagement {
         }
     }
 
-    async renameFileOrFolder(filePath:string,oldName:string, newName:string){        
+    async renameItem(filePath:string,oldName:string, newName:string){        
         try {
-        await invoke("rename_file_or_folder", { filePath: filePath,oldName:oldName, newName: newName })
+        await invoke("rename_item", { filePath: filePath,oldName:oldName, newName: newName })
         .catch((error) => {throw error})
         } catch (error) {
         console.error("Error renaming file or folder:", error);
         }
     }
 
-    async deleteFileOrFolder(filePath:string){
+    async copyItem(filePath:string,destinationPath:string){
         try {
-        await invoke("delete_file_or_folder", { filePath: filePath })
+        await invoke("copy_item", { oldPath: filePath, newPath: destinationPath })
+        .catch((error) => {throw error})
+        } catch (error) {
+        console.error("Error copying file or folder:", error);
+        }
+    }
+
+    async moveItem(filePath:string,destinationPath:string){
+        try {
+        await invoke("move_item", { oldPath: filePath, newPath: destinationPath })
+        .catch((error) => {throw error})
+        } catch (error) {
+        console.error("Error moving file or folder:", error);
+        }
+    }
+
+    async deleteItem(filePath:string){
+        try {
+        await invoke("delete_item", { filePath: filePath })
         .catch((error) => {throw error})
         } catch (error) {
         console.error("Error deleting file or folder:", error);

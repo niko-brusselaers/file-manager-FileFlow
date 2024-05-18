@@ -40,7 +40,7 @@ function DirectoryItem({item, selectedItem, handleClick,edit}: {item:IFile,selec
         let file_path = selectedItem.file_path.split("\\")
         file_path.pop()
         let parentDirectory = file_path.join("\\")
-        fileManagement.renameFileOrFolder(parentDirectory, selectedItem.file_name, newFileName)
+        fileManagement.renameItem(parentDirectory, selectedItem.file_name, newFileName)
     }
 
     function handleItemClick(item:IFile){
