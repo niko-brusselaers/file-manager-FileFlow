@@ -16,14 +16,14 @@ import { invoke } from "@tauri-apps/api/core";
 function App() {
   const [transferSendDialogOpen, setTransferSendDialogOpen] = useState<boolean>(false);
   const [transferHubDialogOpen, setTransferHubDialogOpen] = useState<boolean>(false);
-  const [selectedItem, setSelectedItem] = useState<IFile|null>(null);
+  const [selectedItem, setSelectedItem] = useState<IFile[]|null>(null);
   const [webSocketServer, setWebSocketServer] = useState<any>(null);
 
   useEffect(() => {
 
     //listen if the file sent event is triggered and open the file transfer dialog
     listen("sendFile", (event) => {
-      let file = (event.payload as any).file as IFile;
+      let file = (event.payload as any).file as IFile[];
       setSelectedItem(file);
       setTransferSendDialogOpen(true);
     });
@@ -52,7 +52,7 @@ function App() {
     <>
       <NavigationMenu/>
       <div className="applicationContainer">
-        <FileTransferSend dialogOpened={transferSendDialogOpen} setDialogOpened={setTransferSendDialogOpen} websocket={webSocketServer}  selectedItem={selectedItem}/>
+        <FileTransferSend dialogOpened={transferSendDialogOpen} setDialogOpened={setTransferSendDialogOpen} websocket={webSocketServer}  selectedItems={selectedItem}/>
         <FileTransferHub dialogOpened={transferHubDialogOpen} setDialogOpened={setTransferHubDialogOpen}/>
         <FileTransferProgress />
         <Sidebar />

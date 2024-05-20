@@ -6,16 +6,27 @@ import { emit, listen,UnlistenFn } from '@tauri-apps/api/event';
 import { Socket } from 'socket.io-client';
 import { IConnectedDevice } from '../../../types/IConnectedDevice';
 import { ITransferRequest } from '../../../types/ITransferRequest';
+import tauriStore from '../../../../services/tauriStore';
 
-function FileTransferSend({dialogOpened, setDialogOpened,selectedItem,websocket}:{dialogOpened: boolean, setDialogOpened: Function,selectedItem:IFile|null,websocket?:Socket<any>}) {
+function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket}:{dialogOpened: boolean, setDialogOpened: Function,selectedItems:IFile[]|null,websocket?:Socket<any>}) {
     const [selectedDestination, setSelectedDestination] = useState<IConnectedDevice|null>(null);
     const [contact] = useState<IConnectedDevice[]| null>([]);
     const [filteredContacts, setFilteredContacts] = useState<IConnectedDevice[]| null>(contact);
     const [recent] = useState<IConnectedDevice[]| null>([]);
     const [devices] = useState<IConnectedDevice[]| null>([]);
     const [localDevices,setLocalDevices] = useState<IConnectedDevice[]| null>([]);
+    const [deviceName, setDeviceName] = useState<string>("")
 
     useEffect(() => {
+        tauriStore.readKeyFromLocalFile<string>("credentials.bin","deviceName")
+        .then((data) => {
+            if(data) setDeviceName(data);
+        })
+        .catch((error) => {throw Error(error)});
+    });
+
+    useEffect(() => {
+        
         if(dialogOpened) requestLocalDevices();
         else unlistenForLocalDevices();
     },[dialogOpened])
@@ -29,7 +40,7 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItem,websocket}
         if(websocket.connected){
             //listen for event to get local devices
             websocket.on("localDevices",(data:IConnectedDevice[]) => {
-                setLocalDevices(data)
+                setLocalDevices(data.filter((device) => device.deviceName !== deviceName));
                 console.log(data);
             });
 
@@ -63,13 +74,13 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItem,websocket}
     }
 
     async function sentFile() {
-        if(!selectedItem) return;
+        if(!selectedItems) return;
 
         const listenEvent = listen("fileTransferCode", (event) => {
             //send fileName and code to the file transfer progress dialog to display the progress
             let data = {
                 code: event.payload as string,
-                fileName: selectedItem.file_name,
+                fileName: selectedItems[0].file_name,
             }
 
             emit("openFileTransferProgressDialog",data)
@@ -83,9 +94,9 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItem,websocket}
                     socketId: selectedDestination?.socketId,
                     userName: selectedDestination?.userName,
                     fileDetails:{
-                        fileName: selectedItem.file_name,
-                        fileSize: selectedItem.file_size,
-                        fileType: selectedItem.file_type,
+                        fileName: selectedItems[0].file_name,
+                        fileSize: selectedItems[0].file_size,
+                        fileType: selectedItems[0].file_type,
                     }
                 }
 
@@ -98,7 +109,7 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItem,websocket}
             
         })
         
-        await fileTransfer.sentFiles(selectedItem.file_path);
+        await fileTransfer.sentFiles(selectedItems[0].file_path);
         
     }
 
@@ -108,10 +119,10 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItem,websocket}
                 <div className={styles.itemDetailsContainer}>
                     <img src="/file_icon.png" alt="" />
                     <div>
-                        <h2>{selectedItem?.file_name}</h2>
+                        <h2>{selectedItems?.[0]?.file_name}</h2>
                         <div className={styles.fileSubDetailsContainer}>
-                            <p>{selectedItem?.file_type}</p>
-                            <p>{selectedItem?.file_size}</p>
+                            <p>{selectedItems?.[0]?.file_type}</p>
+                            <p>{selectedItems?.[0]?.file_size}</p>
                         </div>
                     </div>
                 </div>

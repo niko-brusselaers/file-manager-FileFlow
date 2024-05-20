@@ -37,13 +37,8 @@
     }
 }
 
-.folderOptionsBarGreyedOut{
-    display: flex;
-    position: fixed;
-    z-index: 1;
-    align-items: center;
-    top: var(--navBarHeight);
-    width: 100%;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
+.inactive{
+    pointer-events: none;
+    opacity: 0.5;
+
 }

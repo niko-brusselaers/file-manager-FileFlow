@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IFile } from "../../shared/types/IFile";
 import DirectoryItem from "../../shared/components/directoryItem/DirectoryItem";
 import styles from './FolderView.module.scss';
@@ -11,13 +11,7 @@ function FolderView() {
   const [filesAndFolders, setFilesAndFolders] = useState<IFile[]>([]);
   const loaderData: IFile = useLocation().state;
   const navigate = useNavigate();
-  const [selectedItem, setSelectedItem] = useState<IFile>({
-    file_name: "",
-    file_path: "",
-    file_type: "",
-    file_size: "",
-    edit: false,
-  });
+  const [selectedItems, setSelectedItems] = useState<IFile[]>([])
 
   
 
@@ -25,29 +19,48 @@ function FolderView() {
     fileManagement.getDirectoryItems(directoryPath).then((data) => {
       if (!data?.filesAndFolders && !data?.directoryPath) return;
       setFilesAndFolders(data.filesAndFolders);
-      setSelectedItem({
-        file_name: "",
-        file_path: "",
-        file_type: "",
-        file_size: "",
-        edit: false,
-      });
+      setSelectedItems([]);
     }).catch((error) => {
       console.error("Error fetching files and folders:", error);
     });    
   };
 
-  const handleClick = (item: IFile) => {
-    if (selectedItem === item) {
-      if (item.file_type === "folder" || item.file_type === "drive") {
-        navigate(`/${item.file_name}`, { state: item });
+  const setSelected = (event:React.MouseEvent,item: IFile) => {
+    
+    if(selectedItems.length === 0) return setSelectedItems([item]);
+    selectedItems.map(selectedItem => {
+      
+      //if selected item is already in the selectedItems array open the file or folder
+      if (selectedItem === item) {
+        
+        if (item.file_type === "folder" || item.file_type === "drive") {
+          return navigate(`/${item.file_name}`, { state: item });
+        } else {
+          return fileManagement.openFile(item.file_path);
+        }
       } else {
-        fileManagement.openFile(item.file_path);
+        //if selected item is not in the selectedItems array add it to the array
+        if(event.ctrlKey || event.shiftKey) return setSelectedItems([...selectedItems, item]);
+        else return setSelectedItems([item]);
       }
-    } else {
-      setSelectedItem(item);
-    }
+    })
+    
   };
+
+  function unSelectItems(event:React.MouseEvent){      
+      const selectableTargets= [
+        document.querySelector(`.${styles.directoryName}`),
+        document.querySelector(`.${styles.directoryContainer}`),
+        document.querySelector(`.${styles.directoryView}`)
+      ]
+      
+      // if user clicks anything other than a directory item, unselect all items
+      // and ctrl and shift keys are not pressed, unselect all items
+      if(event.ctrlKey) return;
+      if(event.shiftKey) return;
+      if(selectableTargets.some(target => target === event.target))setSelectedItems([]);
+      
+  }
 
   async function createNewFile(){
     const newFile: IFile = {
@@ -58,12 +71,12 @@ function FolderView() {
       edit: true,
     };
     setFilesAndFolders((prevFilesAndFolders) => [newFile, ...prevFilesAndFolders]);
-    setSelectedItem(newFile);
+    setSelectedItems([newFile]);
   };
 
-  function deleteFileOrFolder(selectedItem: IFile){
-    if (!selectedItem.file_name) return;
-    fileManagement.deleteItem(selectedItem.file_path)
+  function deleteFileOrFolder(){
+    if (!selectedItems.some(selectedItem => selectedItem.file_name != "")) return;
+    selectedItems.forEach((selectedItem) => fileManagement.deleteItem(selectedItem.file_path));
   }; 
 
   function renameFileOrFolder(selectedItem: IFile){
@@ -73,6 +86,7 @@ function FolderView() {
       return fileOrFolder;});
     setFilesAndFolders(updatedFilesAndFolders);
   }
+
 
   useEffect(() => {
     if (loaderData === null || loaderData.file_name === "My Device") {
@@ -88,8 +102,8 @@ function FolderView() {
   }, [loaderData]);
 
   return (
-    <div className={styles.directoryView}>
-      <FolderOptionsBar selectedItem={selectedItem} currentPath={loaderData ? loaderData.file_path : ""} deleteItem={deleteFileOrFolder} createItem={createNewFile} editItem={renameFileOrFolder} />
+    <div className={styles.directoryView} onClick={(event) => unSelectItems(event)}>
+      <FolderOptionsBar selectedItems={selectedItems} currentPath={loaderData ? loaderData.file_path : ""} deleteItems={deleteFileOrFolder} createItem={createNewFile} editItem={renameFileOrFolder} />
 
       <h2 className={styles.directoryName}>
         {loaderData ? loaderData.file_name : "My device"}
@@ -100,8 +114,8 @@ function FolderView() {
           <DirectoryItem
             item={fileOrFolder}
             edit={fileOrFolder.edit}
-            handleClick={handleClick}
-            selectedItem={selectedItem}
+            setSelected={setSelected}
+            selectedItems={selectedItems}
             key={index}
           />
         ))}

@@ -3,7 +3,7 @@ import fileManagement from '../../../services/fileManagement';
 import { IFile } from '../../types/IFile';
 import  styles from './DirectoryItem.module.scss';
 
-function DirectoryItem({item, selectedItem, handleClick,edit}: {item:IFile,selectedItem:IFile,handleClick:Function,edit:boolean }) {
+function DirectoryItem({item, selectedItems, setSelected,edit}: {item:IFile,selectedItems:IFile[],setSelected:Function,edit:boolean }) {
     const imageFileTypes = ["pdf","xslx","docx","svg", "folder","drive","Bin"]
     const [EditMode, setEditMode] = useState(edit)
     const [newFileName, setNewFileName] = useState("")
@@ -11,7 +11,6 @@ function DirectoryItem({item, selectedItem, handleClick,edit}: {item:IFile,selec
         if(imageFileTypes.includes(item.file_type)) return `/${item.file_type}_icon.png`
         else return `/file_icon.png`
 
-        
     }
 
     useEffect(() => {
@@ -37,16 +36,15 @@ function DirectoryItem({item, selectedItem, handleClick,edit}: {item:IFile,selec
     }
 
     function renameItem(){        
-        let file_path = selectedItem.file_path.split("\\")
+        let file_path = selectedItems[0].file_path.split("\\")
         file_path.pop()
         let parentDirectory = file_path.join("\\")
-        fileManagement.renameItem(parentDirectory, selectedItem.file_name, newFileName)
+        fileManagement.renameItem(parentDirectory, selectedItems[0].file_name, newFileName)
     }
 
-    function handleItemClick(item:IFile){
+    function setSelectedClick(event:React.MouseEvent,item:IFile){
         if(item.edit) return
-
-        handleClick(item)
+        setSelected(event,item)
     }   
 
 
@@ -67,7 +65,7 @@ function DirectoryItem({item, selectedItem, handleClick,edit}: {item:IFile,selec
 
 
     return (
-        <button className={`${styles.directoryItem} ${selectedItem.file_name === item.file_name ? styles.isSelectedItem : ""}`} onClick={() => handleItemClick(item)} title={item.file_name}>
+        <button className={`${styles.directoryItem} ${selectedItems.some(selectedItem => selectedItem.file_name === item.file_name) ? styles.isSelectedItem : ""}`} onClick={(event) => setSelectedClick(event,item)} title={item.file_name}>
             <div className={styles.imageContainer}>
                 <img src={setIcon()} className={styles.itemImage}/>
             </div>
