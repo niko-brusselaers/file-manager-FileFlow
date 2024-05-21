@@ -25,6 +25,7 @@
     "store:allow-delete",
     "menu:default",
     "menu:allow-new",
-    "menu:allow-popup"
+    "menu:allow-popup",
+    "menu:allow-set-as-app-menu"
   ]
 }

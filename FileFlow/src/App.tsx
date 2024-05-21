@@ -52,7 +52,7 @@ function App() {
   return (
     <>
       <NavigationMenu/>
-      <div onContextMenu={async () => {await ContextMenu.emptyContextMenu()}} className="applicationContainer">
+      <div className="applicationContainer">
         <FileTransferSend dialogOpened={transferSendDialogOpen} setDialogOpened={setTransferSendDialogOpen} websocket={webSocketServer}  selectedItems={selectedItem}/>
         <FileTransferHub dialogOpened={transferHubDialogOpen} setDialogOpened={setTransferHubDialogOpen}/>
         <FileTransferProgress />
