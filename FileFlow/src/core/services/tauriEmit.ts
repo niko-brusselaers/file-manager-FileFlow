@@ -26,8 +26,8 @@ class tauriEmit{
         emit("delete");
     }
 
-    emitClearedMoveItem() {
-        emit("clearedMoveItem");
+    emitUpdateMoveitem() {
+        emit("updateMoveItem");
     }
 
 }

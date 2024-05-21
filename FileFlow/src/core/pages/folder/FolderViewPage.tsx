@@ -31,7 +31,7 @@ function FolderView() {
 
     //listen for create new file command and create a new file
     listen("createNewFile", () => createNewFile());
-
+    
     //listen for the copy command and copy the selected items
     listen("copy", () => copyItems());
 
@@ -46,11 +46,21 @@ function FolderView() {
 
     //listen for the delete command and delete the selected items
     listen("delete",async() => deleteItems())
+
+    //listen for keydown events
+    window.addEventListener("keydown", (event) => {
+      if (event.ctrlKey && event.key === "c") return copyItems();
+      if (event.ctrlKey && event.key === "x") return cutItems();
+      if (event.ctrlKey && event.key === "v") return pasteItems();
+      if (event.key === "F2") return renameFileOrFolder();
+      if (event.key === "Delete") return deleteItems();
+    });
     
   },[])
 
 
 
+  //fetch the files and folders in the directory
   function getFilesAndFolders(directoryPath: string){
     fileManagement.getDirectoryItems(directoryPath).then((data) => {
       if (!data?.filesAndFolders && !data?.directoryPath) return;
@@ -61,6 +71,7 @@ function FolderView() {
     });    
   };
 
+  //add selected item to the selectedItems array, if the item is already in the array open the file or folder
   function setSelected(event:React.MouseEvent,item: IFile) {
     
     if(selectedItems.length === 0) return setSelectedItems([item]);
@@ -83,6 +94,7 @@ function FolderView() {
     
   };
 
+  //unselect all items when user clicks on the directory view
   function unSelectItems(event:React.MouseEvent){      
       const selectableTargets= [
         document.querySelector(`.${styles.directoryName}`),
@@ -98,6 +110,7 @@ function FolderView() {
       
   }
 
+  //create a new file
   async function createNewFile(){
     const newFile: IFile = {
       file_name: "newFile",
@@ -118,7 +131,6 @@ function FolderView() {
     const updatedFilesAndFolders = filesAndFoldersRef.current.map((fileOrFolder) => {
       if (fileOrFolder.file_name === renameItem.file_name) fileOrFolder.edit = true;      
       return fileOrFolder;});
-      console.log(updatedFilesAndFolders);
       
     setFilesAndFolders(updatedFilesAndFolders);
   }
@@ -128,6 +140,7 @@ function FolderView() {
     let cutItems = selectedItemsRef.current;    
     if(!cutItems.length) return;
     sessionStorage.setItem("moveItem", JSON.stringify({type:"cut", items:cutItems}))
+    tauriEmit.emitUpdateMoveitem();
   }
 
   //copy the selected items
@@ -135,6 +148,7 @@ function FolderView() {
     let copyItems = selectedItemsRef.current;
     if(!copyItems.length) return;
     sessionStorage.setItem("moveItem", JSON.stringify({type:"copy", items:copyItems}))
+    tauriEmit.emitUpdateMoveitem();
   }
 
   //paste the copied or cut items
@@ -159,7 +173,7 @@ function FolderView() {
                 fileManagement.moveItem(item.file_path,copyPath)
             })
             sessionStorage.removeItem("moveItem")
-            tauriEmit.emitClearedMoveItem();
+            tauriEmit.emitUpdateMoveitem();
             break;
         default:
             break;
@@ -188,7 +202,7 @@ function FolderView() {
 
   return (
     <div onContextMenu={ async ()=> {MenuContext?.popup()}} className={styles.directoryView} onClick={(event) => unSelectItems(event)}>
-      <FolderOptionsBar selectedItems={selectedItems} createItem={createNewFile} editItem={renameFileOrFolder} />
+      <FolderOptionsBar selectedItems={selectedItems}/>
 
       <h2 className={styles.directoryName}>
         {loaderData ? loaderData.file_name : "My device"}
