@@ -5,6 +5,7 @@ import styles from './FolderView.module.scss';
 import FolderOptionsBar from "../../shared/components/folderOptionsBar/FolderOptionsBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import fileManagement from "../../services/fileManagement";
+import ContextMenu from "../../shared/components/contextMenu/ContextMenu";
 
 function FolderView() {
   // const folderTypes = ["folder", "drive", "Bin"];
@@ -102,7 +103,7 @@ function FolderView() {
   }, [loaderData]);
 
   return (
-    <div className={styles.directoryView} onClick={(event) => unSelectItems(event)}>
+    <div onContextMenu={ async ()=> {await ContextMenu.folderViewContextMenu()}} className={styles.directoryView} onClick={(event) => unSelectItems(event)}>
       <FolderOptionsBar selectedItems={selectedItems} currentPath={loaderData ? loaderData.file_path : ""} deleteItems={deleteFileOrFolder} createItem={createNewFile} editItem={renameFileOrFolder} />
 
       <h2 className={styles.directoryName}>

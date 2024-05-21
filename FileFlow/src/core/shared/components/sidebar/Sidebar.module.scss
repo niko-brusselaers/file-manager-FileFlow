@@ -22,7 +22,7 @@
     align-items: center;
 
     &:not(:last-child){
-        border-bottom: 1px solid $secondaryLightGrey;
+        border-bottom: 1px solid rgba($secondaryLightGrey,  0.5);
         padding-bottom: 2em;
     }
 }

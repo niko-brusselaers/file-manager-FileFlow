@@ -11,6 +11,9 @@ import FileTransferProgress from "./core/shared/components/fileTransfer/fileTran
 import webSocketService from "./core/services/webSocketService";
 import tauriStore from "./core/services/tauriStore";
 import { invoke } from "@tauri-apps/api/core";
+import ContextMenu from "./core/shared/components/contextMenu/ContextMenu";
+
+
 
 
 function App() {
@@ -46,12 +49,10 @@ function App() {
   },[])
 
 
-  
-
   return (
     <>
       <NavigationMenu/>
-      <div className="applicationContainer">
+      <div onContextMenu={async () => {await ContextMenu.emptyContextMenu()}} className="applicationContainer">
         <FileTransferSend dialogOpened={transferSendDialogOpen} setDialogOpened={setTransferSendDialogOpen} websocket={webSocketServer}  selectedItems={selectedItem}/>
         <FileTransferHub dialogOpened={transferHubDialogOpen} setDialogOpened={setTransferHubDialogOpen}/>
         <FileTransferProgress />

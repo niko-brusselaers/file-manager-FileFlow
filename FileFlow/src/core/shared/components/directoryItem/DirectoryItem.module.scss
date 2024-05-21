@@ -2,6 +2,7 @@
 
 .directoryItem{
     width: 100%;
+    padding: 0.5em;
     border: none;
     background-color: inherit;
     display: flex;
@@ -9,7 +10,7 @@
     justify-content: flex-start;
     
     &:hover{
-        background-color: rgba($secondaryDarkGray,.8);
+        background-color: $secondaryLightGrey;
         color: black;
     } 
 
@@ -48,8 +49,9 @@
         justify-content: center;
         align-items: center;
         width: 100%;
-        height: 10em;
-        background-color: $secondaryDarkGray;
+        padding: 2em 0;
+        height: 7.5em;
+        background-color: $secondaryLightGrey;
 
         .itemImage{
         display: flex;

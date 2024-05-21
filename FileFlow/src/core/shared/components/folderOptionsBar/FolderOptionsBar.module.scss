@@ -25,8 +25,8 @@
     background-color: white;
     border: none;
     border-radius: 50%;
-    width: 2.5em;
-    height: 2.5em;
+    width: 1.75em;
+    height: 1.75em;
     margin: 0 .5em;
     
     img{
@@ -39,6 +39,6 @@
 
 .inactive{
     pointer-events: none;
-    opacity: 0.5;
+    opacity: 0.2;
 
 }

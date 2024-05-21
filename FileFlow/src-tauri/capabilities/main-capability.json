@@ -22,6 +22,9 @@
     "store:allow-save",
     "store:allow-load",
     "store:allow-entries",
-    "store:allow-delete"
+    "store:allow-delete",
+    "menu:default",
+    "menu:allow-new",
+    "menu:allow-popup"
   ]
 }

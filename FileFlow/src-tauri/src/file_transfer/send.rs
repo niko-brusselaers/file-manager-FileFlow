@@ -34,14 +34,12 @@ pub async fn send_files(file_path: &str, app: tauri::AppHandle) -> Result<(), St
     let (server_welcome, connection) = match Wormhole::connect_without_code(app_config, 3).await {
         Ok(wormhole) => wormhole,
         Err(error) => {
-            println!("{:#?}", error);
             return Err(error.to_string());
         }
     };
 
     //get code from server welcome and emit to frontend
     let code = server_welcome.code;
-    println!("code: {:#?}", code);
     app.emit("fileTransferCode", code.to_string()).unwrap();
 
     //store start of sending progress

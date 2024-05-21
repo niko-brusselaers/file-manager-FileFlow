@@ -11,6 +11,8 @@ use file_transfer::send::*;
 use file_management::update::*;
 use miscellaneous::get_device_name;
 
+
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
