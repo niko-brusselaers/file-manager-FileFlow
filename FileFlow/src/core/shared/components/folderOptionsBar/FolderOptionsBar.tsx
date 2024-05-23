@@ -1,19 +1,32 @@
 import styles from './FolderOptionsBar.module.scss';
 import { IFile } from '../../types/IFile';
 import { emit, listen } from '@tauri-apps/api/event';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import tauriEmit from '../../../services/tauriEmit';
 
 function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
     const [pasteItemData, setPasteItemData] = useState<{type:string, items:IFile[]} | null>(sessionStorage.getItem("moveItem") ? JSON.parse(sessionStorage.getItem("moveItem") || '') : null);
     const [hidden, setHidden] = useState<Boolean| null>(localStorage.getItem("hiddenFiles") ? JSON.parse(localStorage.getItem("hiddenFiles") || '') :  false);
+    const [sortDropDownMenyIsOpen, setSortDropDownMenuIsOpen] = useState<boolean>(false);
+    const [sortBy, setSortBy] = useState<string>(localStorage.getItem("sortBy") ? localStorage.getItem("sortBy") || "" : "name");
+    const [order, setOrder] = useState<string>(localStorage.getItem("order") ? localStorage.getItem("order") || "" : "ascending");
 
+    const sortFormRef = useRef<HTMLFormElement>(null);
+    let timeoutID: NodeJS.Timeout | null = null;
+    
     useEffect(() => {
         listen("updateMoveItem", () => {
             setPasteItemData(sessionStorage.getItem("moveItem") ? JSON.parse(sessionStorage.getItem("moveItem") || '') : null);
         });
 
+
     },[])
+
+    useEffect(() => {
+        localStorage.setItem("sortBy", sortBy);
+        localStorage.setItem("order", order);
+        tauriEmit.emitSortFiles(sortBy, order);
+    },[sortBy, order])
 
     function openTransferSend(){
         if(selectedItems.some(selectedItem => selectedItem.name != "")) emit("sendFile", {file: selectedItems});
@@ -25,6 +38,18 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
         setHidden(!hidden);
         tauriEmit.emitHiddenFiles(!hidden);
     }
+
+    function handleSortDropDownMenuClick(){
+        if(timeoutID) clearTimeout(timeoutID);
+        setSortDropDownMenuIsOpen(true);
+    }
+
+    function handleSortDropDownMenuLeave(){
+        timeoutID = setTimeout(() => {
+            setSortDropDownMenuIsOpen(false);
+        }, 100);
+    }
+    
 
     
     return (
@@ -50,9 +75,41 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
                 </button>
             </div>
             <div className={styles.folderOptionsBarButtonGroup}>
-                <button className={styles.folderOptionsBarButton}>
-                    <img src="/sort_icon.png" alt="create file" />
-                </button>
+                <div className={styles.sortDropDownMenu} onMouseLeave={handleSortDropDownMenuLeave}>
+                    <button className={styles.folderOptionsBarButton}  onClick={handleSortDropDownMenuClick}>
+                        <img src="/sort_icon.png" alt="create file" />
+                    </button>
+                    <form ref={sortFormRef} className={styles.dropDownContainer} style={sortDropDownMenyIsOpen ? {display:"flex"} : {display:"none"} } onMouseEnter={handleSortDropDownMenuClick}>
+                        <div className={styles.radioContainer}>
+                            <h4>Sort By</h4>
+                            <div className={styles.radioInput}>
+                                <label htmlFor="name">Name</label>
+                                <input type="radio" name="sortBy" id="name" defaultChecked={sortBy === "name"} value={"name"} onChange={(event) => setSortBy(event.target.value)}/>
+                            </div>
+                            <div  className={styles.radioInput}>
+                                <label htmlFor="size">Size</label>
+                                <input type="radio" name="sortBy" id="size" defaultChecked={sortBy === "size"} value={"size"}  onChange={(event) => setSortBy(event.target.value)}/>
+                            </div>
+                            <div  className={styles.radioInput}>
+                                <label htmlFor="type">Type</label>
+                                <input type="radio" name="sortBy" id="type" defaultChecked={sortBy === "type"} value={"type"}  onChange={(event) => setSortBy(event.target.value)}/>
+                            </div>
+
+                        </div>
+                        <div className={styles.radioContainer}>
+                            <h4 >Order</h4>
+                            <div className={styles.radioInput}>
+                                <label htmlFor="ascending">Ascending</label>
+                                <input type="radio" name="order" id="ascending" defaultChecked={order === "ascending"} value={"ascending"}  onChange={(event) => setOrder(event.target.value)}/>
+                            </div>
+                            <div className={styles.radioInput}>
+                                <label htmlFor="descending">Descending</label>
+                                <input type="radio" name="order" id="descending" defaultChecked={order === "descending"} value={"descending"}  onChange={(event) => setOrder(event.target.value)}/>
+                            </div>
+                        </div>
+                    </form>
+                 </div>
+                
                 <button className={styles.folderOptionsBarButton} onClick={changeHiddenFiles}>
                     <img src="/showHidden_icon.png" alt="create file" />
                 </button>

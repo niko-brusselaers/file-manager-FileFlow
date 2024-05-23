@@ -34,6 +34,10 @@ class tauriEmit{
         emit("hiddenFiles",hidden);
     }
 
+    emitSortFiles(sortBy: string, order: string) {
+        emit("sortFiles", {sortBy, order});
+    }
+
 }
 
 export default new tauriEmit();

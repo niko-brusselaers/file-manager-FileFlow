@@ -9,13 +9,14 @@ import ContextMenu from "../../shared/components/contextMenu/ContextMenu";
 import { Menu } from "@tauri-apps/api/menu";
 import { listen } from "@tauri-apps/api/event";
 import tauriEmit from "../../services/tauriEmit";
+import conversion from "../../services/conversion";
 
 function FolderView() {
-  // const folderTypes = ["folder", "drive", "Bin"];
   const [filesAndFolders, setFilesAndFolders] = useState<IFile[]>(() => []);
   const [selectedItems, setSelectedItems] = useState<IFile[]>(() => [])
   const [MenuContext,setMenuContext] = useState<Menu>();
-  const [hidden, setHidden] = useState<Boolean>(true);
+  const [hidden, setHidden] = useState<Boolean>();
+  const [sortingConfig, setSortingConfig] = useState<{sortBy:string, order:string}>(localStorage.getItem("sortBy") && localStorage.getItem("order") ? {sortBy:localStorage.getItem("sortBy") || "", order:localStorage.getItem("order") || ""} : {sortBy:"name", order:"ascending"});
 
 
   const filesAndFoldersRef = useRef(filesAndFolders);
@@ -57,6 +58,11 @@ function FolderView() {
       getFilesAndFolders(loaderData?.path)
     })
 
+    //listen for sort files command and sort the files
+    listen("sortFiles", (event) => {
+      setSortingConfig(event.payload as {sortBy:string, order:string})
+    })
+
     //listen for keydown events
     window.addEventListener("keydown", (event) => {
       if (event.ctrlKey && event.key === "c") return copyItems();
@@ -76,6 +82,8 @@ function FolderView() {
       fileManagement.getdrives().then((data) => {
         if (!data?.filesAndFolders && !data?.directoryPath) return;        
         setFilesAndFolders(data.filesAndFolders);
+        sortItems(data.filesAndFolders);
+
       }).catch((error) => {
         console.error("Error fetching drives:", error);
       });
@@ -84,15 +92,18 @@ function FolderView() {
     }
   }, [loaderData]);
 
+  useEffect(() => {sortItems()}, [sortingConfig])
   useEffect(() => getFilesAndFolders(loaderData?.path), [hidden])
 
   //fetch the files and folders in the directory
   function getFilesAndFolders(directoryPath: string){ 
     //get hidden state from the local storage
     setHidden(localStorage.getItem("hiddenFiles") ? JSON.parse(localStorage.getItem("hiddenFiles") || '') : false)  
+    if(loaderData?.path === "" || !loaderData) return;
+    //fetch the files and folders in the directory
     fileManagement.getDirectoryItems(directoryPath, hidden).then((data) => {      
       if (!data?.filesAndFolders && !data?.directoryPath) return;
-      setFilesAndFolders(data.filesAndFolders)
+      sortItems(data.filesAndFolders);
       setSelectedItems([]);
     }).catch((error) => {
       console.error("Error fetching files and folders:", error);
@@ -137,6 +148,26 @@ function FolderView() {
       
   }
 
+  //sort the files and folders based on the sorting configuration
+  async function sortItems(fileOrFolders:IFile[] = filesAndFoldersRef.current){
+    let sortedItems = [...fileOrFolders];
+    switch(sortingConfig.sortBy){
+      case "name":        
+        sortedItems.sort((a,b) => a.name.localeCompare(b.name));
+        break;
+      case "type":
+        sortedItems.sort((a,b) => a.extension.localeCompare(b.extension));
+        break;
+      case "size":
+        sortedItems.sort((a,b) => conversion.convertFileSizeToNumber(a.size) - conversion.convertFileSizeToNumber(b.size));
+        break;
+    }
+
+    if(sortingConfig.order === "descending") sortedItems.reverse();
+
+    setFilesAndFolders(sortedItems);
+}
+
   //create a new file
   async function createNewFile(){
     const newFile: IFile = {
@@ -151,8 +182,7 @@ function FolderView() {
     };
     setFilesAndFolders((prevFilesAndFolders) => [newFile, ...prevFilesAndFolders]);
     setSelectedItems([newFile]);
-  };
-  
+  }; 
 
   //rename the selected file or folder
   function renameFileOrFolder(){

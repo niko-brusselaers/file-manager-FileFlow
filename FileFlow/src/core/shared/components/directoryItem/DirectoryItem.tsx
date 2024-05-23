@@ -9,7 +9,7 @@ function DirectoryItem({item, selectedItems, setSelected,edit}: {item:IFile,sele
     const [newFileName, setNewFileName] = useState("")
     function setIcon(){
         if(imageFileTypes.includes(item.extension)) return `/${item.extension}_icon.png`
-        else return `/icon.png`
+        else return `/file_icon.png`
 
     }
 

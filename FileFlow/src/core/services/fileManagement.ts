@@ -32,10 +32,10 @@ class fileManagement {
         }
     }
 
-    async getDirectoryItems(directoryPath: string,isHidden:Boolean) {        
+    async getDirectoryItems(directoryPath: string,isHidden?:Boolean) {        
         try {
 
-            let filesAndFolders:IFile[] = await invoke("read_directory", { path: directoryPath, isHidden: isHidden })
+            let filesAndFolders:IFile[] = await invoke("read_directory", { path: directoryPath, isHidden: isHidden ? isHidden : false})
         
             filesAndFolders = filesAndFolders.map((fileOrFolder:IFile) => {
                 //remove double backslashes

@@ -8,11 +8,15 @@ import fileManagement from "../../../services/fileManagement";
 
   
 function NavigationMenu() {
-    const appWindow = Window.getCurrent();
-    const locationData:IFile = useLocation().state;
     const navigate = useNavigate()
+    const locationData:IFile = useLocation().state;
+    const appWindow = Window.getCurrent();
+    let timeoutID: NodeJS.Timeout | null = null;
+
     const [filePathInput, setFilePathInput] = useState<string>(locationData?.name || "");
     const [dropDownBarIsOpen, setDropDownBarIsOpen] = useState<boolean>(false);
+    
+    
 
     useEffect(() => {
         // Set the --navBarHeight variable to the height of the titlebar
@@ -53,6 +57,17 @@ function NavigationMenu() {
 
     function closeWindow() {
         appWindow.close();
+    }
+
+    function handleDropDownClick(){
+        if(timeoutID) clearTimeout(timeoutID);
+        setDropDownBarIsOpen(true);
+    }
+
+    function handleDropDownMenuLeave(){
+        timeoutID = setTimeout(() => {
+            setDropDownBarIsOpen(false);
+        }, 100);
     }
 
     function setNavBarHeightVariable() {
@@ -114,11 +129,6 @@ function NavigationMenu() {
         
     }
 
-    async function ToggleDropDownBar(){
-        setDropDownBarIsOpen(!dropDownBarIsOpen)
-        if(!dropDownBarIsOpen){
-        }
-    }
 
     function openFileTransferHub(){
         emit("openFileTransferHub", {});
@@ -165,8 +175,8 @@ function NavigationMenu() {
                         <input type="text" placeholder="Search This pc"/>
 
                     </form>
-                    <div  className={styles.drownDownMenu}>
-                        <img className={styles.dropdownMenuImage} src="/acount_icon.png" alt="" onClick={() => {ToggleDropDownBar()}} />
+                    <div  className={styles.drownDownMenu}  onMouseLeave={handleDropDownMenuLeave}>
+                        <img className={styles.dropdownMenuImage} src="/acount_icon.png" alt=""  onClick={handleDropDownClick}/>
                         <div className={styles.dropDownMenuContainer} style={dropDownBarIsOpen ? {display:"block"} : {display:"none"}}>
                             <button className={styles.dropDownMenuButton} onClick={() => {openFileTransferHub()}}>
                                 File Transfer

@@ -37,6 +37,38 @@
     }
 }
 
+.sortDropDownMenu{
+    position: relative;
+    
+
+    .dropDownContainer{
+        position: absolute;
+        top: 2em;
+        width: 15em;
+        background-color: $secondaryLightGrey;
+
+        .radioContainer{
+               display: flex;
+            padding: 0.5em 0.25em;
+            flex-direction: column;
+            width: 50%;
+            
+
+
+        }
+
+        .radioInput{
+            display: flex;
+            padding: 0.5em 0;
+
+            label{
+                width: 80%;
+                height: 0.5em 0;
+            }
+        }
+    }
+}
+
 .inactive{
     pointer-events: none;
     opacity: 0.2;

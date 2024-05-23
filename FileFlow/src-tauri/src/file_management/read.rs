@@ -38,10 +38,15 @@ pub fn read_directory(path: String,is_hidden:bool) -> Result<Vec<File>, String> 
         .collect::<Result<Vec<_>, _>>()
         .map_err(|e| e.to_string())?;
 
-    let paths = paths.into_iter().filter(|file| file.hidden == is_hidden).collect();
-
-    Ok(paths)
-}
+        //if is_hidden is false, filter out hidden files else return all files
+        let paths = if is_hidden {
+            paths
+        } else {
+            paths.into_iter().filter(|file| !file.hidden).collect()
+        };
+        
+        Ok(paths)
+    }
 
 #[tauri::command]
 pub fn get_drives() -> Vec<File> {
