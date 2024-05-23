@@ -15,6 +15,10 @@ class fileManagement {
             //set drive name
             drive.name = (drive.name ? drive.name : "Drive") + ` (${drive.path.replace("\\","")})`
 
+            //format created and modified date
+            drive.created = new Date(drive.created).toLocaleString()
+            drive.modified = new Date(drive.modified).toLocaleString()
+
             let fileSize = parseInt(drive.size)
             //convert file size to readable format
             if(fileSize/Math.pow(1024, 4) > 1) drive.size = ((fileSize/Math.pow(1024, 4)).toFixed(2)).toString() +" TB";
@@ -41,13 +45,16 @@ class fileManagement {
                 //remove double backslashes
                 fileOrFolder.path = fileOrFolder.path.replace("\\\\", "\\")
                                 
+                //format created and modified date
+                fileOrFolder.created = new Date(fileOrFolder.created).toLocaleString()
+                fileOrFolder.modified = new Date(fileOrFolder.modified).toLocaleString()
+
                 //set file size
                 fileOrFolder.size = conversion.convertFileSizeIdentifier(parseInt(fileOrFolder.size))
 
 
                 return fileOrFolder
-            })
-
+            })            
             return {filesAndFolders, directoryPath}
 
         } catch (error) {

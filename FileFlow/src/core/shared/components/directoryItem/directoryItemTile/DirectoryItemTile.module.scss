@@ -1,6 +1,6 @@
-@import "../../../shared/style/variables.scss";
+@import "../../../../shared/style/variables.scss";
 
-.directoryItem{
+.directoryItemTile{
     width: 100%;
     padding: 0.5em;
     border: none;
@@ -72,7 +72,7 @@
 .isSelectedItem{
         background-color: rgba($secondaryDarkGray,.8);
         color: black;
-    } 
+} 
 
 
 

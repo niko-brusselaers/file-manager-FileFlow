@@ -21,7 +21,7 @@ function NavigationMenu() {
     useEffect(() => {
         // Set the --navBarHeight variable to the height of the titlebar
         setNavBarHeightVariable();
-        window.addEventListener('resize', () => setNavBarHeightVariable());
+        window.addEventListener('resize', setNavBarHeightVariable);
 
         //close the dropdown bar when the user clicks outside of the dropdown bar
         document.addEventListener("mousedown", (event) => {

@@ -1,9 +1,9 @@
 import {useEffect, useState } from 'react';
-import fileManagement from '../../../services/fileManagement';
-import { IFile } from '../../types/IFile';
-import  styles from './DirectoryItem.module.scss';
+import  styles from './DirectoryItemTile.module.scss';
+import fileManagement from '../../../../services/fileManagement';
+import { IFile } from '../../../types/IFile';
 
-function DirectoryItem({item, selectedItems, setSelected,edit}: {item:IFile,selectedItems:IFile[],setSelected:Function,edit:boolean }) {
+function DirectoryItemTile({item, selectedItems, setSelected,edit}: {item:IFile,selectedItems:IFile[],setSelected:Function,edit:boolean }) {
     const imageFileTypes = ["pdf","xslx","docx","svg", "folder","drive","Bin"]
     const [EditMode, setEditMode] = useState(edit)
     const [newFileName, setNewFileName] = useState("")
@@ -17,10 +17,11 @@ function DirectoryItem({item, selectedItems, setSelected,edit}: {item:IFile,sele
         setEditMode(edit)
     }, [edit])
 
-    function setFileTypeHidden(){
-        if(item.extension === "folder" || item.extension === "drive") return "none"
-        else return "block"
+      function showFileSize(){
+        if(item.extension === "folder") return ""
+        else return item.size
     }
+
 
     function createNewFile(){     
 
@@ -65,20 +66,17 @@ function DirectoryItem({item, selectedItems, setSelected,edit}: {item:IFile,sele
 
 
     return (
-        <button className={`${styles.directoryItem} ${selectedItems.some(selectedItem => selectedItem.name === item.name) ? styles.isSelectedItem : ""}`} onClick={(event) => setSelectedClick(event,item)} title={item.name}>
+        <button className={`${styles.directoryItemTile} ${selectedItems.some(selectedItem => selectedItem.name === item.name) ? styles.isSelectedItem : ""}`} onClick={(event) => setSelectedClick(event,item)} title={item.name}>
             <div className={styles.imageContainer}>
                 <img src={setIcon()} className={styles.itemImage}/>
             </div>
             <div className={styles.itemDetails}>
                 {(EditMode ?
-                    <form onSubmit={(event) => {event.preventDefault(); updateItem()}}>
-                        <input type="text" defaultValue={item.name} onChange={(event)  => {setNewFileName(event.currentTarget.value)}} onBlur={(event) => {event.preventDefault(); updateItem()}}/>
-                    </form>
+                    <input type="text" defaultValue={item.name} onChange={(event)  => {setNewFileName(event.currentTarget.value)}} onKeyDown={(event) => {if (event.key === 'Enter') {event.preventDefault();updateItem();}}}  onBlur={(event) => {event.preventDefault(); updateItem()}}/>
                      : 
                      <p className={styles.fileName}>{item.name}</p>)}
-                 <div>
-                 <p className={styles.fileTypeText} style={{display:setFileTypeHidden()}}>{item.size}</p>
-                 </div>
+                 <p className={styles.fileTypeText} >{item.extension}</p>
+                 <p className={styles.fileTypeText} >{showFileSize()}</p>
 
             </div>
            
@@ -86,4 +84,4 @@ function DirectoryItem({item, selectedItems, setSelected,edit}: {item:IFile,sele
     );
 }
 
-export default DirectoryItem;
+export default DirectoryItemTile;

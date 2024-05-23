@@ -6,6 +6,7 @@ import tauriEmit from '../../../services/tauriEmit';
 
 function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
     const [pasteItemData, setPasteItemData] = useState<{type:string, items:IFile[]} | null>(sessionStorage.getItem("moveItem") ? JSON.parse(sessionStorage.getItem("moveItem") || '') : null);
+    const [detailView, setDetailView] = useState<Boolean>(localStorage.getItem("detailView") ? JSON.parse(localStorage.getItem("detailView") || '') : false);
     const [hidden, setHidden] = useState<Boolean| null>(localStorage.getItem("hiddenFiles") ? JSON.parse(localStorage.getItem("hiddenFiles") || '') :  false);
     const [sortDropDownMenyIsOpen, setSortDropDownMenuIsOpen] = useState<boolean>(false);
     const [sortBy, setSortBy] = useState<string>(localStorage.getItem("sortBy") ? localStorage.getItem("sortBy") || "" : "name");
@@ -37,6 +38,12 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
         localStorage.setItem("hiddenFiles", JSON.stringify(!hidden));
         setHidden(!hidden);
         tauriEmit.emitHiddenFiles(!hidden);
+    }
+
+    function changeViewType(){
+        tauriEmit.emitChangeViewType(!detailView);
+        setDetailView(!detailView);
+        localStorage.setItem("detailView", JSON.stringify(!detailView));
     }
 
     function handleSortDropDownMenuClick(){
@@ -111,10 +118,10 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
                  </div>
                 
                 <button className={styles.folderOptionsBarButton} onClick={changeHiddenFiles}>
-                    <img src="/showHidden_icon.png" alt="create file" />
+                    <img src="/showHidden_icon.png" alt="show hidden file" />
                 </button>
-                <button className={styles.folderOptionsBarButton}>
-                    <img src="/folderView_icon.png" alt="create file" />
+                <button className={styles.folderOptionsBarButton} onClick={changeViewType}>
+                    <img src="/folderView_icon.png" alt="change view type" />
                 </button>
             </div>
             <div className={styles.folderOptionsBarButtonGroup}>

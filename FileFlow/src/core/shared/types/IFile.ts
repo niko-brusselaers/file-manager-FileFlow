@@ -4,7 +4,7 @@ export interface IFile{
   extension: string
   size: string,
   hidden: boolean,
-  created: Date,
-  modified: Date,
+  created: Date | string,
+  modified: Date | string,
   edit: boolean
 }

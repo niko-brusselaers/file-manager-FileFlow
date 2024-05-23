@@ -34,6 +34,10 @@ class tauriEmit{
         emit("hiddenFiles",hidden);
     }
 
+    emitChangeViewType(detailView:Boolean) {
+        emit("changeViewType", detailView);
+    }
+
     emitSortFiles(sortBy: string, order: string) {
         emit("sortFiles", {sortBy, order});
     }

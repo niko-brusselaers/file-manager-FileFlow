@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { IFile } from "../../shared/types/IFile";
-import DirectoryItem from "../../shared/components/directoryItem/DirectoryItem";
 import styles from './FolderView.module.scss';
 import FolderOptionsBar from "../../shared/components/folderOptionsBar/FolderOptionsBar";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -10,13 +9,17 @@ import { Menu } from "@tauri-apps/api/menu";
 import { listen } from "@tauri-apps/api/event";
 import tauriEmit from "../../services/tauriEmit";
 import conversion from "../../services/conversion";
+import DirectoryItemTile from "../../shared/components/directoryItem/directoryItemTile/DirectoryItemTile";
+import DirectoryItemDetail from "../../shared/components/directoryItem/directoryItemDetail/DirectoryItemDetail";
+import ContainerDetailViewTop from "./containerDetailViewTop/ContainerDetailViewTop";
 
 function FolderView() {
+  const [sortingConfig, setSortingConfig] = useState<{sortBy:string, order:string}>(localStorage.getItem("sortBy") && localStorage.getItem("order") ? {sortBy:localStorage.getItem("sortBy") || "", order:localStorage.getItem("order") || ""} : {sortBy:"name", order:"ascending"});
   const [filesAndFolders, setFilesAndFolders] = useState<IFile[]>(() => []);
   const [selectedItems, setSelectedItems] = useState<IFile[]>(() => [])
   const [MenuContext,setMenuContext] = useState<Menu>();
   const [hidden, setHidden] = useState<Boolean>();
-  const [sortingConfig, setSortingConfig] = useState<{sortBy:string, order:string}>(localStorage.getItem("sortBy") && localStorage.getItem("order") ? {sortBy:localStorage.getItem("sortBy") || "", order:localStorage.getItem("order") || ""} : {sortBy:"name", order:"ascending"});
+  const [detailView, setDetailView] = useState<Boolean>(localStorage.getItem("detailView") ? JSON.parse(localStorage.getItem("detailView") || '') : false);
 
 
   const filesAndFoldersRef = useRef(filesAndFolders);
@@ -57,6 +60,9 @@ function FolderView() {
       setHidden(event.payload as boolean)
       getFilesAndFolders(loaderData?.path)
     })
+
+    //listen for detail view command and change the state of the detail view
+    listen("changeViewType", (event) => {setDetailView(event.payload as boolean)})
 
     //listen for sort files command and sort the files
     listen("sortFiles", (event) => {
@@ -254,15 +260,24 @@ function FolderView() {
         {loaderData ? loaderData.name : "My device"}
       </h2>
 
-      <div className={styles.directoryContainer}>
+      <div className={detailView ? styles.directoryContainerDetail : styles.directoryContainerTile}>
+        {(detailView ? <ContainerDetailViewTop/> : "")}
         {filesAndFolders.map((fileOrFolder, index) => (
-          <DirectoryItem
+          detailView ? 
+          <DirectoryItemDetail
             item={fileOrFolder}
             edit={fileOrFolder.edit}
             setSelected={setSelected}
             selectedItems={selectedItems}
-            key={index}
-          />
+            key={index}/> 
+          : 
+          <DirectoryItemTile
+            item={fileOrFolder}
+            edit={fileOrFolder.edit}
+            setSelected={setSelected}
+            selectedItems={selectedItems}
+            key={index}/>
+          
         ))}
       </div>
     </div>

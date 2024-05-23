@@ -1,0 +1,49 @@
+@import "../../../../shared/style/variables.scss";
+
+.directoryItemDetail{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    padding: .5rem 2rem;
+    border:none;
+    background-color: inherit;
+
+    &:hover{
+        background-color: $secondaryLightGrey;
+        color: black;
+    }
+
+    .itemName *{
+        text-align: left;
+    }
+
+    .imageContainer{
+        width: 3rem;
+        padding: 0.5rem;
+        background-color: $secondaryLightGrey;
+        
+        img{
+            width: 60%;
+            height: auto;
+        }
+    }
+
+    .itemDetails{
+        margin-left:5%;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 2fr repeat(3, 1fr);
+        grid-template-rows: 1fr;
+        grid-column-gap: 20px;
+        grid-row-gap: 0px;
+        justify-items: start;
+    }
+
+}
+
+.isSelectedItem{
+        background-color: rgba($secondaryDarkGray,.8);
+        color: black;
+
+} 
