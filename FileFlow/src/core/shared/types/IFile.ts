@@ -1,7 +1,10 @@
 export interface IFile{
-  file_name: string,
-  file_path: string,
-  file_type: string
-  file_size: string
+  name: string,
+  path: string,
+  extension: string
+  size: string,
+  hidden: boolean,
+  created: Date,
+  modified: Date,
   edit: boolean
 }

@@ -13,22 +13,26 @@ import tauriEmit from "../../services/tauriEmit";
 function FolderView() {
   // const folderTypes = ["folder", "drive", "Bin"];
   const [filesAndFolders, setFilesAndFolders] = useState<IFile[]>(() => []);
+  const [selectedItems, setSelectedItems] = useState<IFile[]>(() => [])
+  const [MenuContext,setMenuContext] = useState<Menu>();
+  const [hidden, setHidden] = useState<Boolean>(true);
+
+
   const filesAndFoldersRef = useRef(filesAndFolders);
   filesAndFoldersRef.current = filesAndFolders;
-  const loaderData: IFile = useLocation().state;
-  const navigate = useNavigate();
-  const [selectedItems, setSelectedItems] = useState<IFile[]>(() => [])
   const selectedItemsRef = useRef(selectedItems);
   selectedItemsRef.current = selectedItems;
 
-  const [MenuContext,setMenuContext] = useState<Menu>();
+  const loaderData: IFile = useLocation().state;
+  const navigate = useNavigate();
+
 
   
   
-  useEffect(() => {
+  useEffect(() => {     
+
     //create a context menu for the folder view
     ContextMenu.getFolderViewContextMenu().then((menu) => setMenuContext(menu))
-
     //listen for create new file command and create a new file
     listen("createNewFile", () => createNewFile());
     
@@ -47,6 +51,12 @@ function FolderView() {
     //listen for the delete command and delete the selected items
     listen("delete",async() => deleteItems())
 
+    //listen for hidden files command and change the state of the hidden files
+    listen("hiddenFiles",(event) => {
+      setHidden(event.payload as boolean)
+      getFilesAndFolders(loaderData?.path)
+    })
+
     //listen for keydown events
     window.addEventListener("keydown", (event) => {
       if (event.ctrlKey && event.key === "c") return copyItems();
@@ -54,17 +64,35 @@ function FolderView() {
       if (event.ctrlKey && event.key === "v") return pasteItems();
       if (event.key === "F2") return renameFileOrFolder();
       if (event.key === "Delete") return deleteItems();
-    });
+    });    
     
   },[])
 
 
+    //fetch the files and folders when navigating to a new directory
+  useEffect(() => {
+    if (loaderData === null || loaderData.name === "My Device") {
+      //fetch the drives when the loaderData is null or the name is "My Device"
+      fileManagement.getdrives().then((data) => {
+        if (!data?.filesAndFolders && !data?.directoryPath) return;        
+        setFilesAndFolders(data.filesAndFolders);
+      }).catch((error) => {
+        console.error("Error fetching drives:", error);
+      });
+    } else {
+      getFilesAndFolders(loaderData.path);      
+    }
+  }, [loaderData]);
+
+  useEffect(() => getFilesAndFolders(loaderData?.path), [hidden])
 
   //fetch the files and folders in the directory
-  function getFilesAndFolders(directoryPath: string){
-    fileManagement.getDirectoryItems(directoryPath).then((data) => {
+  function getFilesAndFolders(directoryPath: string){ 
+    //get hidden state from the local storage
+    setHidden(localStorage.getItem("hiddenFiles") ? JSON.parse(localStorage.getItem("hiddenFiles") || '') : false)  
+    fileManagement.getDirectoryItems(directoryPath, hidden).then((data) => {      
       if (!data?.filesAndFolders && !data?.directoryPath) return;
-      setFilesAndFolders(data.filesAndFolders);
+      setFilesAndFolders(data.filesAndFolders)
       setSelectedItems([]);
     }).catch((error) => {
       console.error("Error fetching files and folders:", error);
@@ -76,14 +104,13 @@ function FolderView() {
     
     if(selectedItems.length === 0) return setSelectedItems([item]);
     selectedItems.map(selectedItem => {
-      
       //if selected item is already in the selectedItems array open the file or folder
       if (selectedItem === item) {
         
-        if (item.file_type === "folder" || item.file_type === "drive") {
-          return navigate(`/${item.file_name}`, { state: item });
+        if (item.extension === "folder" || item.extension === "drive") {
+          return navigate(`/${item.name}`, { state: item });
         } else {
-          return fileManagement.openFile(item.file_path);
+          return fileManagement.openFile(item.path);
         }
       } else {
         //if selected item is not in the selectedItems array add it to the array
@@ -113,10 +140,13 @@ function FolderView() {
   //create a new file
   async function createNewFile(){
     const newFile: IFile = {
-      file_name: "newFile",
-      file_path: loaderData.file_path,
-      file_type: "",
-      file_size: "",
+      name: "newFile",
+      path: loaderData.path,
+      created: new Date(),
+      modified: new Date(),
+      hidden: false,
+      extension: "",
+      size: "",
       edit: true,
     };
     setFilesAndFolders((prevFilesAndFolders) => [newFile, ...prevFilesAndFolders]);
@@ -127,9 +157,9 @@ function FolderView() {
   //rename the selected file or folder
   function renameFileOrFolder(){
     let renameItem = selectedItemsRef.current[0];
-    if (renameItem.file_name === "") return;
+    if (renameItem.name === "") return;
     const updatedFilesAndFolders = filesAndFoldersRef.current.map((fileOrFolder) => {
-      if (fileOrFolder.file_name === renameItem.file_name) fileOrFolder.edit = true;      
+      if (fileOrFolder.name === renameItem.name) fileOrFolder.edit = true;      
       return fileOrFolder;});
       
     setFilesAndFolders(updatedFilesAndFolders);
@@ -162,15 +192,15 @@ function FolderView() {
         // when the moveItem is a copy, copy the items
         case "copy":
             moveItem.items.map(item => {
-                let copyPath = loaderData.file_path + "\\" + item.file_name
-                fileManagement.copyItem(item.file_path,copyPath)
+                let copyPath = loaderData.path + "\\" + item.name
+                fileManagement.copyItem(item.path,copyPath)
             })
             break;
         // when the moveItem is a cut, move the items
         case "cut":
             moveItem.items.map(item => {
-                let copyPath = loaderData.file_path + "\\" + item.file_name
-                fileManagement.moveItem(item.file_path,copyPath)
+                let copyPath = loaderData.path + "\\" + item.name
+                fileManagement.moveItem(item.path,copyPath)
             })
             sessionStorage.removeItem("moveItem")
             tauriEmit.emitUpdateMoveitem();
@@ -182,30 +212,16 @@ function FolderView() {
 
   //delete the selected items
   function deleteItems(){
-    if (!selectedItemsRef.current.some(selectedItem => selectedItem.file_name != "")) return;          
-    selectedItemsRef.current.map(selectedItem => fileManagement.deleteItem(selectedItem .file_path))
+    if (!selectedItemsRef.current.some(selectedItem => selectedItem.name != "")) return;          
+    selectedItemsRef.current.map(selectedItem => fileManagement.deleteItem(selectedItem .path))
   };
-
-  //fetch the files and folders when navigating to a new directory
-  useEffect(() => {
-    if (loaderData === null || loaderData.file_name === "My Device") {
-      fileManagement.getdrives().then((data) => {
-        if (!data?.filesAndFolders && !data?.directoryPath) return;
-        setFilesAndFolders(data.filesAndFolders);
-      }).catch((error) => {
-        console.error("Error fetching drives:", error);
-      });
-    } else {
-      getFilesAndFolders(loaderData.file_path);
-    }
-  }, [loaderData]);
 
   return (
     <div onContextMenu={ async ()=> {MenuContext?.popup()}} className={styles.directoryView} onClick={(event) => unSelectItems(event)}>
       <FolderOptionsBar selectedItems={selectedItems}/>
 
       <h2 className={styles.directoryName}>
-        {loaderData ? loaderData.file_name : "My device"}
+        {loaderData ? loaderData.name : "My device"}
       </h2>
 
       <div className={styles.directoryContainer}>

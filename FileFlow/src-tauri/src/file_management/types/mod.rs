@@ -1,11 +1,13 @@
-use std::path::PathBuf;
-
+use std::{path::PathBuf, time::SystemTime};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct File {
-    pub file_name: String,
-    pub file_path: PathBuf,
-    pub file_type: String,
-    pub file_size: u64,
+    pub name: String,
+    pub path: PathBuf,
+    pub extension: String,
+    pub size: u64,
+    pub hidden: bool,
+    pub created: SystemTime,
+    pub modified: SystemTime,
 }

@@ -6,16 +6,24 @@ import tauriEmit from '../../../services/tauriEmit';
 
 function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
     const [pasteItemData, setPasteItemData] = useState<{type:string, items:IFile[]} | null>(sessionStorage.getItem("moveItem") ? JSON.parse(sessionStorage.getItem("moveItem") || '') : null);
+    const [hidden, setHidden] = useState<Boolean| null>(localStorage.getItem("hiddenFiles") ? JSON.parse(localStorage.getItem("hiddenFiles") || '') :  false);
 
     useEffect(() => {
         listen("updateMoveItem", () => {
             setPasteItemData(sessionStorage.getItem("moveItem") ? JSON.parse(sessionStorage.getItem("moveItem") || '') : null);
         });
+
     },[])
 
     function openTransferSend(){
-        if(selectedItems.some(selectedItem => selectedItem.file_name != "")) emit("sendFile", {file: selectedItems});
+        if(selectedItems.some(selectedItem => selectedItem.name != "")) emit("sendFile", {file: selectedItems});
         else return;
+    }
+
+    function changeHiddenFiles(){
+        localStorage.setItem("hiddenFiles", JSON.stringify(!hidden));
+        setHidden(!hidden);
+        tauriEmit.emitHiddenFiles(!hidden);
     }
 
     
@@ -25,19 +33,19 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
                 <button className={styles.folderOptionsBarButton} onClick={tauriEmit.emitCreateCommand}>
                 <img src="/create_icon.png" alt="create file" />
                 </button>
-                <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.file_name != "") ? "": styles.inactive)}`} onClick={tauriEmit.emitCutCommand}>
+                <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.name != "") ? "": styles.inactive)}`} onClick={tauriEmit.emitCutCommand}>
                     <img src="/cut_icon.png" alt="cut file" />
                 </button>
-                <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.file_name != "") ? "": styles.inactive)}`} onClick={tauriEmit.emitCopyCommand}>
+                <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.name != "") ? "": styles.inactive)}`} onClick={tauriEmit.emitCopyCommand}>
                     <img src="/copy_icon.png" alt="copy file" />
                 </button>
                 <button className={`${styles.folderOptionsBarButton} ${(pasteItemData ? "": styles.inactive)}`} onClick={tauriEmit.emitPasteCommand}>
                     <img src="/paste_icon.svg" alt="paste file" />
                 </button>
-                <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.file_name != "") ? "": styles.inactive)}`} onClick={() => {tauriEmit.emitDeleteCommand}}>
+                <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.name != "") ? "": styles.inactive)}`} onClick={() => {tauriEmit.emitDeleteCommand}}>
                     <img src="/delete_icon.png" alt="delete file" />
                 </button>
-                <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.file_name != "") ? "": styles.inactive)}`}>
+                <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.name != "") ? "": styles.inactive)}`}>
                     <img src="/rename_icon.png" alt="rename file"  onClick={tauriEmit.emitRenameCommand}/>
                 </button>
             </div>
@@ -45,7 +53,7 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
                 <button className={styles.folderOptionsBarButton}>
                     <img src="/sort_icon.png" alt="create file" />
                 </button>
-                <button className={styles.folderOptionsBarButton}>
+                <button className={styles.folderOptionsBarButton} onClick={changeHiddenFiles}>
                     <img src="/showHidden_icon.png" alt="create file" />
                 </button>
                 <button className={styles.folderOptionsBarButton}>

@@ -30,6 +30,10 @@ class tauriEmit{
         emit("updateMoveItem");
     }
 
+    emitHiddenFiles(hidden: boolean) {
+        emit("hiddenFiles",hidden);
+    }
+
 }
 
 export default new tauriEmit();

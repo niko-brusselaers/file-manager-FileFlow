@@ -8,8 +8,8 @@ function DirectoryItem({item, selectedItems, setSelected,edit}: {item:IFile,sele
     const [EditMode, setEditMode] = useState(edit)
     const [newFileName, setNewFileName] = useState("")
     function setIcon(){
-        if(imageFileTypes.includes(item.file_type)) return `/${item.file_type}_icon.png`
-        else return `/file_icon.png`
+        if(imageFileTypes.includes(item.extension)) return `/${item.extension}_icon.png`
+        else return `/icon.png`
 
     }
 
@@ -18,7 +18,7 @@ function DirectoryItem({item, selectedItems, setSelected,edit}: {item:IFile,sele
     }, [edit])
 
     function setFileTypeHidden(){
-        if(item.file_type === "folder" || item.file_type === "drive") return "none"
+        if(item.extension === "folder" || item.extension === "drive") return "none"
         else return "block"
     }
 
@@ -27,19 +27,19 @@ function DirectoryItem({item, selectedItems, setSelected,edit}: {item:IFile,sele
         let destructeredName = newFileName.split(".")
         
         if(destructeredName.length === 1){
-            fileManagement.createFolder(item.file_path + "\\" + newFileName )
+            fileManagement.createFolder(item.path + "\\" + newFileName )
         } else if( destructeredName.length === 2){
-            fileManagement.createFile(item.file_path + "\\", newFileName)
+            fileManagement.createFile(item.path + "\\", newFileName)
         } else{
             console.error("Invalid file name")
         }
     }
 
     function renameItem(){        
-        let file_path = selectedItems[0].file_path.split("\\")
-        file_path.pop()
-        let parentDirectory = file_path.join("\\")
-        fileManagement.renameItem(parentDirectory, selectedItems[0].file_name, newFileName)
+        let path = selectedItems[0].path.split("\\")
+        path.pop()
+        let parentDirectory = path.join("\\")
+        fileManagement.renameItem(parentDirectory, selectedItems[0].name, newFileName)
     }
 
     function setSelectedClick(event:React.MouseEvent,item:IFile){
@@ -50,12 +50,12 @@ function DirectoryItem({item, selectedItems, setSelected,edit}: {item:IFile,sele
 
     function updateItem(){
         try{
-            console.log(item.file_type !== "");
+            console.log(item.extension !== "");
             
             if(!EditMode) return
             if(newFileName === "") return
-            if(newFileName === item.file_name) return
-            if(item.file_type !== "")return renameItem()
+            if(newFileName === item.name) return
+            if(item.extension !== "")return renameItem()
             
             createNewFile()
         }catch(error){
@@ -65,19 +65,19 @@ function DirectoryItem({item, selectedItems, setSelected,edit}: {item:IFile,sele
 
 
     return (
-        <button className={`${styles.directoryItem} ${selectedItems.some(selectedItem => selectedItem.file_name === item.file_name) ? styles.isSelectedItem : ""}`} onClick={(event) => setSelectedClick(event,item)} title={item.file_name}>
+        <button className={`${styles.directoryItem} ${selectedItems.some(selectedItem => selectedItem.name === item.name) ? styles.isSelectedItem : ""}`} onClick={(event) => setSelectedClick(event,item)} title={item.name}>
             <div className={styles.imageContainer}>
                 <img src={setIcon()} className={styles.itemImage}/>
             </div>
             <div className={styles.itemDetails}>
                 {(EditMode ?
                     <form onSubmit={(event) => {event.preventDefault(); updateItem()}}>
-                        <input type="text" defaultValue={item.file_name} onChange={(event)  => {setNewFileName(event.currentTarget.value)}} onBlur={(event) => {event.preventDefault(); updateItem()}}/>
+                        <input type="text" defaultValue={item.name} onChange={(event)  => {setNewFileName(event.currentTarget.value)}} onBlur={(event) => {event.preventDefault(); updateItem()}}/>
                     </form>
                      : 
-                     <p className={styles.fileName}>{item.file_name}</p>)}
+                     <p className={styles.fileName}>{item.name}</p>)}
                  <div>
-                 <p className={styles.fileTypeText} style={{display:setFileTypeHidden()}}>{item.file_size}</p>
+                 <p className={styles.fileTypeText} style={{display:setFileTypeHidden()}}>{item.size}</p>
                  </div>
 
             </div>

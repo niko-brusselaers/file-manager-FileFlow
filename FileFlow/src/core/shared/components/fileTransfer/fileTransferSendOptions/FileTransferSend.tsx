@@ -80,7 +80,7 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket
             //send fileName and code to the file transfer progress dialog to display the progress
             let data = {
                 code: event.payload as string,
-                fileName: selectedItems[0].file_name,
+                fileName: selectedItems[0].name,
             }
 
             emit("openFileTransferProgressDialog",data)
@@ -94,9 +94,9 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket
                     socketId: selectedDestination?.socketId,
                     userName: selectedDestination?.userName,
                     fileDetails:{
-                        fileName: selectedItems[0].file_name,
-                        fileSize: selectedItems[0].file_size,
-                        fileType: selectedItems[0].file_type,
+                        fileName: selectedItems[0].name,
+                        fileSize: selectedItems[0].size,
+                        fileType: selectedItems[0].extension,
                     }
                 }
 
@@ -109,7 +109,7 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket
             
         })
         
-        await fileTransfer.sentFiles(selectedItems[0].file_path);
+        await fileTransfer.sentFiles(selectedItems[0].path);
         
     }
 
@@ -117,12 +117,12 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket
         <dialog className={dialogOpened ? styles.fileTransferDialog : "hidden"}>
             <div className={styles.filetransferViewSend}>
                 <div className={styles.itemDetailsContainer}>
-                    <img src="/file_icon.png" alt="" />
+                    <img src="/icon.png" alt="" />
                     <div>
-                        <h2>{selectedItems?.[0]?.file_name}</h2>
+                        <h2>{selectedItems?.[0]?.name}</h2>
                         <div className={styles.fileSubDetailsContainer}>
-                            <p>{selectedItems?.[0]?.file_type}</p>
-                            <p>{selectedItems?.[0]?.file_size}</p>
+                            <p>{selectedItems?.[0]?.extension}</p>
+                            <p>{selectedItems?.[0]?.size}</p>
                         </div>
                     </div>
                 </div>

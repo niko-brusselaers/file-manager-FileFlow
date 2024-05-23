@@ -11,7 +11,7 @@ function NavigationMenu() {
     const appWindow = Window.getCurrent();
     const locationData:IFile = useLocation().state;
     const navigate = useNavigate()
-    const [filePathInput, setFilePathInput] = useState<string>(locationData?.file_name || "");
+    const [filePathInput, setFilePathInput] = useState<string>(locationData?.name || "");
     const [dropDownBarIsOpen, setDropDownBarIsOpen] = useState<boolean>(false);
 
     useEffect(() => {
@@ -40,7 +40,7 @@ function NavigationMenu() {
 
     //update the file path input when the location data changes
     useEffect(() => {
-        setFilePathInput(locationData?.file_name)
+        setFilePathInput(locationData?.name)
     },[locationData])
 
     function minimizeWindow() {
@@ -62,11 +62,11 @@ function NavigationMenu() {
     };
 
     function showFullPath(){
-        setFilePathInput(locationData?.file_path)
+        setFilePathInput(locationData?.path)
     }
 
     function showPathName(){
-        setFilePathInput(locationData?.file_name)
+        setFilePathInput(locationData?.name)
     }
 
     async function navigateToPath(event:SyntheticEvent){
@@ -74,9 +74,9 @@ function NavigationMenu() {
         
         //check if path is valid, if it is a folder navigate to the folder, if it is a file open the file
         await fileManagement.checkPathIsValid(filePathInput).then((fileOrFolder) => {            
-            if(fileOrFolder?.file_type === "" || !fileOrFolder) return
-            else if(fileOrFolder?.file_type ==="folder") return navigate(`/${fileOrFolder.file_name}`, {state: fileOrFolder})
-            else fileManagement.openFile(fileOrFolder.file_path)
+            if(fileOrFolder?.extension === "" || !fileOrFolder) return
+            else if(fileOrFolder?.extension ==="folder") return navigate(`/${fileOrFolder.name}`, {state: fileOrFolder})
+            else fileManagement.openFile(fileOrFolder.path)
             
             
         })
@@ -85,28 +85,31 @@ function NavigationMenu() {
     //navigate to parent folder
     async function navigateToParentFolder(){
         
-        let directoryPathArray = locationData?.file_path.split("\\");
+        let directoryPathArray = locationData?.path.split("\\");
         directoryPathArray = directoryPathArray.filter((path) => path !== "")
         let parentDirectory
 
         const deviceRoot:IFile= {
-            file_name: "My Device",
-            file_path: "",
-            file_size: "",
-            file_type: "folder", 
+            name: "My Device",
+            path: "",
+            size: "",
+            created: new Date(),
+            modified: new Date(),
+            hidden: false,
+            extension: "folder", 
             edit: false
         }
 
         //if directory path is equals or less than 1 navigate to device root
-        if(directoryPathArray.length <= 1) return navigate(`/${deviceRoot.file_name}`, {state: deviceRoot,replace: true})
+        if(directoryPathArray.length <= 1) return navigate(`/${deviceRoot.name}`, {state: deviceRoot,replace: true})
         else if(directoryPathArray.length === 2) parentDirectory = directoryPathArray[0].toLowerCase() + "\\"
         else parentDirectory = directoryPathArray.slice(0,directoryPathArray.length-1).join("\\")
         console.log(directoryPathArray);        
 
         await fileManagement.checkPathIsValid(parentDirectory).then((fileOrFolder) => {            
-            if(fileOrFolder?.file_type === "" || !fileOrFolder) return
-            else if(fileOrFolder?.file_type ==="folder") return navigate(`/${fileOrFolder.file_name}`, {state: fileOrFolder,replace: true})
-            else fileManagement.openFile(fileOrFolder.file_path)
+            if(fileOrFolder?.extension === "" || !fileOrFolder) return
+            else if(fileOrFolder?.extension ==="folder") return navigate(`/${fileOrFolder.name}`, {state: fileOrFolder,replace: true})
+            else fileManagement.openFile(fileOrFolder.path)
         })
         
     }

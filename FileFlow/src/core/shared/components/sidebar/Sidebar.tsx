@@ -19,10 +19,10 @@ function Sidebar() {
     useEffect(() => {    
     if(drives === undefined){
 
-        pictureDir().then((path) => setPictureDirectory({file_name: "Pictures", file_path: path, file_type: "folder", file_size: "", edit: false}))
-        downloadDir().then((path) => setDownloadDirectory({file_name: "Download", file_path: path , file_type: "folder", file_size: "", edit: false}))
-        documentDir().then((path) => setDocumentDirectory({file_name: "Documents", file_path: path, file_type: "folder", file_size: "", edit: false}))
-        homeDir().then((path) => setHomeDirectory({file_name: "Home", file_path: path, file_type: "folder", file_size: "", edit: false}))
+        pictureDir().then((path) => setPictureDirectory({name: "Pictures", path: path,created:new Date(),modified:new Date(),hidden:false, extension: "folder", size: "", edit: false}))
+        downloadDir().then((path) => setDownloadDirectory({name: "Download", path: path, created:new Date(),modified:new Date(),hidden:false, extension: "folder", size: "", edit: false}))
+        documentDir().then((path) => setDocumentDirectory({name: "Documents", path: path,created:new Date(),modified:new Date(),hidden:false, extension: "folder", size: "", edit: false}))
+        homeDir().then((path) => setHomeDirectory({name: "Home", path: path,created:new Date(),modified:new Date(),hidden:false, extension: "folder", size: "", edit: false}))
       
         fileManagement.getdrives().then((data) => {
             //check if data is undefined
@@ -40,20 +40,20 @@ function Sidebar() {
     return ( 
         <div className={styles.sidebar}>
             <div className={styles.sidebarButtonGroup}>
-                <Link className={styles.sidebarLink} title="Home" to={`/${homeDirectory?.file_name}`}  state={homeDirectory}>
+                <Link className={styles.sidebarLink} title="Home" to={`/${homeDirectory?.name}`}  state={homeDirectory}>
                     <img src="/home_sidebar_icon.png"/>
-                    <p>{homeDirectory?.file_name}</p>
+                    <p>{homeDirectory?.name}</p>
                 </Link>
-                <Link className={styles.sidebarLink} title='Pictures' to={`/${pictureDirectory?.file_name}`} state={pictureDirectory}>
+                <Link className={styles.sidebarLink} title='Pictures' to={`/${pictureDirectory?.name}`} state={pictureDirectory}>
                     <img src="/picture_sidebar_icon.png"/>
                     <p>Pictures</p>
                 </Link>
-                <Link className={styles.sidebarLink} title='Download' to={`/${downloadDirectory?.file_name}`} state={downloadDirectory}>
+                <Link className={styles.sidebarLink} title='Download' to={`/${downloadDirectory?.name}`} state={downloadDirectory}>
                     <img src="/download_sidebar_icon.png"/>
                     <p>Download</p>
                 </Link>
-                <Link className={styles.sidebarLink} title='Documents' to={`/${documentDirectory?.file_name}`} state={documentDirectory}>
-                    <img src="/file_sidebar_icon.png"/>
+                <Link className={styles.sidebarLink} title='Documents' to={`/${documentDirectory?.name}`} state={documentDirectory}>
+                    <img src="/folder_sidebar_icon.png"/>
                     <p>Documents</p>
                 </Link>
             </div>
@@ -88,9 +88,9 @@ function Sidebar() {
                 {
                      drives?.map((drive, index) => {
                         return (
-                            <Link className={styles.sidebarLink} key={index} to={"/folderView"} state={drive} title={drive.file_name}>
+                            <Link className={styles.sidebarLink} key={index} to={"/folderView"} state={drive} title={drive.name}>
                                 <img src="/drive_sidebar_icon.png"/>
-                                <p>{drive.file_name}</p>
+                                <p>{drive.name}</p>
                             </Link>
                         )
                     })

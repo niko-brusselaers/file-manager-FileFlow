@@ -81,7 +81,7 @@ pub async fn send_files(file_path: &str, app: tauri::AppHandle) -> Result<(), St
     )
     .await;
 
-    let result = result.map_err(|error| error.to_string())?;
+    result.map_err(|error| error.to_string())?;
 
-    Ok(result)
+    Ok(())
 }
