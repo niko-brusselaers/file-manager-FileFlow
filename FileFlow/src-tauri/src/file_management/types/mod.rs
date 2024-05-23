@@ -1,4 +1,4 @@
-use std::{path::PathBuf, time::SystemTime};
+use std::path::PathBuf;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -8,6 +8,6 @@ pub struct File {
     pub extension: String,
     pub size: u64,
     pub hidden: bool,
-    pub created: SystemTime,
-    pub modified: SystemTime,
+    pub created: String,
+    pub modified: String,
 }

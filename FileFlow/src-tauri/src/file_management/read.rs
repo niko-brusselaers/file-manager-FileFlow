@@ -1,7 +1,9 @@
 use super::types::File;
-use std::{ffi::OsStr,fs, os::windows::fs::MetadataExt, path::PathBuf, time::SystemTime};
+use std::{ffi::OsStr,fs, os::windows::fs::MetadataExt, path::PathBuf};
 use sysinfo::Disks;
 use winapi::um::winnt::FILE_ATTRIBUTE_HIDDEN;
+use chrono::DateTime;
+use chrono::offset::Utc;
 
 #[tauri::command]
 pub fn read_directory(path: String,is_hidden:bool) -> Result<Vec<File>, String> {
@@ -18,13 +20,20 @@ pub fn read_directory(path: String,is_hidden:bool) -> Result<Vec<File>, String> 
                     entry.file_name().to_str().map(|s| s.starts_with(".")).unwrap_or(false)
                 };
 
+                 // Convert SystemTime to DateTime
+                let created: DateTime<Utc> = metadata.created().unwrap().into();
+                let modified: DateTime<Utc> = metadata.modified().unwrap().into();
+
+                // Convert DateTime to a string in RFC 3339 format
+                let created = created.to_rfc3339();
+                let modified = modified.to_rfc3339();
 
                 File {
                     name: entry.file_name().to_string_lossy().into_owned(),
                     path: entry.path(),
                     size: metadata.file_size(),
-                    created: metadata.created().unwrap(),
-                    modified: metadata.modified().unwrap(),
+                    created,
+                    modified,
                     hidden,
                     extension: entry
                         .path()
@@ -49,16 +58,26 @@ pub fn read_directory(path: String,is_hidden:bool) -> Result<Vec<File>, String> 
     }
 
 #[tauri::command]
-pub fn get_drives() -> Vec<File> {
+pub fn get_drives() -> Result<Vec<File>,String> {
     let drives = Disks::new_with_refreshed_list();
+
+    
 
     let mut disks = Vec::new();
     for drive in &drives {
+
+        let modified: DateTime<Utc> = Utc::now();
+        let created: DateTime<Utc> = Utc::now();
+
+
+        let created = created.to_rfc3339();
+        let modified = modified.to_rfc3339();
+
         let drive = File {
             name: drive.name().to_string_lossy().into_owned(),
             extension: String::from("drive"),
-            created: SystemTime::now(),
-            modified: SystemTime::now(),
+            created,
+            modified,
             hidden: false,
             path: drive.mount_point().to_path_buf(),
             size: drive.total_space(),
@@ -67,7 +86,7 @@ pub fn get_drives() -> Vec<File> {
         disks.push(drive)
     }
 
-    disks
+    Ok(disks)
 }
 
 #[tauri::command]
@@ -94,13 +113,21 @@ pub fn check_path(path: String) -> Result<File, String> {
                     file_path.file_name().unwrap().to_str().map(|s| s.starts_with(".")).unwrap_or(false)
                 };
 
+    // Convert SystemTime to DateTime
+    let created: DateTime<Utc> = metadata.created().unwrap().into();
+    let modified: DateTime<Utc> = metadata.modified().unwrap().into();
+
+    // Convert DateTime to a string in RFC 3339 format
+    let created = created.to_rfc3339();
+    let modified = modified.to_rfc3339();
+
     let file = File {
         name,
         extension,
         path: PathBuf::from(file_path),
         size: metadata.len(),
-        created: metadata.created().unwrap(),
-        modified: metadata.modified().unwrap(),
+        created,
+        modified,
         hidden
     };
 
