@@ -1,3 +1,5 @@
+use std::{default, env::consts::OS, ffi::OsStr};
+
 use super::{
     handler::{cancel, progress_handler, transit_handler},
     helper::{gen_app_config, gen_relay_hints, store_file_transfer_progress},
@@ -26,7 +28,7 @@ pub async fn send_files(file_path: &str, app: tauri::AppHandle) -> Result<(), St
 
     let file_name = std::path::Path::new(file_path)
         .file_name()
-        .unwrap()
+        .unwrap_or(OsStr::new(""))
         .to_string_lossy()
         .into_owned();
 
@@ -40,20 +42,20 @@ pub async fn send_files(file_path: &str, app: tauri::AppHandle) -> Result<(), St
 
     //get code from server welcome and emit to frontend
     let code = server_welcome.code;
-    app.emit("fileTransferCode", code.to_string()).unwrap();
+    app.emit("fileTransferCode", code.to_string()).map_err(|error| error.to_string())?;
 
     //store start of sending progress
     // Create a FileProgress struct to store the file transfer progress
     let file_progress = FileProgress {
         file_name: String::from(&file_name),
-        file_size: std::path::Path::new(file_path).metadata().unwrap().len(),
+        file_size: std::path::Path::new(file_path).metadata().map_err(|error| error.to_string())?.len(),
         progress: 0,
         direction: String::from("Send"),
     };
     // Store the file transfer progress
     store_file_transfer_progress(file_progress, app.clone()).map_err(|error| error.to_string())?;
 
-    let wormhole = connection.await.unwrap();
+    let wormhole = connection.await.map_err(|error| error.to_string())?;
 
     // Clone the variables to be used in the progress handler
     let file_name_progress_handler = file_name.clone();
