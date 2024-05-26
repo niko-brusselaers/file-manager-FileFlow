@@ -1,0 +1,14 @@
+.SearchView{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow-y: auto;
+
+    .SearchQuery{
+        margin: 3em 2em 0em;
+        font-size: 25pt;
+    }
+
+    
+
+}

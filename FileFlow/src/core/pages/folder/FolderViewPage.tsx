@@ -16,6 +16,7 @@ import ContainerDetailViewTop from "./containerDetailViewTop/ContainerDetailView
 function FolderView() {
   const [sortingConfig, setSortingConfig] = useState<{sortBy:string, order:string}>(localStorage.getItem("sortBy") && localStorage.getItem("order") ? {sortBy:localStorage.getItem("sortBy") || "", order:localStorage.getItem("order") || ""} : {sortBy:"name", order:"ascending"});
   const [filesAndFolders, setFilesAndFolders] = useState<IFile[]>(() => []);
+  const [currentFilesAndFolders, setCurrentFilesAndFolders] = useState<IFile[]>(() => [])
   const [selectedItems, setSelectedItems] = useState<IFile[]>(() => [])
   const [MenuContext,setMenuContext] = useState<Menu>();
   const [hidden, setHidden] = useState<Boolean>();
@@ -55,7 +56,15 @@ function FolderView() {
     //listen for the delete command and delete the selected items
     listen("delete",async() => {console.log("delete"); deleteItems()})
 
+    //listen for the fs-change event and fetch the files and folders
     listen("fs-change", () => getFilesAndFolders(loaderData?.path))
+
+    //listen for search command and search for the files and folders
+    listen("searchDirectory", (event) => {
+      let searchQuery = event.payload as string;
+      let filteredItems = filesAndFoldersRef.current.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()));
+      setCurrentFilesAndFolders(filteredItems);
+    })
 
     //listen for hidden files command and change the state of the hidden files
     listen("hiddenFiles",(event) => {
@@ -116,6 +125,7 @@ function FolderView() {
     //fetch the files and folders in the directory
     fileManagement.getDirectoryItems(directoryPath, hidden).then((data) => {      
       if (!data?.filesAndFolders && !data?.directoryPath) return;
+      setFilesAndFolders(data.filesAndFolders);
       sortItems(data.filesAndFolders);
       setSelectedItems([]);
     }).catch((error) => {
@@ -178,7 +188,7 @@ function FolderView() {
 
     if(sortingConfig.order === "descending") sortedItems.reverse();
 
-    setFilesAndFolders(sortedItems);
+    setCurrentFilesAndFolders(sortedItems);
 }
 
   //create a new file
@@ -269,7 +279,7 @@ function FolderView() {
 
       <div className={detailView ? styles.directoryContainerDetail : styles.directoryContainerTile}>
         {(detailView ? <ContainerDetailViewTop/> : "")}
-        {filesAndFolders.map((fileOrFolder, index) => (
+        {currentFilesAndFolders.map((fileOrFolder, index) => (
           detailView ? 
           <DirectoryItemDetail
             item={fileOrFolder}

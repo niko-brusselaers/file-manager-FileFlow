@@ -1,8 +1,12 @@
 use super::types::File;
+use std::os::windows::fs::MetadataExt;
 use std::{ffi::OsStr,fs, path::PathBuf};
+use rust_search::SearchBuilder;
 use sysinfo::Disks;
 use chrono::DateTime;
 use chrono::offset::Utc;
+use tauri::Manager;
+use winapi::um::winnt::FILE_ATTRIBUTE_HIDDEN;
 
 #[tauri::command]
 pub fn read_directory(path: String,is_hidden:bool) -> Result<Vec<File>, String> {
@@ -13,7 +17,11 @@ pub fn read_directory(path: String,is_hidden:bool) -> Result<Vec<File>, String> 
             res.map(|entry| {
 
                 let metadata = entry.metadata().unwrap();
-                let hidden = entry.file_name().to_str().map(|s| s.starts_with(".")).unwrap_or(false);
+                let hidden = if cfg!(target_os = "windows") {
+                    metadata.file_attributes() & FILE_ATTRIBUTE_HIDDEN != 0
+                } else {
+                    entry.file_name().to_str().map(|s| s.starts_with(".")).unwrap_or(false)
+                };
 
                  // Convert SystemTime to DateTime
                 let created: DateTime<Utc> = metadata.created().unwrap().into();
@@ -102,11 +110,16 @@ pub fn check_path(path: String) -> Result<File, String> {
         .to_string_lossy()
         .into_owned();
 
-    let hidden = file_path.file_name().unwrap().to_str().map(|s| s.starts_with(".")).unwrap_or(false);
 
     // Convert SystemTime to DateTime
     let created: DateTime<Utc> = metadata.created().unwrap().into();
     let modified: DateTime<Utc> = metadata.modified().unwrap().into();
+
+    let hidden = if cfg!(target_os = "windows") {
+                metadata.file_attributes() & FILE_ATTRIBUTE_HIDDEN != 0
+            } else {
+                file_path.file_name().unwrap().to_str().map(|s| s.starts_with(".")).unwrap_or(false)
+            };
 
     // Convert DateTime to a string in RFC 3339 format
     let created = created.to_rfc3339();
@@ -128,4 +141,61 @@ pub fn check_path(path: String) -> Result<File, String> {
 #[tauri::command]
 pub fn open_file(path: String) -> Result<(), String> {
     opener::open(String::from(path)).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn search_device(query: &str, app: tauri::AppHandle) -> Result<Vec<File>,String> {
+    let drives = get_drives().map_err(|error| error.to_string())?;
+
+    let drive_paths = drives.iter().map(|drive| drive.path.to_str().unwrap().to_string()).collect::<Vec<String>>();
+    
+    let search = SearchBuilder::default()
+        .search_input(query)
+        .more_locations(drive_paths)
+        .ignore_case()
+        .build();
+
+        let mut files: Vec<File> = Vec::new();
+
+        for result in search {
+            let pathBuf = PathBuf::from(result);
+            let metadata = pathBuf.metadata().map_err(|error| error.to_string())?;
+
+            let name = pathBuf
+                .file_name()
+                .unwrap_or(OsStr::new("unkown"))
+                .to_string_lossy()
+                .to_string();
+
+            let extension = pathBuf.extension().unwrap_or(OsStr::new("folder")).to_string_lossy().into_owned();
+
+            // Convert SystemTime to DateTime
+            let created: DateTime<Utc> = metadata.created().unwrap().into();
+            let modified: DateTime<Utc> = metadata.modified().unwrap().into();
+
+            // Convert DateTime to a string in RFC 3339 format
+            let created = created.to_rfc3339();
+            let modified = modified.to_rfc3339();
+            
+            let hidden = if cfg!(target_os = "windows") {
+                metadata.file_attributes() & FILE_ATTRIBUTE_HIDDEN != 0
+            } else {
+                pathBuf.file_name().unwrap().to_str().map(|s| s.starts_with(".")).unwrap_or(false)
+            };
+
+            let file = File {
+                name,
+                extension,
+                path: pathBuf,
+                size: metadata.len(),
+                created,
+                modified,
+                hidden
+            };
+
+            files.push(file);
+            
+        }
+
+    Ok(files)
 }

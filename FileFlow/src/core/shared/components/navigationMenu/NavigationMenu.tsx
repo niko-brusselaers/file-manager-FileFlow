@@ -97,6 +97,15 @@ function NavigationMenu() {
         })
     }
 
+    function searchDirectory(event:React.ChangeEvent<HTMLInputElement>){
+        //emit an event to search the directory
+        emit("searchDirectory", event.currentTarget.value)
+    }
+
+    function searchDevice(query:string){
+        navigate(`/search/${query}`, {state: query})
+    }
+
     //navigate to parent folder
     async function navigateToParentFolder(){
         
@@ -172,7 +181,7 @@ function NavigationMenu() {
                     />
                     </form>
                     <form className={styles.searchInput} >
-                        <input type="text" placeholder="Search This pc"/>
+                        <input type="text" placeholder="Search This pc" onChange={searchDirectory} onKeyDown={(event) => {if (event.key === 'Enter') {event.preventDefault();searchDevice(event.currentTarget.value);}}}/>
 
                     </form>
                     <div  className={styles.drownDownMenu}  onMouseLeave={handleDropDownMenuLeave}>

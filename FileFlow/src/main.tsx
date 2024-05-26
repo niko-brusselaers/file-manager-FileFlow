@@ -4,6 +4,7 @@ import App from "./App";
 import { createBrowserRouter,RouterProvider } from "react-router-dom";
 import FolderView from "./core/pages/folder/FolderViewPage";
 import ErrorPage from "./core/pages/error/ErrorPage";
+import SearchPage from "./core/pages/search/SearchPage";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       {
         path: ":folderName",
         element: <FolderView />,
+      },
+      {
+        path: "search/:searchQuery",
+        element: <SearchPage/>,
       }
     ]
   }

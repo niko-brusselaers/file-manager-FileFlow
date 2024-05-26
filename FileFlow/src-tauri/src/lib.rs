@@ -13,7 +13,6 @@ use file_transfer::send::*;
 use file_management::update::*;
 use file_management::watcher::*;
 use miscellaneous::get_device_name;
-use serde_json::json;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -22,23 +21,13 @@ pub fn run() {
             .plugin(tauri_plugin_store::Builder::new().build())
             .plugin(tauri_plugin_dialog::init())
             .plugin(tauri_plugin_shell::init())
-            // .plugin(
-            //     tauri_plugin_aptabase::Builder::new("A-EU-4327902903")
-            //         .with_panic_hook(Box::new(|client, info, msg| {
-            //         let location = info.location().map(|loc| format!("{}:{}:{}", loc.file(), loc.line(), loc.column())).unwrap_or_else(|| "".to_string());
-
-            //         client.track_event("panic", Some(json!({
-            //         "info": format!("{} ({})", msg, location),
-            //         })));
-            //         }))
-            //         .build(),
-            // )
             .invoke_handler(tauri::generate_handler![
                 get_device_name,
                 read_directory,
                 watch_directory,
                 unwatch_directory,
                 get_drives,
+                search_device,
                 open_file,
                 check_path,
                 create_file,

@@ -159,6 +159,31 @@ class fileManagement {
         }
     }
 
+    async searchDevice(query:string){
+        try {
+            let searchItems = await invoke("search_device", { query: query })
+            .then((response) => response as IFile[])
+            .catch((error) => {throw error})
+
+            searchItems = searchItems.map((fileOrFolder:IFile) => {
+                //remove double backslashes
+                fileOrFolder.path = fileOrFolder.path.replace("\\\\", "\\")
+                                
+                //format created and modified date
+                fileOrFolder.created = new Date(fileOrFolder.created).toLocaleString()
+                fileOrFolder.modified = new Date(fileOrFolder.modified).toLocaleString()
+
+                //set file size
+                fileOrFolder.size = conversion.convertFileSizeIdentifier(parseInt(fileOrFolder.size))
+                return fileOrFolder})
+
+            return searchItems
+            
+        } catch (error) {
+            console.error("Error searching device:", error);
+        }
+    }
+
 }
 
 export default new fileManagement();
