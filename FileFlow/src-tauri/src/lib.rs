@@ -22,17 +22,17 @@ pub fn run() {
             .plugin(tauri_plugin_store::Builder::new().build())
             .plugin(tauri_plugin_dialog::init())
             .plugin(tauri_plugin_shell::init())
-            .plugin(
-                tauri_plugin_aptabase::Builder::new("A-EU-4327902903")
-                    .with_panic_hook(Box::new(|client, info, msg| {
-                    let location = info.location().map(|loc| format!("{}:{}:{}", loc.file(), loc.line(), loc.column())).unwrap_or_else(|| "".to_string());
+            // .plugin(
+            //     tauri_plugin_aptabase::Builder::new("A-EU-4327902903")
+            //         .with_panic_hook(Box::new(|client, info, msg| {
+            //         let location = info.location().map(|loc| format!("{}:{}:{}", loc.file(), loc.line(), loc.column())).unwrap_or_else(|| "".to_string());
 
-                    client.track_event("panic", Some(json!({
-                    "info": format!("{} ({})", msg, location),
-                    })));
-                    }))
-                    .build(),
-            )
+            //         client.track_event("panic", Some(json!({
+            //         "info": format!("{} ({})", msg, location),
+            //         })));
+            //         }))
+            //         .build(),
+            // )
             .invoke_handler(tauri::generate_handler![
                 get_device_name,
                 read_directory,

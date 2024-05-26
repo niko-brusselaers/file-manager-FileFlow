@@ -1,7 +1,6 @@
 use super::types::File;
-use std::{ffi::OsStr,fs, os::windows::fs::MetadataExt, path::PathBuf};
+use std::{ffi::OsStr,fs, path::PathBuf};
 use sysinfo::Disks;
-use winapi::um::winnt::FILE_ATTRIBUTE_HIDDEN;
 use chrono::DateTime;
 use chrono::offset::Utc;
 
@@ -14,11 +13,7 @@ pub fn read_directory(path: String,is_hidden:bool) -> Result<Vec<File>, String> 
             res.map(|entry| {
 
                 let metadata = entry.metadata().unwrap();
-                let hidden = if cfg!(target_os = "windows") {
-                    metadata.file_attributes() & FILE_ATTRIBUTE_HIDDEN != 0
-                } else {
-                    entry.file_name().to_str().map(|s| s.starts_with(".")).unwrap_or(false)
-                };
+                let hidden = entry.file_name().to_str().map(|s| s.starts_with(".")).unwrap_or(false);
 
                  // Convert SystemTime to DateTime
                 let created: DateTime<Utc> = metadata.created().unwrap().into();
@@ -31,7 +26,7 @@ pub fn read_directory(path: String,is_hidden:bool) -> Result<Vec<File>, String> 
                 File {
                     name: entry.file_name().to_string_lossy().into_owned(),
                     path: entry.path(),
-                    size: metadata.file_size(),
+                    size: 0,
                     created,
                     modified,
                     hidden,
@@ -107,11 +102,7 @@ pub fn check_path(path: String) -> Result<File, String> {
         .to_string_lossy()
         .into_owned();
 
-    let hidden = if cfg!(target_os = "windows") {
-                    metadata.file_attributes() & FILE_ATTRIBUTE_HIDDEN != 0
-                } else {
-                    file_path.file_name().unwrap().to_str().map(|s| s.starts_with(".")).unwrap_or(false)
-                };
+    let hidden = file_path.file_name().unwrap().to_str().map(|s| s.starts_with(".")).unwrap_or(false);
 
     // Convert SystemTime to DateTime
     let created: DateTime<Utc> = metadata.created().unwrap().into();
