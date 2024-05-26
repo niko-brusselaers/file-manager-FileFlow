@@ -11,6 +11,7 @@ use file_management::delete::*;
 use file_transfer::receive::*;
 use file_transfer::send::*;
 use file_management::update::*;
+use file_management::watcher::*;
 use miscellaneous::get_device_name;
 use serde_json::json;
 
@@ -35,6 +36,8 @@ pub fn run() {
             .invoke_handler(tauri::generate_handler![
                 get_device_name,
                 read_directory,
+                watch_directory,
+                unwatch_directory,
                 get_drives,
                 open_file,
                 check_path,

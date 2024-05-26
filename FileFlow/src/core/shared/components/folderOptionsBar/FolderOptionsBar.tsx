@@ -74,7 +74,7 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
                 <button className={`${styles.folderOptionsBarButton} ${(pasteItemData ? "": styles.inactive)}`} onClick={tauriEmit.emitPasteCommand}>
                     <img src="/paste_icon.svg" alt="paste file" />
                 </button>
-                <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.name != "") ? "": styles.inactive)}`} onClick={() => {tauriEmit.emitDeleteCommand}}>
+                <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.name != "") ? "": styles.inactive)}`} onClick={tauriEmit.emitDeleteCommand}>
                     <img src="/delete_icon.png" alt="delete file" />
                 </button>
                 <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.name != "") ? "": styles.inactive)}`}>

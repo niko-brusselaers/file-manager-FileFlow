@@ -53,7 +53,9 @@ function FolderView() {
     listen("rename",()=> renameFileOrFolder())
 
     //listen for the delete command and delete the selected items
-    listen("delete",async() => deleteItems())
+    listen("delete",async() => {console.log("delete"); deleteItems()})
+
+    listen("fs-change", () => getFilesAndFolders(loaderData?.path))
 
     //listen for hidden files command and change the state of the hidden files
     listen("hiddenFiles",(event) => {
@@ -94,6 +96,11 @@ function FolderView() {
         console.error("Error fetching drives:", error);
       });
     } else {
+      //get currently watched directory
+      let watchedDirectory = sessionStorage.getItem("watchedDirectory") ? sessionStorage.getItem("watchedDirectory") || '' : null;
+      if(watchedDirectory) fileManagement.unWatchDirectory(watchedDirectory).then(()=> fileManagement.watchDirectory(loaderData.path));
+      else fileManagement.watchDirectory(loaderData.path);
+
       getFilesAndFolders(loaderData.path);      
     }
   }, [loaderData]);

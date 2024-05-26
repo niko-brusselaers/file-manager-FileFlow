@@ -135,6 +135,30 @@ class fileManagement {
         }
     }
 
+    async watchDirectory(directoryPath:string){
+        try {
+            console.log();
+            
+            sessionStorage.setItem("watchedDirectory", directoryPath)            
+            await invoke("watch_directory", { path: directoryPath })
+            .catch((error) => {throw error})
+
+        } catch (error) {
+            console.error("Error watching directory:", error);
+        }
+    }
+
+    async unWatchDirectory(directoryPath:string){
+        try {
+            console.log("unwatching directory");
+            
+        await invoke("unwatch_directory", { path: directoryPath })
+        .catch((error) => {throw error})
+        } catch (error) {
+        console.error("Error stopping watching directory:", error);
+        }
+    }
+
 }
 
 export default new fileManagement();

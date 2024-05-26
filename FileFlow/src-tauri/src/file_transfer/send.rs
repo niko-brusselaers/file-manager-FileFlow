@@ -1,4 +1,4 @@
-use std::{default, env::consts::OS, ffi::OsStr};
+use std::ffi::OsStr;
 
 use super::{
     handler::{cancel, progress_handler, transit_handler},
