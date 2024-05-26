@@ -26,8 +26,19 @@ function SearchPage() {
     
   //add selected item to the selectedItems array, if the item is already in the array open the file or folder
   function handleSelection(event:React.MouseEvent,item: IFile) {
-    if(selectedItem?.name != "") return navigate(`/${item.name}`, { state: item });
-    else  setSelectedItems(item);
+    if(selectedItem?.name == "") return setSelectedItems(item);
+    
+    if(selectedItem?.extension != "folder") {
+      const parentFolderPath = item.path.replace(`\\${item.name}`,"");
+      let folderData = fileManagement.checkPathIsValid(parentFolderPath).then((response) => {
+        navigate(`/${response?.name}`, {state: response});
+      });
+      
+    } else {
+      let folderData = fileManagement.checkPathIsValid(item.path).then((response) => {
+        navigate(`/${response?.name}`, {state: response});
+      });
+    }
     
   };
 
@@ -46,7 +57,7 @@ function SearchPage() {
 
   return (
     <div className={styles.SearchView} onClick={(event) => unSelectItems(event)}>
-         <h2 className={styles.directoryName}>{searchQuery}</h2>
+         <h2 className={styles.SearchQuery}>{searchQuery}</h2>
       <div className={styles.directoryContainerDetail}>
         <ContainerDetailViewTop/>
         { filesAndFolders ? filesAndFolders.map((item,index) => 

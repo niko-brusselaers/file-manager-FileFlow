@@ -94,6 +94,8 @@ function FolderView() {
 
     //fetch the files and folders when navigating to a new directory
   useEffect(() => {
+    console.log(loaderData);
+    
     if (loaderData === null || loaderData.name === "My Device") {
       //fetch the drives when the loaderData is null or the name is "My Device"
       fileManagement.getdrives().then((data) => {

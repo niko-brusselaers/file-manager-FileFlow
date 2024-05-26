@@ -142,18 +142,24 @@ pub fn check_path(path: String) -> Result<File, String> {
 pub fn open_file(path: String) -> Result<(), String> {
     opener::open(String::from(path)).map_err(|e| e.to_string())
 }
-
+use std::thread;
+use std::sync::mpsc;
 #[tauri::command]
 pub fn search_device(query: &str, app: tauri::AppHandle) -> Result<Vec<File>,String> {
     let drives = get_drives().map_err(|error| error.to_string())?;
 
     let drive_paths = drives.iter().map(|drive| drive.path.to_str().unwrap().to_string()).collect::<Vec<String>>();
-    
-    let search = SearchBuilder::default()
-        .search_input(query)
-        .more_locations(drive_paths)
-        .ignore_case()
-        .build();
+
+    let (tx, rx) = mpsc::channel();
+
+    let query = query.to_owned();
+
+    thread::spawn(move || -> Result<(), String> {
+        let search = SearchBuilder::default()
+            .search_input(&query)
+            .more_locations(drive_paths)
+            .ignore_case()
+            .build();
 
         let mut files: Vec<File> = Vec::new();
 
@@ -176,7 +182,7 @@ pub fn search_device(query: &str, app: tauri::AppHandle) -> Result<Vec<File>,Str
             // Convert DateTime to a string in RFC 3339 format
             let created = created.to_rfc3339();
             let modified = modified.to_rfc3339();
-            
+
             let hidden = if cfg!(target_os = "windows") {
                 metadata.file_attributes() & FILE_ATTRIBUTE_HIDDEN != 0
             } else {
@@ -194,8 +200,12 @@ pub fn search_device(query: &str, app: tauri::AppHandle) -> Result<Vec<File>,Str
             };
 
             files.push(file);
-            
         }
+
+        tx.send(files).map_err(|_| "Error sending data from thread".to_string())
+    });
+
+    let files = rx.recv().map_err(|_| "Error receiving data from thread".to_string())?;
 
     Ok(files)
 }
