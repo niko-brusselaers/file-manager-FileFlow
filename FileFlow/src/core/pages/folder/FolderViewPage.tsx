@@ -4,9 +4,7 @@ import styles from './FolderView.module.scss';
 import FolderOptionsBar from "../../shared/components/folderOptionsBar/FolderOptionsBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import fileManagement from "../../services/fileManagement";
-import ContextMenu from "../../shared/components/contextMenu/ContextMenu";
-import { Menu } from "@tauri-apps/api/menu";
-import { listen } from "@tauri-apps/api/event";
+import { emit, listen } from "@tauri-apps/api/event";
 import tauriEmit from "../../services/tauriEmit";
 import conversion from "../../services/conversion";
 import DirectoryItemTile from "../../shared/components/directoryItem/directoryItemTile/DirectoryItemTile";
@@ -18,7 +16,6 @@ function FolderView() {
   const [filesAndFolders, setFilesAndFolders] = useState<IFile[]>(() => []);
   const [currentFilesAndFolders, setCurrentFilesAndFolders] = useState<IFile[]>(() => [])
   const [selectedItems, setSelectedItems] = useState<IFile[]>(() => [])
-  const [MenuContext,setMenuContext] = useState<Menu>();
   const [hidden, setHidden] = useState<Boolean>();
   const [detailView, setDetailView] = useState<Boolean>(localStorage.getItem("detailView") ? JSON.parse(localStorage.getItem("detailView") || '') : false);
 
@@ -36,8 +33,6 @@ function FolderView() {
   
   useEffect(() => {     
 
-    //create a context menu for the folder view
-    ContextMenu.getFolderViewContextMenu().then((menu) => setMenuContext(menu))
     //listen for create new file command and create a new file
     listen("createNewFile", () => createNewFile());
     
@@ -93,9 +88,7 @@ function FolderView() {
 
 
     //fetch the files and folders when navigating to a new directory
-  useEffect(() => {
-    console.log(loaderData);
-    
+  useEffect(() => {    
     if (loaderData === null || loaderData.name === "My Device") {
       //fetch the drives when the loaderData is null or the name is "My Device"
       fileManagement.getdrives().then((data) => {
@@ -271,8 +264,22 @@ function FolderView() {
     selectedItemsRef.current.map(selectedItem => fileManagement.deleteItem(selectedItem .path))
   };
 
+  function handleContextMenu(event:React.MouseEvent<HTMLDivElement, MouseEvent>){
+    event.preventDefault();
+    console.log('right click');
+    let data = {
+        selectedItems: selectedItemsRef.current,
+        position:{
+            x:event.clientX, 
+            y:event.clientY
+        }
+      }
+    emit("contextMenu", data);
+    
+  }
+
   return (
-    <div onContextMenu={ async ()=> {MenuContext?.popup()}} className={styles.directoryView} onClick={(event) => unSelectItems(event)}>
+    <div onContextMenu={ handleContextMenu} className={styles.directoryView} onClick={(event) => unSelectItems(event)}>
       <FolderOptionsBar selectedItems={selectedItems}/>
 
       <h2 className={styles.directoryName}>

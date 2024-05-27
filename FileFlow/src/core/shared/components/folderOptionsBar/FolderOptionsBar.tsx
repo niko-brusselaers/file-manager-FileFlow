@@ -48,10 +48,17 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
 
     function handleSortDropDownMenuClick(){
         if(timeoutID) clearTimeout(timeoutID);
+        setSortDropDownMenuIsOpen(prevState => !prevState);
+    }
+
+    
+    function handleMouseEnter(){
+        if(timeoutID) clearTimeout(timeoutID);
         setSortDropDownMenuIsOpen(true);
     }
 
-    function handleSortDropDownMenuLeave(){
+
+    function handleMouseLeave(){
         timeoutID = setTimeout(() => {
             setSortDropDownMenuIsOpen(false);
         }, 100);
@@ -82,11 +89,11 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
                 </button>
             </div>
             <div className={styles.folderOptionsBarButtonGroup}>
-                <div className={styles.sortDropDownMenu} onMouseLeave={handleSortDropDownMenuLeave}>
+                <div className={styles.sortDropDownMenu} onMouseLeave={handleMouseLeave}>
                     <button className={styles.folderOptionsBarButton}  onClick={handleSortDropDownMenuClick}>
                         <img src="/sort_icon.png" alt="create file" />
                     </button>
-                    <form ref={sortFormRef} className={styles.dropDownContainer} style={sortDropDownMenyIsOpen ? {display:"flex"} : {display:"none"} } onMouseEnter={handleSortDropDownMenuClick}>
+                    <form ref={sortFormRef} className={styles.dropDownContainer} style={sortDropDownMenyIsOpen ? {display:"flex"} : {display:"none"} } onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                         <div className={styles.radioContainer}>
                             <h4>Sort By</h4>
                             <div className={styles.radioInput}>

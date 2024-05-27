@@ -1,0 +1,36 @@
+.contextMenu{
+    position: absolute;
+    display: flex;
+    z-index: 5;
+    flex-direction: column;
+
+    button{
+        border: none;
+        padding: 0.5rem;
+        width: 12rem;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        grid-template-rows: 1fr;
+        justify-items: center;
+
+        img{
+            width: 1rem;
+            grid-column: span 2;
+            box-sizing: content-box;
+        }
+        p{
+            grid-column: span 3;
+            text-align: left;
+            justify-self: flex-start;
+            font-weight: bold;
+        }
+
+        span{
+            grid-column: span 2; // changed from span 4 to span 2
+            text-align: right;
+            justify-self: flex-end;
+            opacity: 0.5;
+        }
+    }
+
+}
