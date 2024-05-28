@@ -37,11 +37,18 @@
         margin-left:5%;
         width: 100%;
         display: grid;
-        grid-template-columns: 2fr repeat(3, 1fr);
+        grid-template-columns: 2fr repeat(3, 1fr) 2fr;
         grid-template-rows: 1fr;
         grid-column-gap: 20px;
         grid-row-gap: 0px;
         justify-items: start;
+
+        .fileInfoTextLast{ 
+            justify-self: end;
+            grid-column: span 1;
+            text-align: right; 
+            width: 100%; 
+        }
     }
 
 }

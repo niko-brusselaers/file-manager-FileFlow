@@ -42,13 +42,14 @@ class fileManagement {
             let filesAndFolders:IFile[] = await invoke("read_directory", { path: directoryPath, isHidden: isHidden ? isHidden : false})
         
             filesAndFolders = filesAndFolders.map((fileOrFolder:IFile) => {
+                
                 //remove double backslashes
                 fileOrFolder.path = fileOrFolder.path.replace("\\\\", "\\")
                                 
                 //format created and modified date
                 fileOrFolder.created = new Date(fileOrFolder.created).toLocaleString()
                 fileOrFolder.modified = new Date(fileOrFolder.modified).toLocaleString()
-
+                
                 //set file size
                 fileOrFolder.size = conversion.convertFileSizeIdentifier(parseInt(fileOrFolder.size))
 

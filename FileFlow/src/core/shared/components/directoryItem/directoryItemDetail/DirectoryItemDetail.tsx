@@ -82,10 +82,10 @@ function DirectoryItemDetail({item, selectedItems, setSelected,edit}: {item:IFil
                         <p className={styles.fileName}>{item.name}</p>)}
                 
                 </div>
-                 <p className={styles.fileTypeText} >{item.extension}</p>
-                 <p className={styles.fileTypeText} >{showFileSize()}</p>
-                 <p className={styles.fileTypeText} >{item.created.toString()}</p>
-
+                <p className={styles.fileInfoText} >{item.created.toString()}</p>
+                <p className={styles.fileInfoText} >{item.extension}</p>
+                <p className={`${styles.fileInfoText}, ${styles.fileInfoTextLast}`} >{showFileSize()}</p>
+                
             </div>
            
         </button>

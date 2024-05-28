@@ -94,13 +94,12 @@ function FolderView() {
       fileManagement.getdrives().then((data) => {
         if (!data?.filesAndFolders && !data?.directoryPath) return;        
         setFilesAndFolders(data.filesAndFolders);
-        sortItems(data.filesAndFolders);
-
+        sortItems(data.filesAndFolders);        
       }).catch((error) => {
         console.error("Error fetching drives:", error);
       });
     } else {
-      //get currently watched directory
+      //get currently watched directory and unwatch it, then watch the new directory
       let watchedDirectory = sessionStorage.getItem("watchedDirectory") ? sessionStorage.getItem("watchedDirectory") || '' : null;
       if(watchedDirectory) fileManagement.unWatchDirectory(watchedDirectory).then(()=> fileManagement.watchDirectory(loaderData.path));
       else fileManagement.watchDirectory(loaderData.path);
@@ -122,6 +121,7 @@ function FolderView() {
       if (!data?.filesAndFolders && !data?.directoryPath) return;
       setFilesAndFolders(data.filesAndFolders);
       sortItems(data.filesAndFolders);
+      
       setSelectedItems([]);
     }).catch((error) => {
       console.error("Error fetching files and folders:", error);

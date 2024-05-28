@@ -9,9 +9,9 @@ function ContainerDetailViewTop() {
                 <div className={styles.itemName}>
                         <p className={styles.fileName}>Name</p>
                 </div>
-                 <p className={styles.fileTypeText}>Type</p>
-                 <p className={styles.fileTypeText} >Size</p>
                  <p className={styles.fileTypeText}>Updated</p>
+                 <p className={styles.fileTypeText}>Type</p>
+                 <p className={styles.fileInfoTextLast} >Size</p>
 
             </div>
            

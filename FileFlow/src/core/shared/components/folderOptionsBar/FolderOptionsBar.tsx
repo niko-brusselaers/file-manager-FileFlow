@@ -15,49 +15,54 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
     const sortFormRef = useRef<HTMLFormElement>(null);
     let timeoutID: NodeJS.Timeout | null = null;
     
+    //listen for the updateMoveItem event to update the pasteItemData state
     useEffect(() => {
         listen("updateMoveItem", () => {
             setPasteItemData(sessionStorage.getItem("moveItem") ? JSON.parse(sessionStorage.getItem("moveItem") || '') : null);
         });
-
-
     },[])
 
+    //listen for the contextMenu event to update the position state
     useEffect(() => {
         localStorage.setItem("sortBy", sortBy);
         localStorage.setItem("order", order);
         tauriEmit.emitSortFiles(sortBy, order);
     },[sortBy, order])
 
+    //open the transfer send dialog
     function openTransferSend(){
-        if(selectedItems.some(selectedItem => selectedItem.name != "")) emit("sendFile", {file: selectedItems});
+        if(selectedItems.some(selectedItem => selectedItem.name != "")) tauriEmit.emitFileShare(selectedItems);
         else return;
     }
 
+    //change the hidden files state
     function changeHiddenFiles(){
         localStorage.setItem("hiddenFiles", JSON.stringify(!hidden));
         setHidden(!hidden);
         tauriEmit.emitHiddenFiles(!hidden);
     }
 
+    //change the view type
     function changeViewType(){
         tauriEmit.emitChangeViewType(!detailView);
         setDetailView(!detailView);
         localStorage.setItem("detailView", JSON.stringify(!detailView));
     }
 
+    //handle the sort drop down menu click
     function handleSortDropDownMenuClick(){
         if(timeoutID) clearTimeout(timeoutID);
         setSortDropDownMenuIsOpen(prevState => !prevState);
     }
 
-    
+    //handle the mouse enter event and clear the timeout
     function handleMouseEnter(){
         if(timeoutID) clearTimeout(timeoutID);
         setSortDropDownMenuIsOpen(true);
     }
 
 
+    //handle the mouse leave event and set a timeout to close the drop down menu
     function handleMouseLeave(){
         timeoutID = setTimeout(() => {
             setSortDropDownMenuIsOpen(false);

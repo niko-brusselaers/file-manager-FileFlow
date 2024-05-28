@@ -34,7 +34,7 @@ pub fn read_directory(path: String,is_hidden:bool) -> Result<Vec<File>, String> 
                 File {
                     name: entry.file_name().to_string_lossy().into_owned(),
                     path: entry.path(),
-                    size: 0,
+                    size: metadata.len(),
                     created,
                     modified,
                     hidden,

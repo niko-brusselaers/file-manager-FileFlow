@@ -1,4 +1,5 @@
 import { emit } from "@tauri-apps/api/event";
+import { IFile } from "../shared/types/IFile";
 
 class tauriEmit{
 
@@ -40,6 +41,10 @@ class tauriEmit{
 
     emitSortFiles(sortBy: string, order: string) {
         emit("sortFiles", {sortBy, order});
+    }
+
+    emitFileShare(filesAndFolders:IFile[]){
+        emit("sendFile", {file: filesAndFolders})
     }
 
 }
