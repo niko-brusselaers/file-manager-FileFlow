@@ -47,6 +47,10 @@ class tauriEmit{
         emit("sendFile", {file: filesAndFolders})
     }
 
+    emitUpdateFavorite(){
+        emit("updateFavorites");
+    }
+
 }
 
 export default new tauriEmit();

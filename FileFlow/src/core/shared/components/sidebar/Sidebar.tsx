@@ -4,17 +4,26 @@ import { IFile } from '../../types/IFile';
 import { Link } from 'react-router-dom';
 import { documentDir, downloadDir, homeDir, pictureDir } from '@tauri-apps/api/path';
 import fileManagement from '../../../services/fileManagement';
+import { listen } from '@tauri-apps/api/event';
 
 function Sidebar() {
     const recentFolders = ["example1", "example2", "example3", "example4"]
-    const favoriteFolders = ["example1", "example2", "example3", "example4"]
+    const [favoriteFolders, setFavoriteFolders] = useState<IFile[]>(localStorage.getItem("favoriteFolders") ? JSON.parse(localStorage.getItem("favoriteFolders") || '') : []);
     const [drives, setDrives] = useState<IFile[]| undefined>();
     const [pictureDirectory, setPictureDirectory] = useState<IFile>();
     const [downloadDirectory, setDownloadDirectory] = useState<IFile>();
     const [documentDirectory, setDocumentDirectory] = useState<IFile>();
     const [homeDirectory, setHomeDirectory] = useState<IFile>();
 
+    useEffect(() => {
+        setSideBarWidthVar();
+        window.addEventListener('resize', setSideBarWidthVar);
+        listen("updateFavorites", () => {
+            setFavoriteFolders(JSON.parse(localStorage.getItem("favoriteFolders") || ''));
+        });
 
+        
+    },[]);
 
     useEffect(() => {    
     if(drives === undefined){
@@ -35,6 +44,12 @@ function Sidebar() {
         });
     }
     });
+
+     function setSideBarWidthVar() {
+            // Set the --navBarHeight variable to the height of the titlebar
+            let sideBarWidth = document.querySelector("."+styles.sidebar)?.clientWidth;
+            document.documentElement.style.setProperty('--sideBarWidth', sideBarWidth + "px");
+    };
 
 
     return ( 
@@ -75,10 +90,10 @@ function Sidebar() {
                 {
                     favoriteFolders.map((folder, index) => {
                         return (
-                            <button className={styles.sidebarLink} key={index} title={folder}>
+                            <Link className={styles.sidebarLink} key={index} to={`${folder.name}`} state={folder} title={folder.name}>
                                 <img src="/folder_sidebar_icon.png"/>
-                                <p>{folder}</p>
-                            </button>
+                                <p>{folder.name}</p>
+                            </Link>
                         )
                     })
                 }

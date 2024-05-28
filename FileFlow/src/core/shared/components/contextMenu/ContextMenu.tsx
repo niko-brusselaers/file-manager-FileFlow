@@ -15,6 +15,7 @@ function ContextMenu() {
     const [deleteActive, setDeleteActive] = useState<Boolean>(false);
     const [fileShareActive, setFileShareActive] = useState<Boolean>(false);
     const [updateFavoriteActive, setUpdateFavoriteActive] = useState<Boolean>(false);
+    const [FavouriteAction, setFavouriteAction] = useState<string>("");
     
 
     const contextMenuRef = useRef<HTMLMenuElement>(null);
@@ -35,23 +36,48 @@ function ContextMenu() {
                     y:number
                 }
             }
-
+            
             if (payload.selectedItems.length === 0) {
                 setCreateActive(true);
                 setCopyActive(false);
                 setRenameActive(false);
                 setDeleteActive(false);
+                setUpdateFavoriteActive(false);
+                
             }
 
+            const allAreFolders = payload.selectedItems.every((item) => item.extension === "folder") && payload.selectedItems.length > 0;            
+            
             if (payload.selectedItems.length === 1) {
                 setCreateActive(false);
                 setCopyActive(true);
                 setRenameActive(true);
                 setDeleteActive(true);
                 setFileShareActive(true);
-                setUpdateFavoriteActive(true);
+                
+                
+                                
+                //check if the selected item is a folder and if it is already in the favorites
+                if(!allAreFolders) setUpdateFavoriteActive(false);
+                else{
+
+                    let favorites = JSON.parse(localStorage.getItem("favoriteFolders") || "[]") as IFile[];
+                    
+                    if(favorites.some((favorite) => favorite.path === payload.selectedItems[0].path)) {
+                        console.log(favorites);
+                        
+                        setFavouriteAction("Remove");}
+                    else setFavouriteAction("Add");
+                    console.log("allAreFolders",allAreFolders);
+
+                    setUpdateFavoriteActive(true);
+                }
+                
+
+                
             }
 
+            
             if (payload.selectedItems.length > 1) {
                 setCreateActive(false);
                 setCopyActive(true);
@@ -59,6 +85,14 @@ function ContextMenu() {
                 setDeleteActive(true);
                 setFileShareActive(true);
 
+                //check if the selected items is a folder and if it is already in the favorites
+                if(!allAreFolders) setUpdateFavoriteActive(false);
+                else{
+                    let favorites = JSON.parse(localStorage.getItem("favoriteFolders") || "[]") as IFile[];
+                    if(favorites.some((favorite) => favorite.path === payload.selectedItems[0].path)) setFavouriteAction("Remove");
+                    else setFavouriteAction("Add");
+                    setUpdateFavoriteActive(true);
+                }
             }
 
             //check if the context menu is going to be out of the screen and adjust the position
@@ -90,6 +124,7 @@ function ContextMenu() {
         });
 
     },[])
+
 
     function handleCreate(){
         tauriEmit.emitCreateCommand();
@@ -131,18 +166,76 @@ function ContextMenu() {
         setActive(false);
     }
 
+    //function to add or remove a folder from the favorites
+    function handleUpdateFavorite(){
+        let favorites = JSON.parse(localStorage.getItem("favoriteFolders") || "[]") as IFile[];
+        if(FavouriteAction === "Add") {
+            favorites.push(selectedItems[0]);
+            favorites = favorites.filter((favorite, index, self) => index === self.findIndex((t) => (t.path === favorite.path)));
+        } else if(FavouriteAction === "Remove") {
+            favorites = favorites.filter((favorite) => favorite.path !== selectedItems[0].path);
+        } else{
+            return console.error(`Invalid action: ${FavouriteAction}`);
+        }
+
+        localStorage.setItem("favoriteFolders",JSON.stringify(favorites));
+        tauriEmit.emitUpdateFavorite();
+        setActive(false);
+    };
+
 
 
     return ( 
         <menu ref={contextMenuRef} onContextMenu={(event) => {event.preventDefault()}} className={styles.contextMenu} style={ active ? {display:"flex", top:`${position.y}px`, left:`${position.x}px`} : {display:"none"}}>
-            <button onClick={handleCreate} style={(createActive ? {display:"grid"}: {display:"none"})}> <img src="/dist/create_icon.png"/> <p>Create</p></button>
-            <button onClick={handleCopy} style={(copyAndCutActive ? {display:"grid"}: {display:"none"})}> <img src="/dist/copy_icon.png"/> <p>Copy</p> <span>CTRL + C</span></button>
-            <button onClick={handleCut} style={(copyAndCutActive ? {display:"grid"}: {display:"none"})}> <img src="/dist/cut_icon.png"/> <p>Cut</p> <span>CTRL + X</span></button>
-            <button onClick={handlePaste} style={(pasteItemData ? {display:"grid"} : {display:"none"})}> <img src="/dist/paste_icon.svg"/> <p>Paste</p> <span>CTRL + V</span></button>
-            <button onClick={handleFileShare} style={(fileShareActive ? {display:"grid"} : {display:"none"})}> <img src="/dist/share_icon.png"/> <p>Share</p></button>
-            <button onClick={handleRename} style={(renameActive ? {display:"grid"} : {display:"none"})}><img src="/dist/rename_icon.png"/><p>Rename</p> <span>F2</span></button>
-            <button onClick={handleDelete} style={(deleteActive ? {display:"grid"} : {display:"none"})}><img src="/dist/delete_icon.png"/><p>Delete</p><span>Del</span></button>
-            <button onClick={handleRefresh}><img src="/dist/refresh_icon.svg"/><p>Refresh</p><span>CTRL + R</span></button>
+            <button onClick={handleCreate} 
+                    style={(createActive ? {display:"grid"}: {display:"none"})}> 
+                        <img src="/dist/create_icon.png"/> 
+                        <p>Create</p>
+            </button>
+            <button onClick={handleCopy} 
+                    style={(copyAndCutActive ? {display:"grid"}: {display:"none"})}> 
+                        <img src="/dist/copy_icon.png"/> 
+                        <p>Copy</p> 
+                        <span>CTRL + C</span>
+            </button>
+            <button onClick={handleCut} 
+                    style={(copyAndCutActive ? {display:"grid"}: {display:"none"})}> 
+                    <img src="/dist/cut_icon.png"/> 
+                    <p>Cut</p> 
+                    <span>CTRL + X</span>
+            </button>
+            <button onClick={handlePaste} 
+                style={(pasteItemData ? {display:"grid"} : {display:"none"})}> 
+                    <img src="/dist/paste_icon.svg"/> 
+                    <p>Paste</p> 
+                    <span>CTRL + V</span>
+            </button>
+            <button onClick={handleFileShare} 
+                    style={(fileShareActive ? {display:"grid"} : {display:"none"})}> 
+                        <img src="/dist/share_icon.png"/> 
+                        <p>Share</p>
+            </button>
+            <button onClick={handleUpdateFavorite} 
+                    style={(updateFavoriteActive ? {display:"grid"} : {display:"none"})}> 
+                        <img src="/dist/favorite_icon.svg"/> 
+                        <p className={styles.extendText}> {(FavouriteAction === "Remove" ? "Remove from favorites" : "Add to Favorites")}</p>
+            </button>
+            <button onClick={handleRename} 
+                    style={(renameActive ? {display:"grid"} : {display:"none"})}>
+                        <img src="/dist/rename_icon.png"/>
+                        <p>Rename</p> 
+                        <span>F2</span>
+                </button>
+            <button onClick={handleDelete} 
+                    style={(deleteActive ? {display:"grid"} : {display:"none"})}>
+                            <img src="/dist/delete_icon.png"/>
+                            <p>Delete</p>
+                            <span>Del</span>
+                </button>
+            <button onClick={handleRefresh}>
+                        <img src="/dist/refresh_icon.svg"/>
+                        <p>Refresh</p><span>CTRL + R</span>
+            </button>
         </menu> 
     );
 }

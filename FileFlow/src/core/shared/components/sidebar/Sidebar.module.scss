@@ -1,12 +1,11 @@
 @import "../../../shared/style/variables.scss";
 
 .sidebar{
-    position: sticky;
-    top: 0;
+    position: fixed;
     min-width: 10em;
     max-width: 15em;
     width: 30%;
-    height: 100vh;
+    height: calc(100vh - var(--navBarHeight));
     margin: 0;
     padding: 5em 0 0;
     box-sizing: border-box;
@@ -54,7 +53,7 @@
     }
 
     img{
-        width: 1.5em;
+        width: 1.5rem;
         padding: 1em;
         margin-right: 1em;
     }

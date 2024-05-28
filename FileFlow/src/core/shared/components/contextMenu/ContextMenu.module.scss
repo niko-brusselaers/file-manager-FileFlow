@@ -1,13 +1,19 @@
+@import "../../style/variables.scss";
+
 .contextMenu{
     position: absolute;
     display: flex;
     z-index: 5;
     flex-direction: column;
+    background-color: $secondaryLightGrey;
+    -webkit-box-shadow: 0.5px 0.5px 20px -8px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0.5px 0.5px 20px -8px rgba(0,0,0,0.75);
+    box-shadow: 0.5px 0.5px 20px -8px rgba(0,0,0,0.75);
 
     button{
         border: none;
         padding: 0.5rem;
-        width: 12rem;
+        width: 13rem;
         display: grid;
         grid-template-columns: repeat(7, 1fr);
         grid-template-rows: 1fr;
@@ -23,6 +29,10 @@
             text-align: left;
             justify-self: flex-start;
             font-weight: bold;
+        }
+        
+        p.extendText{
+            grid-column: span 5;
         }
 
         span{

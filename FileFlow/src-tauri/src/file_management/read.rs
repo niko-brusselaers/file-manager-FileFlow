@@ -5,7 +5,6 @@ use rust_search::SearchBuilder;
 use sysinfo::Disks;
 use chrono::DateTime;
 use chrono::offset::Utc;
-use tauri::Manager;
 use winapi::um::winnt::FILE_ATTRIBUTE_HIDDEN;
 
 #[tauri::command]
@@ -145,7 +144,7 @@ pub fn open_file(path: String) -> Result<(), String> {
 use std::thread;
 use std::sync::mpsc;
 #[tauri::command]
-pub fn search_device(query: &str, app: tauri::AppHandle) -> Result<Vec<File>,String> {
+pub fn search_device(query: &str) -> Result<Vec<File>,String> {
     let drives = get_drives().map_err(|error| error.to_string())?;
 
     let drive_paths = drives.iter().map(|drive| drive.path.to_str().unwrap().to_string()).collect::<Vec<String>>();
@@ -164,16 +163,16 @@ pub fn search_device(query: &str, app: tauri::AppHandle) -> Result<Vec<File>,Str
         let mut files: Vec<File> = Vec::new();
 
         for result in search {
-            let pathBuf = PathBuf::from(result);
-            let metadata = pathBuf.metadata().map_err(|error| error.to_string())?;
+            let path_buf = PathBuf::from(result);
+            let metadata = path_buf.metadata().map_err(|error| error.to_string())?;
 
-            let name = pathBuf
+            let name = path_buf
                 .file_name()
                 .unwrap_or(OsStr::new("unkown"))
                 .to_string_lossy()
                 .to_string();
 
-            let extension = pathBuf.extension().unwrap_or(OsStr::new("folder")).to_string_lossy().into_owned();
+            let extension = path_buf.extension().unwrap_or(OsStr::new("folder")).to_string_lossy().into_owned();
 
             // Convert SystemTime to DateTime
             let created: DateTime<Utc> = metadata.created().unwrap().into();
@@ -186,13 +185,13 @@ pub fn search_device(query: &str, app: tauri::AppHandle) -> Result<Vec<File>,Str
             let hidden = if cfg!(target_os = "windows") {
                 metadata.file_attributes() & FILE_ATTRIBUTE_HIDDEN != 0
             } else {
-                pathBuf.file_name().unwrap().to_str().map(|s| s.starts_with(".")).unwrap_or(false)
+                path_buf.file_name().unwrap().to_str().map(|s| s.starts_with(".")).unwrap_or(false)
             };
 
             let file = File {
                 name,
                 extension,
-                path: pathBuf,
+                path: path_buf,
                 size: metadata.len(),
                 created,
                 modified,

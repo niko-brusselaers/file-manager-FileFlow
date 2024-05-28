@@ -3,6 +3,7 @@
     flex-direction: column;
     width: 100%;
     overflow-y: auto;
+    margin-left: var(--sideBarWidth);
 
     .directoryName{
         margin: 3em 2em 0em;

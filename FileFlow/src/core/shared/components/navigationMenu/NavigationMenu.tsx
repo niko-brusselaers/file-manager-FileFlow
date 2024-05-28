@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useState } from "react";
+import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import styles from "./NavigationMenu.module.scss"
 import { Window } from '@tauri-apps/api/window';
 import { useLocation,useNavigate } from "react-router-dom";
@@ -11,12 +11,11 @@ function NavigationMenu() {
     const navigate = useNavigate()
     const locationData:IFile = useLocation().state;
     const appWindow = Window.getCurrent();
+    const dropDownMenuRef = useRef<HTMLDivElement>(null);
     let timeoutID: NodeJS.Timeout | null = null;
 
     const [filePathInput, setFilePathInput] = useState<string>(locationData?.name || "");
     const [dropDownBarIsOpen, setDropDownBarIsOpen] = useState<boolean>(false);
-    
-    
 
     useEffect(() => {
         // Set the --navBarHeight variable to the height of the titlebar
@@ -26,17 +25,8 @@ function NavigationMenu() {
         //close the dropdown bar when the user clicks outside of the dropdown bar
         document.addEventListener("mousedown", (event) => {
             //classnames of the elements that should not close the dropdown bar
-            const dropDownTargets = [
-                document.querySelector("."+styles.dropDownMenuContainer)?.className,
-                document.querySelector("."+styles.dropDownMenuButton)?.className,
-                document.querySelector("."+styles.dropdownMenuImage)?.className
-            ]            
-            //get the class name of the selected element
-            let selectedClasname = (event.target as HTMLElement).className as string;                
-                
-            if(!dropDownTargets.includes(selectedClasname)) {
-                setDropDownBarIsOpen(false)
-            }
+            if(dropDownMenuRef.current?.contains(event.target as Node)) return
+            else setDropDownBarIsOpen(false);
             
         })
 
@@ -184,7 +174,7 @@ function NavigationMenu() {
                         <input type="text" placeholder="Search This pc" onChange={searchDirectory} onKeyDown={(event) => {if (event.key === 'Enter') {event.preventDefault();searchDevice(event.currentTarget.value);}}}/>
 
                     </form>
-                    <div  className={styles.drownDownMenu}  onMouseLeave={handleDropDownMenuLeave}>
+                    <div ref={dropDownMenuRef} className={styles.drownDownMenu}  onMouseLeave={handleDropDownMenuLeave}>
                         <img className={styles.dropdownMenuImage} src="/acount_icon.png" alt=""  onClick={handleDropDownClick}/>
                         <div className={styles.dropDownMenuContainer} style={dropDownBarIsOpen ? {display:"block"} : {display:"none"}}>
                             <button className={styles.dropDownMenuButton} onClick={() => {openFileTransferHub()}}>

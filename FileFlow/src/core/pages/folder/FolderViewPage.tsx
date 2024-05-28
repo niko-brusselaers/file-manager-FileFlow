@@ -266,7 +266,6 @@ function FolderView() {
 
   function handleContextMenu(event:React.MouseEvent<HTMLDivElement, MouseEvent>){
     event.preventDefault();
-    console.log('right click');
     let data = {
         selectedItems: selectedItemsRef.current,
         position:{
