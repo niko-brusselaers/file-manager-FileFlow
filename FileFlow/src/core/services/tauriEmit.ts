@@ -61,6 +61,10 @@ class tauriEmit{
     
     }
 
+    emitRecentFolderChange(){
+        emit("recentFolderChange")
+    }
+
 }
 
 export default new tauriEmit();

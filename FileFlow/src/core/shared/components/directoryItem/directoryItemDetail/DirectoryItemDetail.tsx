@@ -8,7 +8,6 @@ function DirectoryItemDetail({item, selectedItems, setSelected,edit}: {item:IFil
     const [EditMode, setEditMode] = useState(edit)
     const [newFileName, setNewFileName] = useState("")
 
-    const itemRef = useRef(item)
     
     function setIcon(){
         if(imageFileTypes.includes(item.extension)) return `/${item.extension}_icon.png`

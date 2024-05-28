@@ -9,7 +9,7 @@ import tauriEmit from '../../../services/tauriEmit';
 import { IContextMenuData } from '../../types/IContextMenuData';
 
 function Sidebar() {
-    const recentFolders:IFile[] = [{name: "Folder1", path: "C:\\Users\\User\\Folder1",created:new Date(),modified:new Date(),hidden:false, extension: "folder", size: "", edit: false},{name: "Folder2", path: "C:\\Users\\User\\Folder2",created:new Date(),modified:new Date(),hidden:false, extension: "folder", size: "", edit: false},{name: "Folder3", path: "C:\\Users\\User\\Folder3",created:new Date(),modified:new Date(),hidden:false, extension: "folder", size: "", edit: false}]
+    const [recentFolders,setRecentFolders] = useState<IFile[]>([]);
     const [favoriteFolders, setFavoriteFolders] = useState<IFile[]>(localStorage.getItem("favoriteFolders") ? JSON.parse(localStorage.getItem("favoriteFolders") || '') : []);
     const [drives, setDrives] = useState<IFile[]| undefined>();
     const [pictureDirectory, setPictureDirectory] = useState<IFile>();
@@ -24,7 +24,9 @@ function Sidebar() {
         listen("updateFavorites", () => {
             setFavoriteFolders(JSON.parse(localStorage.getItem("favoriteFolders") || ''));
         });
-
+        console.log(recentFolders);
+        
+        listen("recentFolderChange", getRecentFolders);
         
     },[]);
 
@@ -53,6 +55,15 @@ function Sidebar() {
             let sideBarWidth = document.querySelector("."+styles.sidebar)?.clientWidth;
             document.documentElement.style.setProperty('--sideBarWidth', sideBarWidth + "px");
     };
+
+    function getRecentFolders(){
+        let folders = JSON.parse(localStorage.getItem("recentFolders") || '[]') as IFile[];
+        //removes first element from the array
+        if(folders.length) folders.shift();
+
+        setRecentFolders(folders);
+        return folders
+    }
 
     function handleContextMenuFavoriteClick(event:React.MouseEvent,item:IFile){
         event.preventDefault();
@@ -118,10 +129,10 @@ function Sidebar() {
                 {
                     recentFolders.map((folder, index) => {
                         return (
-                            <button className={styles.sidebarLink} key={index} title={folder.name} onContextMenu={event => handleContextMenuSideBarFolderClick(event,folder)}>
+                            <Link className={styles.sidebarLink} key={index} title={folder.name} to={`/${folder.name}`} state={folder} onContextMenu={event => handleContextMenuSideBarFolderClick(event,folder)}>
                                 <img src="/folder_sidebar_icon.png"/>
                                 <p>{folder.name}</p>
-                            </button>
+                            </Link>
                         )
                     })
                 }

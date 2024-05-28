@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { IFile } from "../../shared/types/IFile";
 import styles from './FolderView.module.scss';
 import FolderOptionsBar from "../../shared/components/folderOptionsBar/FolderOptionsBar";
-import { useLocation, useNavigate } from "react-router-dom";
+import { unstable_HistoryRouter, useLocation, useNavigate } from "react-router-dom";
 import fileManagement from "../../services/fileManagement";
-import { emit, listen } from "@tauri-apps/api/event";
+import { listen } from "@tauri-apps/api/event";
 import tauriEmit from "../../services/tauriEmit";
 import conversion from "../../services/conversion";
 import DirectoryItemTile from "../../shared/components/directoryItem/directoryItemTile/DirectoryItemTile";
@@ -28,12 +28,9 @@ function FolderView() {
 
   const loaderData: IFile = useLocation().state;
   const navigate = useNavigate();
-
-
   
   
   useEffect(() => {     
-
     //listen for create new file command and create a new file
     listen("createNewFile", () => createNewFile());
     
@@ -89,7 +86,7 @@ function FolderView() {
 
 
     //fetch the files and folders when navigating to a new directory
-  useEffect(() => {    
+  useEffect(() => {   
     if (loaderData === null || loaderData.name === "My Device") {
       //fetch the drives when the loaderData is null or the name is "My Device"
       fileManagement.getdrives().then((data) => {
@@ -104,8 +101,27 @@ function FolderView() {
       let watchedDirectory = sessionStorage.getItem("watchedDirectory") ? sessionStorage.getItem("watchedDirectory") || '' : null;
       if(watchedDirectory) fileManagement.unWatchDirectory(watchedDirectory).then(()=> fileManagement.watchDirectory(loaderData.path));
       else fileManagement.watchDirectory(loaderData.path);
-
       getFilesAndFolders(loaderData.path);      
+
+      //set the watched directory to the local storage
+      let watchedDirectories = JSON.parse(localStorage.getItem("recentFolders") || "[]") as IFile[];
+      if(watchedDirectories.length === 0) watchedDirectories.push(loaderData);
+
+      //if the last watched directory is the same as the current directory keep the watched directories the same
+      if(watchedDirectories[watchedDirectories.length - 1].path !== loaderData.path) {
+          //if the current directory is already, place it at the top of the watched directories
+          if(watchedDirectories.some(directory => directory.path === loaderData.path)) {
+              watchedDirectories = watchedDirectories.filter(directory => directory.path !== loaderData.path);
+              watchedDirectories.unshift(loaderData);
+          } else {
+              //if the watched directories are more than 5, remove the last one
+              if(watchedDirectories.length >= 5) watchedDirectories.pop();
+              watchedDirectories.unshift(loaderData);
+          }
+      }
+
+      localStorage.setItem("recentFolders", JSON.stringify(watchedDirectories));
+      tauriEmit.emitRecentFolderChange();
     }
   }, [loaderData]);
 
@@ -282,7 +298,7 @@ function FolderView() {
   }
 
   return (
-    <div onContextMenu={ handleContextMenu} className={styles.directoryView} onClick={(event) => unSelectItems(event)}>
+    <div onContextMenu={handleContextMenu} className={styles.directoryView} onClick={(event) => unSelectItems(event)}>
       <FolderOptionsBar selectedItems={selectedItems}/>
 
       <h2 className={styles.directoryName}>
