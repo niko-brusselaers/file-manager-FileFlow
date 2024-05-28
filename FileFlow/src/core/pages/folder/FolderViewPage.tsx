@@ -10,6 +10,7 @@ import conversion from "../../services/conversion";
 import DirectoryItemTile from "../../shared/components/directoryItem/directoryItemTile/DirectoryItemTile";
 import DirectoryItemDetail from "../../shared/components/directoryItem/directoryItemDetail/DirectoryItemDetail";
 import ContainerDetailViewTop from "./containerDetailViewTop/ContainerDetailViewTop";
+import { IContextMenuData } from "../../shared/types/IContextMenuData";
 
 function FolderView() {
   const [sortingConfig, setSortingConfig] = useState<{sortBy:string, order:string}>(localStorage.getItem("sortBy") && localStorage.getItem("order") ? {sortBy:localStorage.getItem("sortBy") || "", order:localStorage.getItem("order") || ""} : {sortBy:"name", order:"ascending"});
@@ -129,9 +130,11 @@ function FolderView() {
   };
 
   //add selected item to the selectedItems array, if the item is already in the array open the file or folder
-  function setSelected(event:React.MouseEvent,item: IFile) {
+  function setSelected(event:React.MouseEvent,item: IFile) {    
     
+    if(event.type === "auxclick" && selectedItems.length > 0) return;
     if(selectedItems.length === 0) return setSelectedItems([item]);
+
     selectedItems.map(selectedItem => {
       //if selected item is already in the selectedItems array open the file or folder
       if (selectedItem === item) {
@@ -266,15 +269,16 @@ function FolderView() {
 
   function handleContextMenu(event:React.MouseEvent<HTMLDivElement, MouseEvent>){
     event.preventDefault();
-    let data = {
+    let data:IContextMenuData = {
         selectedItems: selectedItemsRef.current,
         position:{
             x:event.clientX, 
             y:event.clientY
-        }
+        },
+        contextType : "directoryView"
       }
-    emit("contextMenu", data);
-    
+
+    tauriEmit.emitContextMenuOpen(data)
   }
 
   return (

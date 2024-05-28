@@ -13,7 +13,7 @@
     button{
         border: none;
         padding: 0.5rem;
-        width: 13rem;
+        width: 12rem;
         display: grid;
         grid-template-columns: repeat(7, 1fr);
         grid-template-rows: 1fr;
@@ -33,7 +33,9 @@
         
         p.extendText{
             grid-column: span 5;
+            justify-content: center;
         }
+
 
         span{
             grid-column: span 2; // changed from span 4 to span 2

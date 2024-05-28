@@ -1,19 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './Sidebar.module.scss';
 import { IFile } from '../../types/IFile';
 import { Link } from 'react-router-dom';
 import { documentDir, downloadDir, homeDir, pictureDir } from '@tauri-apps/api/path';
 import fileManagement from '../../../services/fileManagement';
 import { listen } from '@tauri-apps/api/event';
+import tauriEmit from '../../../services/tauriEmit';
+import { IContextMenuData } from '../../types/IContextMenuData';
 
 function Sidebar() {
-    const recentFolders = ["example1", "example2", "example3", "example4"]
+    const recentFolders:IFile[] = [{name: "Folder1", path: "C:\\Users\\User\\Folder1",created:new Date(),modified:new Date(),hidden:false, extension: "folder", size: "", edit: false},{name: "Folder2", path: "C:\\Users\\User\\Folder2",created:new Date(),modified:new Date(),hidden:false, extension: "folder", size: "", edit: false},{name: "Folder3", path: "C:\\Users\\User\\Folder3",created:new Date(),modified:new Date(),hidden:false, extension: "folder", size: "", edit: false}]
     const [favoriteFolders, setFavoriteFolders] = useState<IFile[]>(localStorage.getItem("favoriteFolders") ? JSON.parse(localStorage.getItem("favoriteFolders") || '') : []);
     const [drives, setDrives] = useState<IFile[]| undefined>();
     const [pictureDirectory, setPictureDirectory] = useState<IFile>();
     const [downloadDirectory, setDownloadDirectory] = useState<IFile>();
     const [documentDirectory, setDocumentDirectory] = useState<IFile>();
     const [homeDirectory, setHomeDirectory] = useState<IFile>();
+
 
     useEffect(() => {
         setSideBarWidthVar();
@@ -51,23 +54,61 @@ function Sidebar() {
             document.documentElement.style.setProperty('--sideBarWidth', sideBarWidth + "px");
     };
 
+    function handleContextMenuFavoriteClick(event:React.MouseEvent,item:IFile){
+        event.preventDefault();
+        event.stopPropagation();
+        if(!item) return;
+        let data:IContextMenuData = {
+            selectedItems: [item],
+            position: {x:event.clientX, y:event.clientY},
+            contextType: 'sidebarFavourite'
+        }
+
+        tauriEmit.emitContextMenuOpen(data);
+    
+    }
+
+    function handleContextMenuSideBarFolderClick(event:React.MouseEvent,item?:IFile){
+        event.preventDefault();
+        event.stopPropagation();
+        if(!item) return;
+        let data:IContextMenuData = {
+            selectedItems: [item],
+            position: {x:event.clientX, y:event.clientY},
+            contextType: 'sideBarFolder'
+        }
+
+        tauriEmit.emitContextMenuOpen(data);
+    }
+
+    function handleSideBarDivContextMenuClick(event:React.MouseEvent){
+        event.preventDefault();
+        event.stopPropagation();
+        let data:IContextMenuData = {
+            selectedItems: [],
+            position: {x:event.clientX, y:event.clientY},
+            contextType: 'sideBar'
+        }
+
+        tauriEmit.emitContextMenuOpen(data);
+    }
 
     return ( 
-        <div className={styles.sidebar}>
+        <div onContextMenu={handleSideBarDivContextMenuClick} className={styles.sidebar}>
             <div className={styles.sidebarButtonGroup}>
-                <Link className={styles.sidebarLink} title="Home" to={`/${homeDirectory?.name}`}  state={homeDirectory}>
+                <Link className={styles.sidebarLink} title="Home" to={`/${homeDirectory?.name}`}  state={homeDirectory} onContextMenu={event => handleContextMenuSideBarFolderClick(event,homeDirectory)}>
                     <img src="/home_sidebar_icon.png"/>
                     <p>{homeDirectory?.name}</p>
                 </Link>
-                <Link className={styles.sidebarLink} title='Pictures' to={`/${pictureDirectory?.name}`} state={pictureDirectory}>
+                <Link className={styles.sidebarLink} title='Pictures' to={`/${pictureDirectory?.name}`} state={pictureDirectory} onContextMenu={event => handleContextMenuSideBarFolderClick(event,pictureDirectory)}>
                     <img src="/picture_sidebar_icon.png"/>
                     <p>Pictures</p>
                 </Link>
-                <Link className={styles.sidebarLink} title='Download' to={`/${downloadDirectory?.name}`} state={downloadDirectory}>
+                <Link className={styles.sidebarLink} title='Download' to={`/${downloadDirectory?.name}`} state={downloadDirectory} onContextMenu={event => handleContextMenuSideBarFolderClick(event,downloadDirectory)}>
                     <img src="/download_sidebar_icon.png"/>
                     <p>Download</p>
                 </Link>
-                <Link className={styles.sidebarLink} title='Documents' to={`/${documentDirectory?.name}`} state={documentDirectory}>
+                <Link className={styles.sidebarLink} title='Documents' to={`/${documentDirectory?.name}`} state={documentDirectory} onContextMenu={event => handleContextMenuSideBarFolderClick(event,documentDirectory)}>
                     <img src="/folder_sidebar_icon.png"/>
                     <p>Documents</p>
                 </Link>
@@ -77,9 +118,9 @@ function Sidebar() {
                 {
                     recentFolders.map((folder, index) => {
                         return (
-                            <button className={styles.sidebarLink} key={index} title={folder}>
+                            <button className={styles.sidebarLink} key={index} title={folder.name} onContextMenu={event => handleContextMenuSideBarFolderClick(event,folder)}>
                                 <img src="/folder_sidebar_icon.png"/>
-                                <p>{folder}</p>
+                                <p>{folder.name}</p>
                             </button>
                         )
                     })
@@ -90,7 +131,7 @@ function Sidebar() {
                 {
                     favoriteFolders.map((folder, index) => {
                         return (
-                            <Link className={styles.sidebarLink} key={index} to={`${folder.name}`} state={folder} title={folder.name}>
+                            <Link className={styles.sidebarLink} onContextMenu={event => handleContextMenuFavoriteClick(event,folder)} key={index} to={`${folder.name}`} state={folder} title={folder.name}>
                                 <img src="/folder_sidebar_icon.png"/>
                                 <p>{folder.name}</p>
                             </Link>

@@ -1,5 +1,6 @@
 import { emit } from "@tauri-apps/api/event";
 import { IFile } from "../shared/types/IFile";
+import { IContextMenuData } from "../shared/types/IContextMenuData";
 
 class tauriEmit{
 
@@ -49,6 +50,15 @@ class tauriEmit{
 
     emitUpdateFavorite(){
         emit("updateFavorites");
+    }
+
+    emitClearSelection(){
+        emit("clearSelection");
+    }
+
+    emitContextMenuOpen(data: IContextMenuData){
+        emit("contextMenu", data);
+    
     }
 
 }

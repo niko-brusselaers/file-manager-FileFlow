@@ -51,7 +51,7 @@ function App() {
 
   return (
     <>
-      <NavigationMenu/>
+      <NavigationMenu />
       <ContextMenu/>
       <div className="applicationContainer">
         <FileTransferSend dialogOpened={transferSendDialogOpen} setDialogOpened={setTransferSendDialogOpen} websocket={webSocketServer}  selectedItems={selectedItem}/>

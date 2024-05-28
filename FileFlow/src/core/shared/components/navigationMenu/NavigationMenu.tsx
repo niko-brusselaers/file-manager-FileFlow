@@ -136,7 +136,7 @@ function NavigationMenu() {
 
 
     return ( 
-            <div  className={styles.titlebar}>
+            <div onContextMenu={(event) => {event.preventDefault()}}  className={styles.titlebar}>
                 <div  className={styles.navBarTopContainer}>
                     <div data-tauri-drag-region className={styles.windowsOptionsContainer}>
                         <button className={styles.titlebarButton} onClick={() => minimizeWindow()}>
