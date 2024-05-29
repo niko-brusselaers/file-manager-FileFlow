@@ -4,12 +4,13 @@ import fileManagement from '../../../../services/fileManagement';
 import { IFile } from '../../../types/IFile';
 
 function DirectoryItemTile({item, selectedItems, setSelected,edit}: {item:IFile,selectedItems:IFile[],setSelected:Function,edit:boolean }) {
-    const imageFileTypes = ["pdf","xslx","docx","svg", "folder","drive","Bin"]
+    const imageFileTypes = ["pdf","doc","docx","txt","xsl","xslx","csv","svg","tiff","png","gif","mp3","mp4","rar","zip", "folder","drive","Bin","css","py","html","js","ts","java"]
+
     const [EditMode, setEditMode] = useState(edit)
     const [newFileName, setNewFileName] = useState("")
     function setIcon(){
-        if(imageFileTypes.includes(item.extension)) return `/${item.extension}_icon.png`
-        else return `/file_icon.png`
+        if(imageFileTypes.includes(item.extension)) return `/dist/${item.extension}_icon.png`
+        else return `/dist/file_icon.png`
 
     }
 

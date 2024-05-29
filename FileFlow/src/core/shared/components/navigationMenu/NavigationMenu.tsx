@@ -158,12 +158,13 @@ function NavigationMenu() {
                 </div>
                 <div className={styles.navBarBottomContainer}>
                     <div className={styles.navigationMenuContainer}>
-                        <button className={styles.navigationMenuButton}><img className={styles.backArrow} src="/arrow.png" alt="back" onClick={() => {history.back()}}/></button>
-                        <button className={styles.navigationMenuButton}><img className={styles.forwardArrow} src="/arrow.png" alt="forward" onClick={() => {history.forward()}}/></button>
-                        <button className={styles.navigationMenuButton}><img className={styles.downArrow} src="/arrow.png" alt="" onClick={async () => {await navigateToParentFolder()}}/></button>
+                        <button className={styles.navigationMenuButton}><img className={styles.backArrow} src="/dist/arrow.png" alt="back" onClick={() => {history.back()}}/></button>
+                        <button className={styles.navigationMenuButton}><img className={styles.forwardArrow} src="/dist/arrow.png" alt="forward" onClick={() => {history.forward()}}/></button>
+                        <button className={styles.navigationMenuButton}><img className={styles.downArrow} src="/dist/arrow.png" alt="" onClick={async () => {await navigateToParentFolder()}}/></button>
                     </div>
                     <form onSubmit={(event)=>{navigateToPath(event)}} className={styles.navigationPathInput}>
-                    <input  type="text"  
+                    <input  type="text"
+                        className={styles.navigationInput}  
                         value={filePathInput || ""} 
                         onClick={() => {showFullPath()}}
                         onBlur={() => {showPathName()}}
@@ -171,11 +172,11 @@ function NavigationMenu() {
                     />
                     </form>
                     <form className={styles.searchInput} >
-                        <input type="text" placeholder="Search This pc" onChange={searchDirectory} onKeyDown={(event) => {if (event.key === 'Enter') {event.preventDefault();searchDevice(event.currentTarget.value);}}}/>
+                        <input className={styles.navigationInput}  type="text" placeholder="Search This pc" onChange={searchDirectory} onKeyDown={(event) => {if (event.key === 'Enter') {event.preventDefault();searchDevice(event.currentTarget.value);}}}/>
 
                     </form>
                     <div ref={dropDownMenuRef} className={styles.drownDownMenu}  onMouseLeave={handleDropDownMenuLeave}>
-                        <img className={styles.dropdownMenuImage} src="/acount_icon.png" alt=""  onClick={handleDropDownClick}/>
+                        <img className={styles.dropdownMenuImage} src="/dist/acount_icon.png" alt=""  onClick={handleDropDownClick}/>
                         <div className={styles.dropDownMenuContainer} style={dropDownBarIsOpen ? {display:"block"} : {display:"none"}}>
                             <button className={styles.dropDownMenuButton} onClick={() => {openFileTransferHub()}}>
                                 File Transfer

@@ -44,7 +44,7 @@
     text-decoration: none;
     
     &:hover{
-        background-image: url("/sidebar_button_background.png");
+        background-image: url("/dist/sidebar_button_background.png");
         background-size: 100% 100%;
     }
 
@@ -57,5 +57,6 @@
         width: 1.5rem;
         padding: 1em;
         margin-right: 1em;
+        filter: $whiteIcon;
     }
 }

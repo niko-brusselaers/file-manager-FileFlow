@@ -25,6 +25,7 @@
             width: 1rem;
             grid-column: span 2;
             box-sizing: content-box;
+            filter: $icon;
         }
         p{
             grid-column: span 3;
@@ -44,6 +45,11 @@
             text-align: right;
             justify-self: flex-end;
             opacity: 0.5;
+            color: $text;
+        }
+
+        &:hover{
+            background-color: $secondary;
         }
     }
 

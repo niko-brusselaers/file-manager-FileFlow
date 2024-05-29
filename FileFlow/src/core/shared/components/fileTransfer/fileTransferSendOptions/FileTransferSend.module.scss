@@ -52,6 +52,11 @@
         padding-left: 1em;
         color: $text;
 
+        &::placeholder { 
+            color: $text; 
+            opacity: .5; 
+        }
+
     }
 
     .selectionItemsContainer{

@@ -12,6 +12,7 @@ import webSocketService from "./core/services/webSocketService";
 import tauriStore from "./core/services/tauriStore";
 import { invoke } from "@tauri-apps/api/core";
 import ContextMenu from "./core/shared/components/contextMenu/ContextMenu";
+import CssFilterConverter from "css-filter-converter";
 
 
 
@@ -32,10 +33,24 @@ function App() {
       document.documentElement.style.setProperty('--background', '#172241');
       document.documentElement.style.setProperty('--tertiary', '#313D5F');
       document.documentElement.style.setProperty('--text', '#FFFFFF');
+
+      //convert the hex color to css filter color
+      let iconColor = CssFilterConverter.hexToFilter("#FFFFFF").color
+      let whiteIconColor = CssFilterConverter.hexToFilter("#FFFFFF").color
+
+      document.documentElement.style.setProperty('--icon', iconColor);
+      document.documentElement.style.setProperty('--whiteIcon', whiteIconColor);
     } else {
       document.documentElement.style.setProperty('--background', '#F5F5F8');
       document.documentElement.style.setProperty('--tertiary', '#E3E3E3');
       document.documentElement.style.setProperty('--text', '#000000');
+
+      //convert the hex color to css filter color
+      let iconColor = CssFilterConverter.hexToFilter("#000000").color
+      let whiteIconColor = CssFilterConverter.hexToFilter("#FFFFFF").color
+      
+      document.documentElement.style.setProperty('--icon', iconColor);
+      document.documentElement.style.setProperty('--whiteIcon', whiteIconColor);
       
     }
     

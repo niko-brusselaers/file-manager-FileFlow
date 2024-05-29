@@ -11,7 +11,7 @@
   left: 0;
   right: 0;
   z-index: 1;
-  background-image: url("/topmenu_background.png");
+  background-image: url("/dist/topmenu_background.png");
   background-size: auto;
   
   .navBarTopContainer{
@@ -56,6 +56,7 @@
         height: 1.25em;
         padding: 0.5em 0;
         background-color: transparent;
+        filter: $icon;
 
         .backArrow{
           rotate: 180deg;
@@ -157,21 +158,20 @@
   height: 100%;
   background: transparent;
   border: none;
+  filter: $whiteIcon;
   &:hover{
     background: rgba($background, 0.1);
   }
 }
 
+.navigationInput{
+  color: $text;
+  background-color: $background;
 
-@keyframes fadeIn {
-  0% { display: none; opacity: 0; }
-  1% { display: block; opacity: 0; }
-  100% { display: block; opacity: 1; }
+  &::placeholder { 
+    color: $text; 
+    opacity: .5; 
+  }
+
+ 
 }
-
-@keyframes fadeOut {
-  0% { display: block; opacity: 1; }
-  99% { display: block; opacity: 0; }
-  100% { display: none; opacity: 0; }
-}
-

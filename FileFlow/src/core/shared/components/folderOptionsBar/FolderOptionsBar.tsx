@@ -75,28 +75,28 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
         <div className={styles.folderOptionsBar}>
             <div className={styles.folderOptionsBarButtonGroup}>
                 <button className={styles.folderOptionsBarButton} onClick={tauriEmit.emitCreateCommand}>
-                <img src="/create_icon.png" alt="create file" />
+                <img src="/dist/create_icon.png" alt="create file" />
                 </button>
                 <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.name != "") ? "": styles.inactive)}`} onClick={tauriEmit.emitCutCommand}>
-                    <img src="/cut_icon.png" alt="cut file" />
+                    <img src="/dist/cut_icon.png" alt="cut file" />
                 </button>
                 <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.name != "") ? "": styles.inactive)}`} onClick={tauriEmit.emitCopyCommand}>
-                    <img src="/copy_icon.png" alt="copy file" />
+                    <img src="/dist/copy_icon.png" alt="copy file" />
                 </button>
                 <button className={`${styles.folderOptionsBarButton} ${(pasteItemData ? "": styles.inactive)}`} onClick={tauriEmit.emitPasteCommand}>
-                    <img src="/paste_icon.svg" alt="paste file" />
+                    <img src="/dist/paste_icon.png" alt="paste file" />
                 </button>
                 <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.name != "") ? "": styles.inactive)}`} onClick={tauriEmit.emitDeleteCommand}>
-                    <img src="/delete_icon.png" alt="delete file" />
+                    <img src="/dist/delete_icon.png" alt="delete file" />
                 </button>
                 <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.name != "") ? "": styles.inactive)}`}>
-                    <img src="/rename_icon.png" alt="rename file"  onClick={tauriEmit.emitRenameCommand}/>
+                    <img src="/dist/rename_icon.png" alt="rename file"  onClick={tauriEmit.emitRenameCommand}/>
                 </button>
             </div>
             <div className={styles.folderOptionsBarButtonGroup}>
                 <div className={styles.sortDropDownMenu} onMouseLeave={handleMouseLeave}>
                     <button className={styles.folderOptionsBarButton}  onClick={handleSortDropDownMenuClick}>
-                        <img src="/sort_icon.png" alt="create file" />
+                        <img src="/dist/sort_icon.png" alt="create file" />
                     </button>
                     <form ref={sortFormRef} className={styles.dropDownContainer} style={sortDropDownMenyIsOpen ? {display:"flex"} : {display:"none"} } onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                         <div className={styles.radioContainer}>
@@ -130,25 +130,23 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
                  </div>
                 
                 <button className={styles.folderOptionsBarButton} onClick={changeHiddenFiles}>
-                    <img src="/showHidden_icon.png" alt="show hidden file" />
+                    <img src="/dist/showHidden_icon.png" alt="show hidden file" />
                 </button>
                 <button className={styles.folderOptionsBarButton} onClick={changeViewType}>
-                    <img src="/folderView_icon.png" alt="change view type" />
+                    <img src="/dist/folderView_icon.png" alt="change view type" />
                 </button>
             </div>
             <div className={styles.folderOptionsBarButtonGroup}>
                 <button className={`${styles.folderOptionsBarButton} ${selectedItems.length ? " " : styles.inactive}`} onClick={() => {openTransferSend()}}>
-                    <img src="/share_icon.png" alt="create file" />
+                    <img src="/dist/share_icon.png" alt="share" />
                 </button>
                 <button className={styles.folderOptionsBarButton}>
-                    <img src="/zip_icon.png" alt="create file" />
+                    <img src="/dist/zipFunction_icon.png" alt="zip" />
                 </button>
                 <button className={styles.folderOptionsBarButton}>
-                    <img src="/unzip_icon.png" alt="create file" />
+                    <img src="/dist/unzip_icon.png" alt="unzip" />
                 </button>
-                <button className={styles.folderOptionsBarButton}>
-                    <img src="/convert_icon.png" alt="create file" />
-                </button>
+
             </div>
                
         </div>

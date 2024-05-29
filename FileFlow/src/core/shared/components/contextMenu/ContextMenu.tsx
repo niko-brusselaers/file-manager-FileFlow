@@ -257,7 +257,7 @@ function ContextMenu() {
             </button>
             <button onClick={handlePaste} 
                 style={(pasteItemData ? {display:"grid"} : {display:"none"})}> 
-                    <img src="/dist/paste_icon.svg"/> 
+                    <img src="/dist/paste_icon.png"/> 
                     <p>Paste</p> 
                     <span>CTRL + V</span>
             </button>
@@ -284,7 +284,7 @@ function ContextMenu() {
                             <span>Del</span>
                 </button>
             <button onClick={handleRefresh}>
-                        <img src="/dist/refresh_icon.svg"/>
+                        <img src="/dist/refresh_icon.png"/>
                         <p>Refresh</p><span>CTRL + R</span>
             </button>
         </menu> 
