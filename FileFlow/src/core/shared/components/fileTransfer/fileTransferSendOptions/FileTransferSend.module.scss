@@ -3,7 +3,7 @@
 
 
 .filetransferViewSend{
-    background-color: white;
+    background-color: $background;
     padding: 1em 0;
     min-height: 20em;
     max-height: 40em;
@@ -14,6 +14,7 @@
     flex-direction: column;
     justify-content: space-around;
     overflow: scroll;
+    color: $text;
 
     > div{
         padding: 0em 3em;
@@ -21,7 +22,7 @@
     }
 
     .itemDetailsContainer{
-        border-bottom: $primaryDarkBlue 1px solid;
+        border-bottom: $primary 1px solid;
         padding-bottom: 1em;
         display: flex;
         align-items: center;
@@ -46,10 +47,10 @@
         width: 100%;
         margin-top: 0.5em;
         height: 2em;
-        border: none;
-        border-radius: 20px;
-        background-color: $secondaryDarkGray;
+        background-color: $background;
+        border: 1px solid $text;
         padding-left: 1em;
+        color: $text;
 
     }
 
@@ -67,7 +68,7 @@
         }
 
         &::-webkit-scrollbar-thumb{
-            background-color: $secondaryDarkBlue;
+            background-color: $primary;
         }
     }
 
@@ -80,15 +81,22 @@
     }
 
     .selectedDestination{
-        background-color: $secondaryDarkBlue;
+        background-color: $primary;
         color: white;
     }
 
     .otherShareOptionButton{
         width: 100%;
         height: 2em;
-        border: none;
+        border: 1.5px solid $secondary;
+        color: $secondary;
+        background-color: $background;
         border-radius: 20px;
+
+        &:hover{
+                background-color: $secondary;
+                color: invert($text);
+            }
     }
 
     .dialogButtonsBottomContainer{
@@ -99,18 +107,20 @@
         button{
             width: 45%;
             height: 3em;
-            border: none;
+            border: 1.5px solid $secondary;
+            color: $secondary;
+            background-color: $background;
 
             &:hover{
-                background-color: $secondaryDarkBlue;
-                color: white;
+                background-color: $secondary;
+                color: invert($text);
             }
         }
     }
 }
 
 button:hover{
-background-color: $secondaryDarkBlue;
+background-color: $primary;
 color: white;
 }
 

@@ -9,7 +9,7 @@
     margin: 0;
     padding: 5em 0 0;
     box-sizing: border-box;
-    background-color: $primaryDarkBlue;
+    background-color: $primary;
     overflow-y: auto;
 
     
@@ -21,13 +21,13 @@
     align-items: center;
 
     &:not(:last-child){
-        border-bottom: 1px solid rgba($secondaryLightGrey,  0.5);
+        border-bottom: 1px solid rgba(white,  0.5);
         padding-bottom: 2em;
     }
 }
 
 .sidebarGroupTitle{
-    color: $secondaryLightGrey;
+    color: white;
     margin: 1em 0 .5em;
     align-self: flex-start;
     padding: 0 1em;
@@ -38,7 +38,7 @@
     flex-direction: row;
     background-color: transparent;
     border: none;
-    color: #F5F5F8;
+    color: white;
     width: 90%;
     align-items: center;
     text-decoration: none;
@@ -50,6 +50,7 @@
 
     p{
         text-align: left;
+        width: 100%;
     }
 
     img{

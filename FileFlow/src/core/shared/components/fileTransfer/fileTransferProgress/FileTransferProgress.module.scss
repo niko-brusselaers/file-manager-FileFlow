@@ -3,7 +3,7 @@
 
 
 .fileTranferProgressInnerContainer{
-    background-color: white;
+    background-color: $background;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -25,6 +25,7 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    color: $text;
 }
 
 .fileTransferProgressBar{
@@ -43,15 +44,15 @@
     progress{
         width: 80%;
         height: 2rem;
-        background-color: #eee;
+        background-color: invert($text);
         border: none;
 
         &::-webkit-progress-value {
-            background-color: $secondaryDarkBlue;
+            background-color: $secondary;
         }
 
         &::-moz-progress-bar {
-            background-color: $secondaryDarkBlue;
+            background-color: $secondary;
         }
         
     }

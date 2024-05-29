@@ -6,7 +6,7 @@
     
 
 .filetransferViewHub{
-    background-color: white;
+    background-color: $background;
     padding: 1em 0;
     min-height: 20em;
     max-height: 40em;
@@ -35,11 +35,13 @@
         .dropDownButton{
             width: 100%;
             height: 3em;
-            border: none;
+            border: 1.5px solid $secondary;
+            color: $secondary;
+            background-color: $background;
 
             &:hover{
-                background-color: $secondaryDarkBlue;
-                color: white;
+                background-color: $secondary;
+                color: invert($text);
             }
         }
     }
@@ -51,10 +53,13 @@
             width: 100%;
             height: 3em;
             border: none;
+            border: 1.5px solid $secondary;
+            color: $secondary;
+            background-color: $background;
 
             &:hover{
-                background-color: $secondaryDarkBlue;
-                color: white;
+                background-color: $secondary;
+                color: invert($text);
             }
         }
     }

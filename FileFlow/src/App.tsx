@@ -24,6 +24,22 @@ function App() {
 
   useEffect(() => {
 
+    //set the default theme based on the system theme
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    console.log(mediaQuery);
+    
+    if(mediaQuery.matches){
+      document.documentElement.style.setProperty('--background', '#172241');
+      document.documentElement.style.setProperty('--tertiary', '#313D5F');
+      document.documentElement.style.setProperty('--text', '#FFFFFF');
+    } else {
+      document.documentElement.style.setProperty('--background', '#F5F5F8');
+      document.documentElement.style.setProperty('--tertiary', '#E3E3E3');
+      document.documentElement.style.setProperty('--text', '#000000');
+      
+    }
+    
+
     //listen if the file sent event is triggered and open the file transfer dialog
     listen("sendFile", (event) => {
       let file = (event.payload as any).file as IFile[];

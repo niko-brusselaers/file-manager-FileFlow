@@ -8,10 +8,11 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    color: $text;
     
     &:hover{
-        background-color: $secondaryLightGrey;
-        color: black;
+        background-color: $tertiary;
+        color: $text;
     } 
 
     .itemDetails{
@@ -52,7 +53,7 @@
         width: 100%;
         padding: 2em 0;
         height: 7.5em;
-        background-color: $secondaryLightGrey;
+        background-color: $tertiary;
 
         .itemImage{
         display: flex;
@@ -70,8 +71,9 @@
 }
 
 .isSelectedItem{
-        background-color: rgba($secondaryDarkGray,.8);
-        color: black;
+        background-color: rgba($tertiary,.8);
+        color: $text;
+
 } 
 
 

@@ -8,10 +8,11 @@
     padding: .5rem 2rem;
     border:none;
     background-color: inherit;
+    color: $text;
 
     &:hover{
-        background-color: $secondaryLightGrey;
-        color: black;
+        background-color: $tertiary;
+        color: $text;
     }
 
     .itemName{
@@ -26,7 +27,7 @@
     .imageContainer{
         width: 3rem;
         padding: 0.5rem;
-        background-color: $secondaryLightGrey;
+        background-color: $tertiary;
         box-sizing: content-box;
         
         img{
@@ -56,7 +57,7 @@
 }
 
 .isSelectedItem{
-        background-color: rgba($secondaryDarkGray,.8);
-        color: black;
+        background-color: rgba($tertiary,.8);
+        color: $text;
 
 } 
