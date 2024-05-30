@@ -11,7 +11,7 @@ pub async fn rename_item(file_path:String,new_name: String, old_name: String) ->
     }
 
     let old_file_path = format!("{}/{}", file_path, old_name);
-    let new_file_path = format!("{}/{}", file_path, new_name);
+    let new_file_path = gen_available_file_name(PathBuf::from(format!("{}/{}", file_path, new_name))).await;
 
     let result = std::fs::rename(old_file_path, new_file_path).map_err(|e| e.to_string())?;
     

@@ -75,9 +75,8 @@ function DirectoryItemDetail({item, selectedItems, setSelected,edit}: {item:IFil
             <div className={styles.itemDetails}>
                 <div className={styles.itemName}>
                     {(EditMode ?
-                        <form onSubmit={(event) => {event.preventDefault(); updateItem()}}>
-                            <input type="text" defaultValue={item.name} onChange={(event)  => {setNewFileName(event.currentTarget.value)}} onBlur={(event) => {event.preventDefault(); updateItem()}}/>
-                        </form>
+                        <input autoFocus={true} type="text" defaultValue={item.name} onChange={(event)  => {setNewFileName(event.currentTarget.value)}} onKeyDown={(event) => {if (event.key === 'Enter') {event.preventDefault();updateItem();}}}  onBlur={(event) => {event.preventDefault(); updateItem()}}/>
+
                         : 
                         <p className={styles.fileName}>{item.name}</p>)}
                 

@@ -1,10 +1,11 @@
 use super::types::File;
-use std::os::windows::fs::MetadataExt;
 use std::{ffi::OsStr,fs, path::PathBuf};
 use rust_search::SearchBuilder;
 use sysinfo::Disks;
 use chrono::DateTime;
 use chrono::offset::Utc;
+
+use std::os::windows::fs::MetadataExt;
 use winapi::um::winnt::FILE_ATTRIBUTE_HIDDEN;
 
 #[tauri::command]

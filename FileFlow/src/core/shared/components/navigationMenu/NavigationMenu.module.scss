@@ -159,8 +159,9 @@
   background: transparent;
   border: none;
   filter: $whiteIcon;
+
   &:hover{
-    background: rgba($background, 0.1);
+    background-color: rgba(white, $alpha: .2);
   }
 }
 

@@ -1,4 +1,4 @@
-import {useEffect, useState } from 'react';
+import {useEffect, useRef, useState } from 'react';
 import  styles from './DirectoryItemTile.module.scss';
 import fileManagement from '../../../../services/fileManagement';
 import { IFile } from '../../../types/IFile';
@@ -73,7 +73,7 @@ function DirectoryItemTile({item, selectedItems, setSelected,edit}: {item:IFile,
             </div>
             <div className={styles.itemDetails}>
                 {(EditMode ?
-                    <input type="text" defaultValue={item.name} onChange={(event)  => {setNewFileName(event.currentTarget.value)}} onKeyDown={(event) => {if (event.key === 'Enter') {event.preventDefault();updateItem();}}}  onBlur={(event) => {event.preventDefault(); updateItem()}}/>
+                    <input autoFocus={true} type="text" defaultValue={item.name} onChange={(event)  => {setNewFileName(event.currentTarget.value)}} onKeyDown={(event) => {if (event.key === 'Enter') {event.preventDefault();updateItem();}}}  onBlur={(event) => {event.preventDefault(); updateItem()}}/>
                      : 
                      <p className={styles.fileName}>{item.name}</p>)}
                  <p className={styles.fileTypeText} >{item.extension}</p>
