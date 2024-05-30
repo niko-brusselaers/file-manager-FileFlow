@@ -61,8 +61,8 @@ class tauriEmit{
     
     }
 
-    emitRecentFolderChange(){
-        emit("recentFolderChange")
+    emitRecentItemChange(){
+        emit("recentItemsChange")
     }
 
 }

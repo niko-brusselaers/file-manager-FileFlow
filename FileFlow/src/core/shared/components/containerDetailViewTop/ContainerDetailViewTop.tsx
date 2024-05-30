@@ -2,7 +2,7 @@ import styles from "./ContainerDetailViewTop.module.scss"
 
 function ContainerDetailViewTop() {
     return (
-        <button className={`${styles.directoryItemDetail}`}>
+        <button className={`${styles.ItemDetailTopView}`}>
             <div className={styles.imageContainer}>
             </div>
             <div className={styles.itemDetails}>

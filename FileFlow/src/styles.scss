@@ -23,8 +23,8 @@ body{
   display: flex;
   flex-direction: row;
   width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+  height: calc(100vh - var(--navBarHeight));
+  overflow-y: hidden;
   margin-top: var(--navBarHeight);
   background-color: $background;
   

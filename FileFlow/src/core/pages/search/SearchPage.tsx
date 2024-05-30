@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IFile } from "../../shared/types/IFile";
 import styles from './SearchPage.module.scss';
 import DirectoryItemDetail from "../../shared/components/directoryItem/directoryItemDetail/DirectoryItemDetail";
-import ContainerDetailViewTop from "../folder/containerDetailViewTop/ContainerDetailViewTop";
+import ContainerDetailViewTop from "../../shared/components/containerDetailViewTop/ContainerDetailViewTop";
 import fileManagement from "../../services/fileManagement";
 import { useLocation, useNavigate } from "react-router-dom";
 import { listen } from "@tauri-apps/api/event";

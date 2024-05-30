@@ -1,21 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './Sidebar.module.scss';
 import { IFile } from '../../types/IFile';
 import { Link } from 'react-router-dom';
-import { documentDir, downloadDir, homeDir, pictureDir } from '@tauri-apps/api/path';
+import { documentDir, downloadDir, pictureDir } from '@tauri-apps/api/path';
 import fileManagement from '../../../services/fileManagement';
 import { listen } from '@tauri-apps/api/event';
 import tauriEmit from '../../../services/tauriEmit';
 import { IContextMenuData } from '../../types/IContextMenuData';
 
 function Sidebar() {
-    const [recentFolders,setRecentFolders] = useState<IFile[]>([]);
+    const [recentFolders,setRecentFolders] = useState<IFile[]>(localStorage.getItem("recentItems") ? JSON.parse(localStorage.getItem("recentItems") || '') : []);
     const [favoriteFolders, setFavoriteFolders] = useState<IFile[]>(localStorage.getItem("favoriteFolders") ? JSON.parse(localStorage.getItem("favoriteFolders") || '') : []);
     const [drives, setDrives] = useState<IFile[]| undefined>();
     const [pictureDirectory, setPictureDirectory] = useState<IFile>();
     const [downloadDirectory, setDownloadDirectory] = useState<IFile>();
     const [documentDirectory, setDocumentDirectory] = useState<IFile>();
-    const [homeDirectory, setHomeDirectory] = useState<IFile>();
+    const HomePage = {name: "Home", path: "",created:new Date(),modified:new Date(),hidden:false, extension: "folder", size: "", edit: false};
 
 
     useEffect(() => {
@@ -36,7 +36,6 @@ function Sidebar() {
         pictureDir().then((path) => setPictureDirectory({name: "Pictures", path: path,created:new Date(),modified:new Date(),hidden:false, extension: "folder", size: "", edit: false}))
         downloadDir().then((path) => setDownloadDirectory({name: "Download", path: path, created:new Date(),modified:new Date(),hidden:false, extension: "folder", size: "", edit: false}))
         documentDir().then((path) => setDocumentDirectory({name: "Documents", path: path,created:new Date(),modified:new Date(),hidden:false, extension: "folder", size: "", edit: false}))
-        homeDir().then((path) => setHomeDirectory({name: "Home", path: path,created:new Date(),modified:new Date(),hidden:false, extension: "folder", size: "", edit: false}))
       
         fileManagement.getdrives().then((data) => {
             //check if data is undefined
@@ -107,9 +106,9 @@ function Sidebar() {
     return ( 
         <div onContextMenu={handleSideBarDivContextMenuClick} className={styles.sidebar}>
             <div className={styles.sidebarButtonGroup}>
-                <Link className={styles.sidebarLink} title="Home" to={`/${homeDirectory?.name}`}  state={homeDirectory} onContextMenu={event => handleContextMenuSideBarFolderClick(event,homeDirectory)}>
+                <Link className={styles.sidebarLink} title="Home" to={`/`} state={HomePage}  onContextMenu={event => handleContextMenuSideBarFolderClick(event,HomePage)}>
                     <img src="/dist/home_sidebar_icon.png"/>
-                    <p>{homeDirectory?.name}</p>
+                    <p>Home</p>
                 </Link>
                 <Link className={styles.sidebarLink} title='Pictures' to={`/${pictureDirectory?.name}`} state={pictureDirectory} onContextMenu={event => handleContextMenuSideBarFolderClick(event,pictureDirectory)}>
                     <img src="/dist/picture_sidebar_icon.png"/>

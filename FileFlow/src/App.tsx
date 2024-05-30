@@ -27,7 +27,6 @@ function App() {
 
     //set the default theme based on the system theme
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    console.log(mediaQuery);
     
     if(mediaQuery.matches){
       document.documentElement.style.setProperty('--background', '#172241');

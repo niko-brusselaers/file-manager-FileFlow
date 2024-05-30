@@ -24,22 +24,23 @@ function ContextMenu() {
     const contextMenuRef = useRef<HTMLMenuElement>(null);
     const navigate = useNavigate()
 
+    useEffect(() => {
+        console.log(active);
+        
+    }  ,[active])
 
     useEffect(() => {
         listen("updateMoveItem", () => {
             setPasteItemData(sessionStorage.getItem("moveItem") ? JSON.parse(sessionStorage.getItem("moveItem") || '') : null);
         });
 
-        listen("contextMenu", (event) => {
-            console.log(event.payload);
-            
+        listen("contextMenu", (event) => {            
             if (!(typeof event.payload === 'object') || event.payload === null) return
             let payload = event.payload as IContextMenuData
 
-            //check if the context menu is going to be out of the screen and adjust the position
-            if(window.screenX + window.innerWidth < payload.position.x + 200) payload.position.x = payload.position.x - 200;
-            if(window.screenY + window.innerHeight < payload.position.y + 200) payload.position.y = payload.position.y - 200;
-
+            // Check if the context menu is going to be out of the viewport and adjust the position
+            if(window.innerWidth < payload.position.x + 200) payload.position.x = payload.position.x - 200;
+            if(window.innerHeight < payload.position.y + 200) payload.position.y = payload.position.y - 200;
             setPosition(payload.position)
             setSelectedItems(payload.selectedItems);
             
@@ -135,7 +136,6 @@ function ContextMenu() {
         setDeleteActive(false);
         setFileShareActive(false);
         setActive(true);
-
         setupFavorites(data.selectedItems)
 
         

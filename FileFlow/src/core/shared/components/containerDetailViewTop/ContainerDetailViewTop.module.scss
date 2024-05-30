@@ -1,13 +1,15 @@
 @import "../../../shared/style/variables.scss";
 
-.directoryItemDetail{
+.ItemDetailTopView{
     display: flex;
+    position: sticky;
+    top: 0;
     flex-direction: row;
     align-items: center;
     width: 100%;
     padding: .5rem 2rem;
     border:none;
-    background-color: inherit;
+    background-color: $background;
     color: $text;
     
     &:hover{

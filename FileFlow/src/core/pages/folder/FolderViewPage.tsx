@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { IFile } from "../../shared/types/IFile";
 import styles from './FolderView.module.scss';
 import FolderOptionsBar from "../../shared/components/folderOptionsBar/FolderOptionsBar";
-import { unstable_HistoryRouter, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import fileManagement from "../../services/fileManagement";
 import { listen } from "@tauri-apps/api/event";
 import tauriEmit from "../../services/tauriEmit";
 import conversion from "../../services/conversion";
 import DirectoryItemTile from "../../shared/components/directoryItem/directoryItemTile/DirectoryItemTile";
 import DirectoryItemDetail from "../../shared/components/directoryItem/directoryItemDetail/DirectoryItemDetail";
-import ContainerDetailViewTop from "./containerDetailViewTop/ContainerDetailViewTop";
+import ContainerDetailViewTop from "../../shared/components/containerDetailViewTop/ContainerDetailViewTop";
 import { IContextMenuData } from "../../shared/types/IContextMenuData";
 
 function FolderView() {
@@ -104,7 +104,7 @@ function FolderView() {
       getFilesAndFolders(loaderData.path);      
 
       //set the watched directory to the local storage
-      let watchedDirectories = JSON.parse(localStorage.getItem("recentFolders") || "[]") as IFile[];
+      let watchedDirectories = JSON.parse(localStorage.getItem("recentItems") || "[]") as IFile[];
       if(watchedDirectories.length === 0) watchedDirectories.push(loaderData);
 
       //if the last watched directory is the same as the current directory keep the watched directories the same
@@ -120,8 +120,8 @@ function FolderView() {
           }
       }
 
-      localStorage.setItem("recentFolders", JSON.stringify(watchedDirectories));
-      tauriEmit.emitRecentFolderChange();
+      localStorage.setItem("recentItems", JSON.stringify(watchedDirectories));
+      tauriEmit.emitRecentItemChange();
     }
   }, [loaderData]);
 

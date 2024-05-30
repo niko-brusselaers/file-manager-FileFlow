@@ -5,6 +5,7 @@ import { createBrowserRouter,RouterProvider } from "react-router-dom";
 import FolderView from "./core/pages/folder/FolderViewPage";
 import ErrorPage from "./core/pages/error/ErrorPage";
 import SearchPage from "./core/pages/search/SearchPage";
+import HomePage from "./core/pages/home/HomePage";
 
 const router = createBrowserRouter([
   {
@@ -13,9 +14,10 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "/",
-        element: <FolderView />,
+        path: "",
+        element: <HomePage/>,
       },
+
       {
         path: ":folderName",
         element: <FolderView />,
@@ -29,7 +31,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <>
+  <React.StrictMode>
     <RouterProvider router={router}/>
-  </>,
+  </React.StrictMode>,
 );

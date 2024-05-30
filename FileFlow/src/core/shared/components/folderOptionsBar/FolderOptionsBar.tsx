@@ -1,6 +1,6 @@
 import styles from './FolderOptionsBar.module.scss';
 import { IFile } from '../../types/IFile';
-import { emit, listen } from '@tauri-apps/api/event';
+import { listen } from '@tauri-apps/api/event';
 import { useEffect, useRef, useState } from 'react';
 import tauriEmit from '../../../services/tauriEmit';
 

@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState } from 'react';
+import {useEffect, useState } from 'react';
 import  styles from './DirectoryItemTile.module.scss';
 import fileManagement from '../../../../services/fileManagement';
 import { IFile } from '../../../types/IFile';
