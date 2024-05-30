@@ -9,8 +9,8 @@ import tauriEmit from '../../../services/tauriEmit';
 import { IContextMenuData } from '../../types/IContextMenuData';
 
 function Sidebar() {
-    const [recentFolders,setRecentFolders] = useState<IFile[]>(localStorage.getItem("recentItems") ? JSON.parse(localStorage.getItem("recentItems") || '') : []);
-    const [favoriteFolders, setFavoriteFolders] = useState<IFile[]>(localStorage.getItem("favoriteFolders") ? JSON.parse(localStorage.getItem("favoriteFolders") || '') : []);
+    const [recentFolders,setRecentFolders] = useState<IFile[]>([]);
+    const [favoriteFolders, setFavoriteFolders] = useState<IFile[]>([]);
     const [drives, setDrives] = useState<IFile[]| undefined>();
     const [pictureDirectory, setPictureDirectory] = useState<IFile>();
     const [downloadDirectory, setDownloadDirectory] = useState<IFile>();
@@ -22,11 +22,18 @@ function Sidebar() {
         setSideBarWidthVar();
         window.addEventListener('resize', setSideBarWidthVar);
         listen("updateFavorites", () => {
-            setFavoriteFolders(JSON.parse(localStorage.getItem("favoriteFolders") || ''));
+            const favoriteFoldersLS = JSON.parse(localStorage.getItem("favoriteItems") || '[]') as IFile[];
+            const folders = favoriteFoldersLS.filter((folder:IFile) => folder.extension === "folder");
+            setFavoriteFolders(folders);
         });
-        console.log(recentFolders);
         
-        listen("recentFolderChange", getRecentFolders);
+        listen("recentItemChange", getRecentFolders);
+
+        const favoriteFoldersLS = JSON.parse(localStorage.getItem("favoriteItems") || '[]') as IFile[];
+        const folders = favoriteFoldersLS.filter((folder:IFile) => folder.extension === "folder");
+        
+        setFavoriteFolders(folders);
+        getRecentFolders();
         
     },[]);
 
@@ -56,13 +63,16 @@ function Sidebar() {
     };
 
     function getRecentFolders(){
-        let folders = JSON.parse(localStorage.getItem("recentFolders") || '[]') as IFile[];
-        //removes first element from the array
-        if(folders.length) folders.shift();
+        let items = JSON.parse(localStorage.getItem("recentItems") || '[]') as {file:IFile,count:number}[];
 
+        //only return last 5 items from highest count
+        let folders = items.sort((a,b) => b.count - a.count).map((folder) => folder.file).slice(0,5);
+        
         setRecentFolders(folders);
         return folders
     }
+
+   
 
     function handleContextMenuFavoriteClick(event:React.MouseEvent,item:IFile){
         event.preventDefault();
@@ -97,7 +107,7 @@ function Sidebar() {
         let data:IContextMenuData = {
             selectedItems: [],
             position: {x:event.clientX, y:event.clientY},
-            contextType: 'sideBar'
+            contextType: 'none'
         }
 
         tauriEmit.emitContextMenuOpen(data);

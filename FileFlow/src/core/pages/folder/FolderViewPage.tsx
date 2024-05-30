@@ -101,27 +101,7 @@ function FolderView() {
       let watchedDirectory = sessionStorage.getItem("watchedDirectory") ? sessionStorage.getItem("watchedDirectory") || '' : null;
       if(watchedDirectory) fileManagement.unWatchDirectory(watchedDirectory).then(()=> fileManagement.watchDirectory(loaderData.path));
       else fileManagement.watchDirectory(loaderData.path);
-      getFilesAndFolders(loaderData.path);      
-
-      //set the watched directory to the local storage
-      let watchedDirectories = JSON.parse(localStorage.getItem("recentItems") || "[]") as IFile[];
-      if(watchedDirectories.length === 0) watchedDirectories.push(loaderData);
-
-      //if the last watched directory is the same as the current directory keep the watched directories the same
-      if(watchedDirectories[watchedDirectories.length - 1].path !== loaderData.path) {
-          //if the current directory is already, place it at the top of the watched directories
-          if(watchedDirectories.some(directory => directory.path === loaderData.path)) {
-              watchedDirectories = watchedDirectories.filter(directory => directory.path !== loaderData.path);
-              watchedDirectories.unshift(loaderData);
-          } else {
-              //if the watched directories are more than 5, remove the last one
-              if(watchedDirectories.length >= 5) watchedDirectories.pop();
-              watchedDirectories.unshift(loaderData);
-          }
-      }
-
-      localStorage.setItem("recentItems", JSON.stringify(watchedDirectories));
-      tauriEmit.emitRecentItemChange();
+      getFilesAndFolders(loaderData.path);
     }
   }, [loaderData]);
 
@@ -155,11 +135,9 @@ function FolderView() {
       //if selected item is already in the selectedItems array open the file or folder
       if (selectedItem === item) {
         
-        if (item.extension === "folder" || item.extension === "drive") {
-          return navigate(`/${item.name}`, { state: item });
-        } else {
-          return fileManagement.openFile(item.path);
-        }
+        if (item.extension === "folder" || item.extension === "drive")return navigate(`/${item.name}`, { state: item });
+        else return fileManagement.openFile(item.path);
+
       } else {
         //if selected item is not in the selectedItems array add it to the array
         if(event.ctrlKey || event.shiftKey) return setSelectedItems([...selectedItems, item]);

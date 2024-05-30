@@ -5,6 +5,7 @@
     flex-direction: row;
     align-items: center;
     width: 100%;
+    min-width: 50rem;
     padding: .5rem 2rem;
     border:none;
     background-color: inherit;
@@ -45,6 +46,12 @@
         grid-column-gap: 20px;
         grid-row-gap: 0px;
         justify-items: start;
+
+        *{
+            width: 100%;
+            text-align: left;
+
+        }
 
         .fileInfoTextLast{ 
             justify-self: end;

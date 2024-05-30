@@ -65,6 +65,10 @@ class tauriEmit{
         emit("recentItemsChange")
     }
 
+    emitUpdateRecent(){
+        emit("recentItemChange")
+    }
+
 }
 
 export default new tauriEmit();

@@ -17,17 +17,15 @@ function ContextMenu() {
     const [deleteActive, setDeleteActive] = useState<Boolean>(false);
     const [fileShareActive, setFileShareActive] = useState<Boolean>(false);
     const [updateFavoriteActive, setUpdateFavoriteActive] = useState<Boolean>(false);
+    const [updateRecentActive,  setUpdateRecentActive] = useState<Boolean>(false)
     const [navigateActive, setNavigateActive] = useState<Boolean>(false);
     const [FavouriteAction, setFavouriteAction] = useState<string>("");
+    const [contextType, setContextType] = useState<string>("");
     
 
     const contextMenuRef = useRef<HTMLMenuElement>(null);
     const navigate = useNavigate()
 
-    useEffect(() => {
-        console.log(active);
-        
-    }  ,[active])
 
     useEffect(() => {
         listen("updateMoveItem", () => {
@@ -43,17 +41,21 @@ function ContextMenu() {
             if(window.innerHeight < payload.position.y + 200) payload.position.y = payload.position.y - 200;
             setPosition(payload.position)
             setSelectedItems(payload.selectedItems);
-            
+            setContextType(payload.contextType);
 
             switch(payload.contextType){
                 case "directoryView":
                     setupFolderViewContextMenu(payload);
                     break;
-                case "sideBar":
+                case "none":
                     setActive(false)
                     break;
                 case "sidebarFavourite":
-                    setupFavoriteFolderContextMenu(payload);
+                case "homePageFavorite":
+                    setupFavoriteContextMenu(payload);
+                    break;
+                case "homePageRecent":
+                    setupRecentContextMenu();
                     break;
                 case "sideBarFolder":
                     setupFolderContextMenu();
@@ -89,6 +91,8 @@ function ContextMenu() {
     //function to setup the context menu for the folder view
     function setupFolderViewContextMenu(data:IContextMenuData){
 
+        setUpdateRecentActive(false);
+
         //check if the length of the selected items is 0 and update the context menu accordingly
         if (data.selectedItems.length === 0) {
             setCreateActive(true);
@@ -107,7 +111,7 @@ function ContextMenu() {
             setRenameActive(true);
             setDeleteActive(true);
             setFileShareActive(true);    
-                            
+            
             setupFavorites(data.selectedItems)
         
         }
@@ -120,6 +124,7 @@ function ContextMenu() {
             setDeleteActive(true);
             setFileShareActive(true);
 
+
             setupFavorites(data.selectedItems)
         }
 
@@ -128,15 +133,32 @@ function ContextMenu() {
     }
 
     //function to setup the context menu for the favorite folder view
-    function setupFavoriteFolderContextMenu(data:IContextMenuData){
+    function setupFavoriteContextMenu(data:IContextMenuData){
         setNavigateActive(true);
         setCopyActive(false);
         setCreateActive(false);
         setRenameActive(false);
         setDeleteActive(false);
         setFileShareActive(false);
-        setActive(true);
+        setUpdateRecentActive(false);
+
         setupFavorites(data.selectedItems)
+        setActive(true);
+
+        
+    }
+
+    //function to setup the context menu for the favorite folder view
+    function setupRecentContextMenu(){
+        setNavigateActive(true);
+        setCopyActive(false);
+        setCreateActive(false);
+        setRenameActive(false);
+        setDeleteActive(false);
+        setFileShareActive(false);
+        setUpdateFavoriteActive(false);
+        setUpdateRecentActive(true);
+        setActive(true);
 
         
     }
@@ -154,11 +176,8 @@ function ContextMenu() {
 
     //check if the selected items is a folder and if it is already in the favorites
     function setupFavorites(selectedItems:IFile[]){   
-        const allAreFolders = selectedItems.every((item) => item.extension === "folder") && selectedItems.length > 0;            
-        
-        if(!allAreFolders) return setUpdateFavoriteActive(false);
-        
-        let favorites = JSON.parse(localStorage.getItem("favoriteFolders") || "[]") as IFile[];
+                
+        let favorites = JSON.parse(localStorage.getItem("favoriteItems") || "[]") as IFile[];
     
         if(favorites.some(favorite => selectedItems.map(item => item.path).includes(favorite.path))) setFavouriteAction("Remove");
         else setFavouriteAction("Add");
@@ -212,9 +231,15 @@ function ContextMenu() {
         navigate(`${item.name}`, {state: item})
     };
 
+    //check if the paste item is a folder and if the context type is directory view
+    function pasteActive(){
+        if (contextType === "directoryView" && pasteItemData !== null ) return true
+        return false
+    }
+
     //function to add or remove a folder from the favorites
     function handleUpdateFavorite(){
-        let favorites = JSON.parse(localStorage.getItem("favoriteFolders") || "[]") as IFile[];
+        let favorites = JSON.parse(localStorage.getItem("favoriteItems") || "[]") as IFile[];
         if(FavouriteAction === "Add") {
             favorites.push(selectedItems[0]);
             favorites = favorites.filter((favorite, index, self) => index === self.findIndex((t) => (t.path === favorite.path)));
@@ -224,10 +249,20 @@ function ContextMenu() {
             return console.error(`Invalid action: ${FavouriteAction}`);
         }
 
-        localStorage.setItem("favoriteFolders",JSON.stringify(favorites));
+        localStorage.setItem("favoriteItems",JSON.stringify(favorites));
         tauriEmit.emitUpdateFavorite();
         setActive(false);
     };
+
+    function handleUpdateRecent(){
+        let recent = JSON.parse(localStorage.getItem("recentItems") || "[]") as {file:IFile,count:number}[];
+        console.log(recent);
+        
+        recent = recent.filter((item) => item.file.path !== selectedItems[0].path);
+        localStorage.setItem("recentItems",JSON.stringify(recent));
+        tauriEmit.emitUpdateRecent();
+        setActive(false);
+    }
 
 
 
@@ -256,7 +291,7 @@ function ContextMenu() {
                     <span>CTRL + X</span>
             </button>
             <button onClick={handlePaste} 
-                style={(pasteItemData ? {display:"grid"} : {display:"none"})}> 
+                style={(pasteActive() ? {display:"grid"} : {display:"none"})}> 
                     <img src="/dist/paste_icon.png"/> 
                     <p>Paste</p> 
                     <span>CTRL + V</span>
@@ -270,6 +305,11 @@ function ContextMenu() {
                     style={(updateFavoriteActive ? {display:"grid"} : {display:"none"})}> 
                         <img src="/dist/favorite_icon.svg"/> 
                         <p className={styles.extendText}> {(FavouriteAction === "Remove" ? "Remove from favorites" : "Add to Favorites")}</p>
+            </button>
+            <button onClick={handleUpdateRecent} 
+                    style={(updateRecentActive ? {display:"grid"} : {display:"none"})}> 
+                        <img src="/dist/favorite_icon.svg"/> 
+                        <p className={styles.extendText}>remove from recent</p>
             </button>
             <button onClick={handleRename} 
                     style={(renameActive ? {display:"grid"} : {display:"none"})}>

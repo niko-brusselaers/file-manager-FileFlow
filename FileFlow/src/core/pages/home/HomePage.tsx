@@ -5,10 +5,14 @@ import DirectoryItemTile from "../../shared/components/directoryItem/directoryIt
 import { listen } from "@tauri-apps/api/event";
 import DirectoryItemDetail from "../../shared/components/directoryItem/directoryItemDetail/DirectoryItemDetail";
 import ContainerDetailViewTop from "../../shared/components/containerDetailViewTop/ContainerDetailViewTop";
+import fileManagement from "../../services/fileManagement";
+import tauriEmit from "../../services/tauriEmit";
+import { IContextMenuData } from "../../shared/types/IContextMenuData";
+import conversion from "../../services/conversion";
 
 function HomePage() {
-    const [favoriteFolders, setFavoriteFolders] = useState<IFile[]>(localStorage.getItem("favoriteFolders") ? JSON.parse(localStorage.getItem("favoriteFolders") || '') : []);
-    const [recentItems, setRecentItems] = useState<IFile[]>(localStorage.getItem("recentItems") ? JSON.parse(localStorage.getItem("recentItems") || '') : []);
+    const [favoriteFolders, setFavoriteFolders] = useState<IFile[]>([]);
+    const [recentItems, setRecentItems] = useState<{file:IFile,count:number}[]>([]);
     const [selectedItemFavorites, setSelectedItemFavorites] = useState<IFile>({name: "", path: "",created:new Date(),modified:new Date(),hidden:false, extension: "", size: "", edit: false});
     const [selectedItemRecent, setSelectedItemRecent] = useState<IFile>({name: "", path: "",created:new Date(),modified:new Date(),hidden:false, extension: "", size: "", edit: false});
 
@@ -17,15 +21,20 @@ function HomePage() {
 
     useEffect(() => {
 
-        listen("updateFavorites", () => {
-            setFavoriteFolders(JSON.parse(localStorage.getItem("favoriteFolders") || ''));
-        });
+        listen("updateFavorites", updateFavoriteItems);
+
+        listen("recentItemChange", updateRecentItems);
+
+       
+
+        // retrieve favorite and recent items from local storage
+        updateFavoriteItems();
+        updateRecentItems();
 
     },[]);
     
     function setSelected(event:React.MouseEvent,item: IFile) {    
     
-        if(event.type === "auxclick") return;
         if(favoritesContainerRef.current?.contains(event.target as Node)) {
             setSelectedItemRecent({name: "", path: "",created:new Date(),modified:new Date(),hidden:false, extension: "", size: "", edit: false});
             setSelectedItemFavorites(item);
@@ -36,6 +45,52 @@ function HomePage() {
         };
     };
 
+    // Function to update local storage and state for recent items
+    async function updateRecentItems() {
+        let items = JSON.parse(localStorage.getItem("recentItems") || '[]') as {file:IFile,count:number}[];
+        
+        let updatedItems = await Promise.all(items.map(async (item) => {
+            let file = await fileManagement.checkPathIsValid(item.file.path);
+            if(!file) return 
+            file.size = await conversion.convertFileSizeIdentifier(parseInt(file.size));
+            return {file:file,count:item.count};    
+        }));
+
+        // Filter out invalid items (i.e., items where the file is undefined)
+        updatedItems = updatedItems.filter(item => item !== undefined);
+
+        //if changes, update local storage
+        if(updatedItems.length !== items.length){
+            localStorage.setItem("recentItems", JSON.stringify(updatedItems));
+        }
+
+        // Ensure that updatedItems is an array of {file:IFile,count:number}
+        var recentItems = updatedItems as {file:IFile,count:number}[];
+        setRecentItems(recentItems);
+    }
+
+    // Function to update local storage and state for favorite items
+    async function updateFavoriteItems() {
+        let items = JSON.parse(localStorage.getItem("favoriteItems") || '[]') as IFile[];
+        
+        let updatedItems = await Promise.all(items.map(async (item) => {
+            let file = await fileManagement.checkPathIsValid(item.path);
+            if(file) return file;
+        }));
+
+        // Filter out invalid items (i.e., items where the file is undefined)
+        updatedItems = updatedItems.filter(item => item !== undefined);
+
+        //if changes, update local storage
+        if(updatedItems.length !== items.length){
+            localStorage.setItem("favoriteItems", JSON.stringify(updatedItems));
+        }
+
+        // Ensure that updatedItems is an array of IFile
+        let favoriteItems = updatedItems as IFile[];
+        setFavoriteFolders(favoriteItems);
+    }
+
     // Define the scroll event handler outside of the listenForScroll function
     const handleScroll = (event: WheelEvent) => {
         favoritesContainerRef.current?.scrollBy({left: event.deltaY * 0.25});
@@ -43,6 +98,7 @@ function HomePage() {
 
     // Add the event listener
     function listenForScroll(event:React.MouseEvent<HTMLDivElement>){
+        event.preventDefault();
         window.addEventListener("wheel", handleScroll);
     }
 
@@ -50,9 +106,34 @@ function HomePage() {
     function stopListenForScroll(){
         window.removeEventListener("wheel", handleScroll);
     }
+
+    function handleContextMenu(event:React.MouseEvent<HTMLDivElement, MouseEvent>){
+    event.preventDefault();
+    event.stopPropagation();
+    const target = event.target as HTMLElement;
+    console.log(selectedItemFavorites, selectedItemRecent);
+    
+    let selectedItem = selectedItemFavorites.name !== "" ? selectedItemFavorites : selectedItemRecent;
+    if(selectedItem.name === "") return;
+
+    let data:IContextMenuData = {
+        selectedItems: [selectedItem],
+        position:{
+            x:event.clientX, 
+            y:event.clientY
+        },
+        contextType : "none"
+      }
+
+    if(target.className === styles.favoritesContainer || target.className === styles.recentContainer || target.className === styles.homePageView || target.className === styles.HomePageTitle) data.contextType = "none"
+    if(selectedItemFavorites.name !== "") data.contextType = "homePageFavorite"
+    if(selectedItemRecent.name !== "") data.contextType = "homePageRecent"
+
+    tauriEmit.emitContextMenuOpen(data)
+  }
     
     return ( 
-    <div className={styles.homePageView}>
+    <div onContextMenu={handleContextMenu} className={styles.homePageView}>
         <h2 className={styles.HomePageTitle}>Favorites</h2>
         <div className={styles.favoritesContainer} ref={favoritesContainerRef} onMouseEnter={listenForScroll} onMouseLeave={stopListenForScroll}>
             {favoriteFolders.map((folder,index) => {
@@ -72,7 +153,7 @@ function HomePage() {
             {recentItems.map((folder,index) => {
                 return (
                     <DirectoryItemDetail
-                        item={folder}
+                        item={folder.file}
                         edit={false}
                         setSelected={setSelected}
                         selectedItems={[selectedItemRecent]}

@@ -1,10 +1,27 @@
 import { invoke } from "@tauri-apps/api/core";
 import { IFile } from "../shared/types/IFile";
 import conversion from "./conversion";
+import tauriEmit from "./tauriEmit";
 
 
 class fileManagement {
     
+    //check if the item is already in recent items and update counter if it is
+    private async  updateRecent(directoryPath:string){
+        let item = await this.checkPathIsValid(directoryPath);  
+        if(!item) return; 
+        let recentItems = JSON.parse(localStorage.getItem("recentItems") || '[]') as {file:IFile,count:number}[];
+        let itemIndex = recentItems.findIndex(recentItem => recentItem.file.path === item.path);
+        
+        if(itemIndex !== -1){
+        recentItems[itemIndex].count += 1;
+        }else{
+        recentItems.push({file:item,count:1});
+        }
+        localStorage.setItem("recentItems", JSON.stringify(recentItems));
+        tauriEmit.emitRecentItemChange();
+    }
+
     async getdrives() {
         try {
         let drives:IFile[] = await invoke("get_drives")
@@ -16,8 +33,15 @@ class fileManagement {
             drive.name = (drive.name ? drive.name : "Drive") + ` (${drive.path.replace("\\","")})`
 
             //format created and modified date
-            drive.created = new Date(drive.created).toLocaleString()
-            drive.modified = new Date(drive.modified).toLocaleString()
+            let createdDate = new Date(drive.created);
+            let createdDateString = createdDate.toISOString();
+            drive.created = `${createdDateString.slice(2,10).split('-').reverse().join('/')}` + ' - ' + `${createdDateString.slice(11,16)}`;
+
+            let modifiedDate = new Date(drive.modified);
+            let modifiedDateString = modifiedDate.toISOString();
+            drive.modified = `${modifiedDateString.slice(2,10).split('-').reverse().join('/')}` + ' - ' + `${modifiedDateString.slice(11,16)}`;
+
+
 
             let fileSize = parseInt(drive.size)
             //convert file size to readable format
@@ -47,8 +71,15 @@ class fileManagement {
                 fileOrFolder.path = fileOrFolder.path.replace("\\\\", "\\")
                                 
                 //format created and modified date
-                fileOrFolder.created = new Date(fileOrFolder.created).toLocaleString()
-                fileOrFolder.modified = new Date(fileOrFolder.modified).toLocaleString()
+                let createdDate = new Date(fileOrFolder.created);
+                let createdDateString = createdDate.toISOString();
+                fileOrFolder.created = `${createdDateString.slice(2,10).split('-').reverse().join('/')}` + ' - ' + `${createdDateString.slice(11,16)}`;
+
+                let modifiedDate = new Date(fileOrFolder.modified);
+                let modifiedDateString = modifiedDate.toISOString();
+                fileOrFolder.modified = `${modifiedDateString.slice(2,10).split('-').reverse().join('/')}` + ' - ' + `${modifiedDateString.slice(11,16)}`;
+
+
                 
                 //set file size
                 fileOrFolder.size = conversion.convertFileSizeIdentifier(parseInt(fileOrFolder.size))
@@ -56,6 +87,7 @@ class fileManagement {
 
                 return fileOrFolder
             })            
+            this.updateRecent(directoryPath);
             return {filesAndFolders, directoryPath}
 
         } catch (error) {
@@ -76,6 +108,8 @@ class fileManagement {
     async openFile(directoryPath:string) {
         try {
         await invoke("open_file", { path: directoryPath })
+        .catch((error) => {throw error})
+        this.updateRecent(directoryPath);
         } catch (error) {
         console.error("Error opening file:", error);
         }
@@ -151,8 +185,6 @@ class fileManagement {
 
     async unWatchDirectory(directoryPath:string){
         try {
-            console.log("unwatching directory");
-            
         await invoke("unwatch_directory", { path: directoryPath })
         .catch((error) => {throw error})
         } catch (error) {
