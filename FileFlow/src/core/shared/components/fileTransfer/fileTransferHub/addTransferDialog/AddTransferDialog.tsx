@@ -15,6 +15,7 @@ function AddTransferDialog({transferDialogOpened, setTransferDialogOpened}:{tran
     return ( 
         <div className={(transferDialogOpened ? styles.addTransferDialogContainer : "hidden")}>
             <div className={styles.dialogInnerContainer}>
+                <h3>Add with code</h3>
                 <input type="text" onChange={(event) => {setInputCode(event.target.value)}} />
                 <div className={styles.dialogButtonsBottomContainer}>
                         <button onClick={() => {startDownload()}}>Share</button>

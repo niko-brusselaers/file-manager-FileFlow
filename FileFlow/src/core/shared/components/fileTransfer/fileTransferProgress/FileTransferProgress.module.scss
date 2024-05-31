@@ -6,9 +6,10 @@
     background-color: rgb($background);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 30em;
-    height: 20em;
+    align-items: flex-start;
+    width: 30rem;
+    height: 20rem;
+    padding: 0rem 3rem;
     justify-content: space-evenly;
 
     h3{
@@ -26,6 +27,13 @@
     flex-direction: column;
     align-items: center;
     color: $text;
+
+    h3{
+        font-size: 16pt; 
+        text-align: left;  
+        width: 100%; 
+        font-weight: bold;
+    }
 }
 
 .fileTransferProgressBar{
@@ -42,7 +50,7 @@
     }
 
     progress{
-        width: 80%;
+        width: 100%;
         height: 2rem;
         background-color: invert($text);
         border: none;
@@ -61,7 +69,35 @@
 }
 
 .fileTransferProgressButtonContainer{
-    width: 80%;
+    width: 100%;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+
+    .abortButton:hover{
+        background-image: none;
+            background-color: $red;
+            color: white;
+    }
+
+    button{
+        width: 45%;
+        height: 3em;
+        border: none;
+        border: 1.5px solid rgb($secondary);
+        color: rgb($secondary);
+        background-color: rgb($background);
+
+        &:hover{
+            background-image: url("/dist/sidebar_button_background.png");
+            background-size: 100% 100%;
+            border: none;
+            color: invert($text);
+
+        }
+
+
+
+    }
+
+    
 }

@@ -122,7 +122,10 @@
         position: absolute;
         width: 7em;
         right: 1rem;
-        background-color: white;
+        background-color: rgb($tertiary);
+        -webkit-box-shadow: 0.5px 0.5px 20px -8px rgba($background,0.75);
+        -moz-box-shadow: 0.5px 0.5px 20px -8px rgba($background,0.75);
+        box-shadow: 0.5px 0.5px 20px -8px rgba($background,0.75);
 
         border: 1px;
 

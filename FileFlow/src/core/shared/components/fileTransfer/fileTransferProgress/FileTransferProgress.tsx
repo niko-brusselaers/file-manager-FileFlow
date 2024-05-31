@@ -78,7 +78,7 @@ function fileTransferProgress() {
                 <progress value={fileTransferData?.progress} max={fileTransferData?.file_size}></progress>
                 </div>
                 <div className={styles.fileTransferProgressButtonContainer}>
-                    <button>abort</button>
+                    <button className={styles.abortButton}>abort</button>
                     <button onClick={()=> { closeDialog()}}>close</button>
                 </div>
                 </div>

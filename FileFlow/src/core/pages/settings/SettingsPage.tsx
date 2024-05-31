@@ -36,6 +36,8 @@ function SettingsPage() {
         themeManagement.checkTheme();   
     }
 
+    
+
 
     return ( 
     

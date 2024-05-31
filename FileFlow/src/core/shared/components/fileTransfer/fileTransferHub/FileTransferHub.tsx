@@ -48,12 +48,9 @@ function FileTransferHub({dialogOpened, setDialogOpened}:{dialogOpened: boolean,
         <div className={dialogOpened ? styles.fileTransferDialog : "hidden"}>
             <AddTransferDialog transferDialogOpened={transferWithCodeDialogIsOpen} setTransferDialogOpened={setTransferWithCodeDialogIsOpen} />
             <div className={styles.filetransferViewHub}>
-                <div className={styles.dropDownMenu}>
-                    <button className={styles.dropDownButton} onClick={() => {openDrownDownMenu()}}>More</button>
-                    <div className={`${(dropDownMenuOpen ?  styles.dropDownContainer : "hidden" )}`}>
+                <div className={styles.buttonContainer}>
                         <button className={styles.dropDownButton} onClick={() => {setTransferWithCodeDialogIsOpen(true)}}>Add with code</button>
                         <button className={styles.dropDownButton}>pending requests</button>
-                    </div>
 
                 </div>
                 <div className={styles.fileTransfersContainer}>
