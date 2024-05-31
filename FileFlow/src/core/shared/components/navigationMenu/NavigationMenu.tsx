@@ -34,7 +34,8 @@ function NavigationMenu() {
 
     //update the file path input when the location data changes
     useEffect(() => {
-        setFilePathInput(locationData?.name)
+        if(locationData) return setFilePathInput(locationData?.name)
+        else return setFilePathInput("Home")
     },[locationData])
 
     function minimizeWindow() {

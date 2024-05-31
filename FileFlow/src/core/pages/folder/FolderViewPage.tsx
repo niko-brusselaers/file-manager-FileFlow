@@ -196,6 +196,7 @@ function FolderView() {
       edit: true,
     };
     setFilesAndFolders((prevFilesAndFolders) => [newFile, ...prevFilesAndFolders]);
+    setCurrentFilesAndFolders((prevFilesAndFolders) => [newFile, ...prevFilesAndFolders]);
     setSelectedItems([newFile]);
   }; 
 
