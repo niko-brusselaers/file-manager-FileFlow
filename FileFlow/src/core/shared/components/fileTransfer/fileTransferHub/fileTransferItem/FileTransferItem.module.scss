@@ -1,7 +1,7 @@
 @import "../../style/fileTransferDialog.module.scss";
 
 .fileTransferItemContainer{
-    background-color: $background;
+    background-color: rgb($background);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -9,7 +9,7 @@
     height: 5em;
     margin: 1em 0;
     justify-content: space-evenly;
-    color: $text;
+    color: rgb($text);
 }
 
 .FileTransferItemProgressData{
@@ -27,11 +27,11 @@
         border: none;
 
         &::-webkit-progress-value {
-            background-color: $secondary;
+            background-color: rgb($secondary);
         }
 
         &::-moz-progress-bar {
-            background-color: $secondary;
+            background-color: rgb($secondary);
         }
     }
 
@@ -39,7 +39,7 @@
         border: none;
         border-radius: 15px;
         background-color: transparent;
-        padding: 0.5em;
+        padding: 0.25rem .5rem .5rem;
         margin: 0 0.5em;
         color: $red;
         font-weight: bold;

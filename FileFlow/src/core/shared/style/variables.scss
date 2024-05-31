@@ -1,6 +1,5 @@
-// Light mode colors
-$primary: #090926;
-$secondary: #0139D6;
+$primary: var(--primary); //Primary: #0139D6
+$secondary: var(--secondary); //Secondary: #0139D6
 $background: var(--background); // dark mode : #172241, light mode : #F5F5F8
 $tertiary: var(--tertiary); // dark mode : #313D5F , light mode : #E3E3E3
 $text: var(--text); // dark mode : #FFFFFF, light mode : #000000

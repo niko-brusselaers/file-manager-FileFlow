@@ -1,7 +1,7 @@
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import styles from "./NavigationMenu.module.scss"
 import { Window } from '@tauri-apps/api/window';
-import { useLocation,useNavigate } from "react-router-dom";
+import { Link, useLocation,useNavigate } from "react-router-dom";
 import { IFile } from "../../types/IFile";
 import { emit } from "@tauri-apps/api/event";
 import fileManagement from "../../../services/fileManagement";
@@ -12,9 +12,10 @@ function NavigationMenu() {
     const locationData:IFile = useLocation().state;
     const appWindow = Window.getCurrent();
     const dropDownMenuRef = useRef<HTMLDivElement>(null);
+    const setingsData = {name: "Settings", path: "",created:new Date(),modified:new Date(),hidden:false, extension: "", size: "", edit: false}
     let timeoutID: NodeJS.Timeout | null = null;
 
-    const [filePathInput, setFilePathInput] = useState<string>(locationData?.name || "");
+    const [filePathInput, setFilePathInput] = useState<string>("");
     const [dropDownBarIsOpen, setDropDownBarIsOpen] = useState<boolean>(false);
 
     useEffect(() => {
@@ -182,6 +183,9 @@ function NavigationMenu() {
                             <button className={styles.dropDownMenuButton} onClick={() => {openFileTransferHub()}}>
                                 File Transfer
                             </button>
+                            <Link className={styles.dropDownMenuButton} to={`/settings`} state={setingsData}>
+                                Settings
+                            </Link>
                         </div>
                     </div>
                 </div>

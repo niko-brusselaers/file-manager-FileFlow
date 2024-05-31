@@ -8,11 +8,10 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    color: $text;
+    color: rgb($text);
     
     &:hover{
-        background-color: $tertiary;
-        color: $text;
+        background-color: rgb($tertiary);
     } 
 
     .itemDetails{
@@ -53,7 +52,7 @@
         width: 100%;
         padding: 2em 0;
         height: 7.5em;
-        background-color: $tertiary;
+        background-color: rgb($tertiary);
 
         .itemImage{
         display: flex;

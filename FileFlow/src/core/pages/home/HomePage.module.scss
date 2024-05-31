@@ -15,7 +15,10 @@
 .HomePageTitle{
     margin: 0rem 3rem 2rem;
     font-size: 25pt;
-    color: $text;
+
+    &:last-of-type{
+        margin: 5rem 3rem 0rem;
+    }
 
 }
 
@@ -28,7 +31,7 @@
     grid-auto-flow: column;
     gap: 1.25em;
     width: calc(100% - 6rem);
-    height: 20rem;
+    height: 15rem;
     overflow-x: auto;
     overflow-y: hidden;
 }

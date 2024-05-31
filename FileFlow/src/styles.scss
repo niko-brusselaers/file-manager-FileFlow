@@ -12,6 +12,7 @@ body{
   margin: 0px;
   font-family: 'Calibri';
   user-select: none;
+  color: rgb($text);
 
 }
 
@@ -26,7 +27,7 @@ body{
   height: calc(100vh - var(--navBarHeight));
   overflow-y: hidden;
   margin-top: var(--navBarHeight);
-  background-color: $background;
+  background-color: rgb($background);
   
 } 
 

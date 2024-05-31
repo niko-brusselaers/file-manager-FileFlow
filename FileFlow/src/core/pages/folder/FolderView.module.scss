@@ -8,9 +8,8 @@
     margin-top: var(--navBarHeight);
 
     .directoryName{
-        margin: 1em 2em 0em;
+        margin: 1rem 5rem 0em;
         font-size: 25pt;
-        color: $text;
     }
 
     
@@ -19,8 +18,8 @@
 
 .directoryContainerTile{
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(10em, 1fr));
-    grid-auto-rows: minmax(15em, min-content);
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    grid-auto-rows: minmax(15rem, min-content);
     gap: 1.25em;
     margin: 1.25em;
 }

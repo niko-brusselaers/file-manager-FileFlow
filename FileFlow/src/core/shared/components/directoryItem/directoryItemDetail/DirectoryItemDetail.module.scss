@@ -9,11 +9,10 @@
     padding: .5rem 2rem;
     border:none;
     background-color: inherit;
-    color: $text;
+    color: rgb($text);
 
     &:hover{
-        background-color: $tertiary;
-        color: $text;
+        background-color: rgb($tertiary);
     }
 
     .itemName{
@@ -64,7 +63,7 @@
 }
 
 .isSelectedItem{
-        background-color: $tertiary;
+        background-color: rgb($tertiary);
         color: $text;
 
 } 

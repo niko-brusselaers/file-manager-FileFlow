@@ -9,7 +9,7 @@
     margin: 0;
     padding: 5em 0 0;
     box-sizing: border-box;
-    background-color: $primary;
+    background-color: rgb($primary);
     overflow-y: auto;
 
     
@@ -51,6 +51,7 @@
     p{
         text-align: left;
         width: 100%;
+        color: $whiteIcon;
     }
 
     img{

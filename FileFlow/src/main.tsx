@@ -6,6 +6,7 @@ import FolderView from "./core/pages/folder/FolderViewPage";
 import ErrorPage from "./core/pages/error/ErrorPage";
 import SearchPage from "./core/pages/search/SearchPage";
 import HomePage from "./core/pages/home/HomePage";
+import SettingsPage from "./core/pages/settings/SettingsPage";
 
 const router = createBrowserRouter([
   {
@@ -17,7 +18,10 @@ const router = createBrowserRouter([
         path: "",
         element: <HomePage/>,
       },
-
+      {
+        path:"settings",
+        element:<SettingsPage/>
+      },
       {
         path: ":folderName",
         element: <FolderView />,

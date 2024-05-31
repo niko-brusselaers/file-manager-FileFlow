@@ -3,6 +3,7 @@
 .ItemDetailTopView{
     display: flex;
     position: sticky;
+    z-index: 1;
     top: 0;
     flex-direction: row;
     align-items: center;
@@ -10,7 +11,7 @@
     padding: .5rem 2rem;
     min-width: 50rem;
     border:none;
-    background-color: $background;
+    background-color: rgb($background);
     color: $text;
     
     &:hover{

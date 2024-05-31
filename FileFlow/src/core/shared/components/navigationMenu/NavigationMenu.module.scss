@@ -28,7 +28,7 @@
   }
 
   .navBarBottomContainer{
-    background-color: $background;
+    background-color: rgb($background);
     display: flex;
     width: 100%;
     flex-direction: row;
@@ -127,13 +127,17 @@
         border: 1px;
 
         .dropDownMenuButton{
+          display: inline-block; 
           width: 100%;
-          height: 1.5rem;
+          padding: .5rem 0;
           border: none;
           background-color: transparent;
+          text-decoration: none;
+          text-align: center;
+          background-color: rgb($tertiary);
 
           &:hover{
-            background-color: $primary;
+            background-color: rgb($primary);
             color: white;
           }
         }
@@ -162,16 +166,16 @@
   filter: $whiteIcon;
 
   &:hover{
-    background-color: rgba(white, $alpha: .2);
+    background-color: rgba(white, .2);
   }
 }
 
 .navigationInput{
-  color: $text;
-  background-color: $background;
+  color: rgb($text);
+  background-color: rgb($background);
 
   &::placeholder { 
-    color: $text; 
+    color:  rgb($text); 
     opacity: .5; 
   }
 

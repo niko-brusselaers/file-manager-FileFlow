@@ -103,6 +103,11 @@ function FolderView() {
       else fileManagement.watchDirectory(loaderData.path);
       getFilesAndFolders(loaderData.path);
     }
+
+    console.log(loaderData);
+    console.log(window.location);
+    
+    
   }, [loaderData]);
 
   useEffect(() => {sortItems()}, [sortingConfig])
