@@ -5,7 +5,6 @@ class themeManagement{
     checkTheme(){
         let theme = localStorage.getItem('theme');
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        console.log(theme);
         
         switch(theme){
             case 'light':

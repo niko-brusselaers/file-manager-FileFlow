@@ -1,32 +1,25 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './SettingsPage.module.scss';
 import tauriStore from '../../services/tauriStore';
 import themeManagement from '../../services/themeManagement';
+import UpdateValueDialog from './updateValueDialog/UpdateValueDialog';
 
 function SettingsPage() {
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [deviceName, setDeviceName] = useState<string>("");
     const [theme, setTheme] = useState<string>(localStorage.getItem("theme") ? localStorage.getItem("theme") || "device" : "device");
+    
+    const [updateDialogOpened, setUpdateDialogOpened] = useState<boolean>(false);
+    const [initialUpdateValue, setInitialUpdateValue] = useState<string>("");
+    const [updateType, setUpdateType] = useState<string>("");
 
     useEffect(() => {
-        tauriStore.readKeyFromLocalFile("credentials.bin","userName").then((data) => {
-            if(typeof data !== "string") return;
-            setName(data);
-        })
+        localStorage.getItem("name") ? setName(localStorage.getItem("name") || "") : setName("")
 
-        tauriStore.readKeyFromLocalFile("credentials.bin","email").then((data) => {
-            if(typeof data !== "string") return;
-            setEmail(data);
-        })
+        localStorage.getItem("email") ? setEmail(localStorage.getItem("email") || "") : setEmail("")
 
-        tauriStore.readKeyFromLocalFile("credentials.bin","deviceName").then((data) => {
-            if(typeof data !== "string") return;
-            setDeviceName(data);
-        })
-
-        console.log(theme);
-        
+        localStorage.getItem("deviceName") ? setDeviceName(localStorage.getItem("deviceName") || "") : setDeviceName("")
     },[])
 
 
@@ -36,12 +29,60 @@ function SettingsPage() {
         themeManagement.checkTheme();   
     }
 
+    function updateSettingsValue(event:React.MouseEvent,type: string){
+        event.preventDefault();
+        setUpdateType(type);
+        setUpdateDialogOpened(true);
+        switch(type){
+            case "name":
+                setInitialUpdateValue(name);
+
+                break;
+            case "email":
+                console.log("currently not supported");
+                
+                break;
+            case "deviceName":
+                setInitialUpdateValue(deviceName);
+                break;
+        }
+    }
+
+    function updateSettingsItem(newValue: string){
+        try {
+            switch(updateType){
+            case "name":
+                setName(newValue);
+                localStorage.setItem("name",newValue);
+                break;
+            case "email":
+                console.log("currently not supported");
+                break;
+            case "deviceName":
+                setDeviceName(newValue);
+                localStorage.setItem("deviceName",newValue);
+                break;
+            }
+
+            setUpdateDialogOpened(false);
+        } catch (error) {
+            
+        }
+    }
+
     
 
 
     return ( 
     
         <div className={styles.SettingsView}>
+            <UpdateValueDialog 
+                dialogOpened={updateDialogOpened} 
+                setDialogOpened={setUpdateDialogOpened}  
+                initialValue={initialUpdateValue} 
+                updateType={updateType}
+                updateValue={updateSettingsItem}/>
+
             <h2 className={styles.directoryName}>Settings</h2>
 
             <h3 className={styles.settingsCategoryHeader}>Personal information</h3>
@@ -51,7 +92,7 @@ function SettingsPage() {
                     <h3 className={styles.settingsItemTitle}>Name</h3>
                     <div>
                          <p className={styles.settingsItemText}>{name}</p>
-                        <button>Edit</button>
+                        <button onClick={(event) => {updateSettingsValue(event,"name")}}>Edit</button>
                     </div>
                 </div>
 
@@ -59,7 +100,7 @@ function SettingsPage() {
                     <h3 className={styles.settingsItemTitle}>Email</h3>
                     <div>
                          <p className={styles.settingsItemText}>{email}</p>
-                        <button>Edit</button>
+                        <button onClick={(event) => {updateSettingsValue(event,"email")}}>Edit</button>
                     </div>
                 </div>
             </div>
@@ -70,7 +111,7 @@ function SettingsPage() {
                     <h3 className={styles.settingsItemTitle}>Device name</h3>
                     <div>
                          <p className={styles.settingsItemText}>{deviceName}</p>
-                        <button>Edit</button>
+                        <button onClick={(event) => {updateSettingsValue(event,"deviceName")}}>Edit</button>
                     </div>
                 </div>
                 <div className={styles.settingsItem}>

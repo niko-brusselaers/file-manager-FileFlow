@@ -1,0 +1,64 @@
+@import "../../../shared/style/variables.scss";
+
+.addTransferDialogContainer{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(100vw - var(--sideBarWidth));
+    height: calc(100vh - var(--navBarHeight));
+    background-color: rgba($background,0.6);
+    z-index: 5;
+    top: var(--navBarHeight);
+    left: var(--sidebarWidth);
+
+    .dialogInnerContainer{
+            display: flex;
+            width: 30rem;
+            height: 15rem;
+            padding: 2rem 3rem;
+            margin-left: -3rem;
+            background-color: rgb($background);
+            flex-direction: column;
+            align-items: flex-start;
+            border: 1px solid rgb($tertiary);
+            justify-content: space-evenly;
+
+        h3{
+            font-size: 20pt;    
+            font-weight: bold;
+        }
+
+        input{
+            width: 100%;
+            height: 2.5rem;
+            color: rgb($text);
+            background-color: rgb($background);
+            border: gray 1px solid;
+            align-self: start;-self: center;
+            padding-left: 1rem;
+        }
+
+        .dialogButtonsBottomContainer{
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1em;
+            width: 100%;
+
+            button{
+                width: 45%;
+                height: 3rem;
+                border: 1.5px solid rgb($secondary);
+                background-color: inherit;
+
+                &:hover{
+                    background-image: url("/dist/sidebar_button_background.png");
+                    background-size: 100% 100%;
+                    border: none;
+                    color: invert($text);
+                }
+            }
+        }
+    }
+
+}

@@ -45,13 +45,11 @@ function App() {
       else tauriStore.setKeyToLocalFile("credentials.bin","userName","User")
     })
 
-    tauriStore.readKeyFromLocalFile("credentials.bin","deviceName")
-    .then(async (data) => {
-      if(data != null) return;
-      let deviceName = await invoke("get_device_name")      
-      if(deviceName != null) tauriStore.setKeyToLocalFile("credentials.bin","deviceName",deviceName)
-      else tauriStore.setKeyToLocalFile("credentials.bin","deviceName","Device")
-    })
+    let name = localStorage.getItem("name") ? localStorage.getItem("name") : "";
+    let deviceName = localStorage.getItem("deviceName") ? localStorage.getItem("deviceName") : "";
+
+    if(name === "") localStorage.setItem("name","User")
+    if(deviceName === "") invoke("get_device_name").then((data) => {localStorage.setItem("deviceName",data as string)})
 
     webSocketService.connectToWebsocket("https://fileflow-backend.onrender.com/")
     .then((data) => {setWebSocketServer(data)})
