@@ -117,7 +117,7 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket
         <dialog className={dialogOpened ? styles.fileTransferDialog : "hidden"}>
             <div className={styles.filetransferViewSend}>
                 <div className={styles.itemDetailsContainer}>
-                    <img src="/dist/file_icon.png" alt="" />
+                    <img src="/file_icon.png" alt="" />
                     <div>
                         <h2>{selectedItems?.[0]?.name}</h2>
                         <div className={styles.fileSubDetailsContainer}>

@@ -5,7 +5,6 @@ import DirectoryItemDetail from "../../shared/components/directoryItem/directory
 import ContainerDetailViewTop from "../../shared/components/containerDetailViewTop/ContainerDetailViewTop";
 import fileManagement from "../../services/fileManagement";
 import { useLocation, useNavigate } from "react-router-dom";
-import { listen } from "@tauri-apps/api/event";
 
 function SearchPage() {
     const navigate = useNavigate();
@@ -26,16 +25,17 @@ function SearchPage() {
     
   //add selected item to the selectedItems array, if the item is already in the array open the file or folder
   function handleSelection(event:React.MouseEvent,item: IFile) {
+    event.preventDefault();
     if(selectedItem?.name == "") return setSelectedItems(item);
     
     if(selectedItem?.extension != "folder") {
       const parentFolderPath = item.path.replace(`\\${item.name}`,"");
-      let folderData = fileManagement.checkPathIsValid(parentFolderPath).then((response) => {
+      fileManagement.checkPathIsValid(parentFolderPath).then((response) => {
         navigate(`/${response?.name}`, {state: response});
       });
       
     } else {
-      let folderData = fileManagement.checkPathIsValid(item.path).then((response) => {
+      fileManagement.checkPathIsValid(item.path).then((response) => {
         navigate(`/${response?.name}`, {state: response});
       });
     }

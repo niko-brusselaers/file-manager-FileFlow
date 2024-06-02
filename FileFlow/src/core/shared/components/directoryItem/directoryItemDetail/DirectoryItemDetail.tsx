@@ -10,8 +10,8 @@ function DirectoryItemDetail({item, selectedItems, setSelected,edit}: {item:IFil
 
     
     function setIcon(){
-        if(imageFileTypes.includes(item.extension)) return `/dist/${item.extension}_icon.png`
-        else return `/dist/file_icon.png`
+        if(imageFileTypes.includes(item.extension)) return `/${item.extension}_icon.png`
+        else return `/file_icon.png`
 
     }
 

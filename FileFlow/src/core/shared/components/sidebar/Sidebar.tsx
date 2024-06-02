@@ -117,19 +117,19 @@ function Sidebar() {
         <div onContextMenu={handleSideBarDivContextMenuClick} className={styles.sidebar}>
             <div className={styles.sidebarButtonGroup}>
                 <Link className={styles.sidebarLink} title="Home" to={`/`} state={HomePage}  onContextMenu={event => handleContextMenuSideBarFolderClick(event,HomePage)}>
-                    <img src="/dist/home_sidebar_icon.png"/>
+                    <img src="/home_sidebar_icon.png"/>
                     <p>Home</p>
                 </Link>
                 <Link className={styles.sidebarLink} title='Pictures' to={`/${pictureDirectory?.name}`} state={pictureDirectory} onContextMenu={event => handleContextMenuSideBarFolderClick(event,pictureDirectory)}>
-                    <img src="/dist/picture_sidebar_icon.png"/>
+                    <img src="/picture_sidebar_icon.png"/>
                     <p>Pictures</p>
                 </Link>
                 <Link className={styles.sidebarLink} title='Download' to={`/${downloadDirectory?.name}`} state={downloadDirectory} onContextMenu={event => handleContextMenuSideBarFolderClick(event,downloadDirectory)}>
-                    <img src="/dist/download_sidebar_icon.png"/>
+                    <img src="/download_sidebar_icon.png"/>
                     <p>Download</p>
                 </Link>
                 <Link className={styles.sidebarLink} title='Documents' to={`/${documentDirectory?.name}`} state={documentDirectory} onContextMenu={event => handleContextMenuSideBarFolderClick(event,documentDirectory)}>
-                    <img src="/dist/folder_sidebar_icon.png"/>
+                    <img src="/folder_sidebar_icon.png"/>
                     <p>Documents</p>
                 </Link>
             </div>
@@ -139,7 +139,7 @@ function Sidebar() {
                     recentFolders.map((folder, index) => {
                         return (
                             <Link className={styles.sidebarLink} key={index} title={folder.name} to={`/${folder.name}`} state={folder} onContextMenu={event => handleContextMenuSideBarFolderClick(event,folder)}>
-                                <img src="/dist/folder_sidebar_icon.png"/>
+                                <img src="/folder_sidebar_icon.png"/>
                                 <p>{folder.name}</p>
                             </Link>
                         )
@@ -152,7 +152,7 @@ function Sidebar() {
                     favoriteFolders.map((folder, index) => {
                         return (
                             <Link className={styles.sidebarLink} onContextMenu={event => handleContextMenuFavoriteClick(event,folder)} key={index} to={`${folder.name}`} state={folder} title={folder.name}>
-                                <img src="/dist/folder_sidebar_icon.png"/>
+                                <img src="/folder_sidebar_icon.png"/>
                                 <p>{folder.name}</p>
                             </Link>
                         )
@@ -165,7 +165,7 @@ function Sidebar() {
                      drives?.map((drive, index) => {
                         return (
                             <Link className={styles.sidebarLink} key={index} to={"/folderView"} state={drive} title={drive.name}>
-                                <img src="/dist/drive_sidebar_icon.png"/>
+                                <img src="/drive_sidebar_icon.png"/>
                                 <p>{drive.name}</p>
                             </Link>
                         )

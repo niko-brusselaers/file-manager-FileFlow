@@ -270,7 +270,7 @@ function ContextMenu() {
         <menu ref={contextMenuRef} onContextMenu={(event) => {event.preventDefault()}} className={styles.contextMenu} style={ active ? {display:"flex", top:`${position.y}px`, left:`${position.x}px`} : {display:"none"}}>
             <button onClick={handleCreate} 
                     style={(createActive ? {display:"grid"}: {display:"none"})}> 
-                        <img src="/dist/create_icon.png"/> 
+                        <img src="/create_icon.png"/> 
                         <p>Create</p>
             </button>
             <button onClick={event => handleNavigate(event,selectedItems[0])} 
@@ -280,51 +280,51 @@ function ContextMenu() {
             </button>
             <button onClick={handleCopy} 
                     style={(copyAndCutActive ? {display:"grid"}: {display:"none"})}> 
-                        <img src="/dist/copy_icon.png"/> 
+                        <img src="/copy_icon.png"/> 
                         <p>Copy</p> 
                         <span>CTRL + C</span>
             </button>
             <button onClick={handleCut} 
                     style={(copyAndCutActive ? {display:"grid"}: {display:"none"})}> 
-                    <img src="/dist/cut_icon.png"/> 
+                    <img src="/cut_icon.png"/> 
                     <p>Cut</p> 
                     <span>CTRL + X</span>
             </button>
             <button onClick={handlePaste} 
                 style={(pasteActive() ? {display:"grid"} : {display:"none"})}> 
-                    <img src="/dist/paste_icon.png"/> 
+                    <img src="/paste_icon.png"/> 
                     <p>Paste</p> 
                     <span>CTRL + V</span>
             </button>
             <button onClick={handleFileShare} 
                     style={(fileShareActive ? {display:"grid"} : {display:"none"})}> 
-                        <img src="/dist/share_icon.png"/> 
+                        <img src="/share_icon.png"/> 
                         <p>Share</p>
             </button>
             <button onClick={handleUpdateFavorite} 
                     style={(updateFavoriteActive ? {display:"grid"} : {display:"none"})}> 
-                        <img src="/dist/favorite_icon.svg"/> 
+                        <img src="/favorite_icon.svg"/> 
                         <p className={styles.extendText}> {(FavouriteAction === "Remove" ? "Remove from favorites" : "Add to Favorites")}</p>
             </button>
             <button onClick={handleUpdateRecent} 
                     style={(updateRecentActive ? {display:"grid"} : {display:"none"})}> 
-                        <img src="/dist/favorite_icon.svg"/> 
+                        <img src="/favorite_icon.svg"/> 
                         <p className={styles.extendText}>remove from recent</p>
             </button>
             <button onClick={handleRename} 
                     style={(renameActive ? {display:"grid"} : {display:"none"})}>
-                        <img src="/dist/rename_icon.png"/>
+                        <img src="/rename_icon.png"/>
                         <p>Rename</p> 
                         <span>F2</span>
                 </button>
             <button onClick={handleDelete} 
                     style={(deleteActive ? {display:"grid"} : {display:"none"})}>
-                            <img src="/dist/delete_icon.png"/>
+                            <img src="/delete_icon.png"/>
                             <p>Delete</p>
                             <span>Del</span>
                 </button>
             <button onClick={handleRefresh}>
-                        <img src="/dist/refresh_icon.png"/>
+                        <img src="/refresh_icon.png"/>
                         <p>Refresh</p><span>CTRL + R</span>
             </button>
         </menu> 

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styles from './SettingsPage.module.scss';
-import tauriStore from '../../services/tauriStore';
 import themeManagement from '../../services/themeManagement';
 import UpdateValueDialog from './updateValueDialog/UpdateValueDialog';
 

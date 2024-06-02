@@ -9,8 +9,8 @@ function DirectoryItemTile({item, selectedItems, setSelected,edit}: {item:IFile,
     const [EditMode, setEditMode] = useState(edit)
     const [newFileName, setNewFileName] = useState("")
     function setIcon(){
-        if(imageFileTypes.includes(item.extension)) return `/dist/${item.extension}_icon.png`
-        else return `/dist/file_icon.png`
+        if(imageFileTypes.includes(item.extension)) return `/${item.extension}_icon.png`
+        else return `/file_icon.png`
 
     }
 

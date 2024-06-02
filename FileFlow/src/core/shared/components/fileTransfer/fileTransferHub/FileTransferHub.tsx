@@ -22,6 +22,7 @@ function FileTransferHub({dialogOpened, setDialogOpened}:{dialogOpened: boolean,
             if(!dropDownTargets.includes(selectedClasname)) {
                 setDropDownMenuOpen(false)
             }
+            console.log(dropDownMenuOpen);
             
         })
     },[])
@@ -36,11 +37,6 @@ function FileTransferHub({dialogOpened, setDialogOpened}:{dialogOpened: boolean,
             if(dialogOpened) setTimeout(() => {getTransferData()}, 100)
 
         })
-    }
-
-    function openDrownDownMenu() {
-        setDropDownMenuOpen(!dropDownMenuOpen);
-        
     }
 
     
