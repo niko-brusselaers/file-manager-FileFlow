@@ -19,15 +19,39 @@ pub async fn rename_item(file_path:String,new_name: String, old_name: String) ->
 }
 
 #[tauri::command]
-pub async fn move_item(old_path:String,new_path:String) -> Result<(), String> {
+pub async fn move_item(old_path:String,new_path:String) -> Result<u64, String> {
     let new_path = gen_available_file_name(PathBuf::from(new_path)).await;
-    let result = std::fs::rename(old_path, new_path).map_err(|e| e.to_string())?;
-  Ok(result)
+
+    match PathBuf::from(old_path.clone()).is_file(){
+        true => {
+            let copyoptions = fs_extra::file::CopyOptions::new().overwrite(true);
+            let result = fs_extra::file::move_file(&old_path, &new_path, &copyoptions).map_err(|e| e.to_string())?;
+            Ok(result)
+        },
+        false => {
+            let copyoptions = fs_extra::dir::CopyOptions::new();
+            let result = fs_extra::dir::move_dir(&old_path, &new_path, &copyoptions).map_err(|e| e.to_string())?;
+            Ok(result)
+        }
+
+    }
 }
 
 #[tauri::command]
 pub async fn copy_item(old_path:String,new_path:String) -> Result<u64, String> {
     let new_path = gen_available_file_name(PathBuf::from(new_path)).await;
-    let result = std::fs::copy(old_path, new_path).map_err(|e| e.to_string())?;
-  Ok(result)
+    
+    match PathBuf::from(old_path.clone()).is_file(){
+        true => {
+            let copyoptions = fs_extra::file::CopyOptions::new().overwrite(true);
+            let result = fs_extra::file::copy(&old_path, &new_path, &copyoptions).map_err(|e| e.to_string())?;
+            Ok(result)
+        },
+        false => {
+            let copyoptions = fs_extra::dir::CopyOptions::new();
+            let result = fs_extra::dir::copy(&old_path, &new_path, &copyoptions).map_err(|e| e.to_string())?;
+            Ok(result)
+        }
+
+    }
 }
