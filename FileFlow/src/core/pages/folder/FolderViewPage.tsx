@@ -139,8 +139,8 @@ function FolderView() {
     selectedItems.map(selectedItem => {
       //if selected item is already in the selectedItems array open the file or folder
       if (selectedItem === item) {
-        
-        if (item.extension === "folder" || item.extension === "drive")return navigate(`/${item.name}`, { state: item });
+        let name = item.name.split("(")[0]
+        if (item.extension === "folder" || item.extension === "drive")return navigate(`/${name}`, { state: item });
         else return fileManagement.openFile(item.path);
 
       } else {
