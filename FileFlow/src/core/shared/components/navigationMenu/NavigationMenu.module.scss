@@ -15,6 +15,24 @@
   background-size: auto;
   
   .navBarTopContainer{
+    display: flex;
+    padding: .5rem 0 .25rem;
+
+    .titleContainer{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+       *{
+        filter: $whiteIcon;
+        margin-left: .5rem;
+       }
+      img{
+        width: 1.5rem;
+
+      }
+
+    }
 
     .windowsOptionsContainer{
       display: flex;
@@ -22,7 +40,7 @@
       align-items: center;
       height: 2.2em;
       width: 100%;
-      padding-right: 1em;
+      padding-right: .5rem;
       
     }
   }

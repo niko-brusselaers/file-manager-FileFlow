@@ -145,6 +145,10 @@ function NavigationMenu() {
     return ( 
             <div onContextMenu={(event) => {event.preventDefault()}}  className={styles.titlebar}>
                 <div  className={styles.navBarTopContainer}>
+                    <div className={styles.titleContainer}>
+                        <img src="/fileflow_icon.png" alt="" />
+                        <h3>FileFlow</h3>
+                    </div>
                     <div data-tauri-drag-region className={styles.windowsOptionsContainer}>
                         <button className={styles.titlebarButton} onClick={() => minimizeWindow()}>
                             <img
