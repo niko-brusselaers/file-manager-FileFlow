@@ -110,7 +110,7 @@ function FolderView() {
     
   }, [loaderData]);
 
-  useEffect(() => {sortItems()}, [sortingConfig])
+  useEffect(() => {sortItems()}, [sortingConfig,filesAndFolders])
   useEffect(() => getFilesAndFolders(loaderData?.path), [hidden])
 
   //fetch the files and folders in the directory

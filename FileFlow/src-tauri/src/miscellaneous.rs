@@ -38,3 +38,9 @@ pub async fn gen_available_file_name(file_path: PathBuf) -> String {
         file_path.to_string_lossy().into_owned()
     }
 }
+#[tauri::command]
+pub fn get_os_type() -> String {
+    let os = std::env::consts::OS;
+
+    String::from(os)
+}

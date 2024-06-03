@@ -12,7 +12,7 @@ use file_transfer::receive::*;
 use file_transfer::send::*;
 use file_management::update::*;
 use file_management::watcher::*;
-use miscellaneous::get_device_name;
+use miscellaneous::*;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -23,6 +23,7 @@ pub fn run() {
             .plugin(tauri_plugin_shell::init())
             .invoke_handler(tauri::generate_handler![
                 get_device_name,
+                get_os_type,
                 read_directory,
                 watch_directory,
                 unwatch_directory,

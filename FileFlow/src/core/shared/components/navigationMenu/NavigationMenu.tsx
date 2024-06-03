@@ -44,7 +44,12 @@ function NavigationMenu() {
     }
 
     function maximizeWindow() {
-        appWindow.toggleMaximize();
+        fileManagement.getOsType().then((osType) => {
+            if(osType === "windows") appWindow.toggleMaximize();
+            else appWindow.isFullscreen().then((isFullscreen) => appWindow.setFullscreen(!isFullscreen));
+        });
+        
+        
     }
 
     function closeWindow() {

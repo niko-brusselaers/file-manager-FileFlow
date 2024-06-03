@@ -217,6 +217,15 @@ class fileManagement {
         }
     }
 
+    async getOsType(){
+        try {
+            let osType = await invoke("get_os_type")
+            return osType;
+        } catch (error) {
+            console.error("Error getting os type:", error);
+        }
+    }
+
 }
 
 export default new fileManagement();
