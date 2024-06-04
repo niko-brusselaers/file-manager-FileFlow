@@ -55,6 +55,7 @@ function ContextMenu() {
                     setupFavoriteContextMenu(payload);
                     break;
                 case "homePageRecent":
+                case "sidebarRecent":
                     setupRecentContextMenu();
                     break;
                 case "sideBarFolder":
@@ -287,7 +288,7 @@ function ContextMenu() {
             <button onClick={handleCut} 
                     style={(copyAndCutActive ? {display:"grid"}: {display:"none"})}> 
                     <img src="/cut_icon.png"/> 
-                    <p>Cut</p> 
+                    <p>Move</p> 
                     <span>CTRL + X</span>
             </button>
             <button onClick={handlePaste} 
@@ -308,7 +309,7 @@ function ContextMenu() {
             </button>
             <button onClick={handleUpdateRecent} 
                     style={(updateRecentActive ? {display:"grid"} : {display:"none"})}> 
-                        <img src="/favorite_icon.svg"/> 
+                        <img src="/favorite_icon.svg" style={{opacity:0}}/> 
                         <p className={styles.extendText}>remove from recent</p>
             </button>
             <button onClick={handleRename} 

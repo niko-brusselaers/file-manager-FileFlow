@@ -19,7 +19,7 @@ class fileManagement {
         recentItems.push({file:item,count:1});
         }
         localStorage.setItem("recentItems", JSON.stringify(recentItems));
-        tauriEmit.emitRecentItemChange();
+        tauriEmit.emitUpdateRecent();
     }
 
     async getdrives() {

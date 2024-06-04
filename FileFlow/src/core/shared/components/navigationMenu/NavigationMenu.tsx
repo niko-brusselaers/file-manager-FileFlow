@@ -48,8 +48,6 @@ function NavigationMenu() {
             if(osType === "windows") appWindow.toggleMaximize();
             else appWindow.isFullscreen().then((isFullscreen) => appWindow.setFullscreen(!isFullscreen));
         });
-        
-        
     }
 
     function closeWindow() {
@@ -152,18 +150,18 @@ function NavigationMenu() {
                     <div data-tauri-drag-region className={styles.windowsOptionsContainer}>
                         <button className={styles.titlebarButton} onClick={() => minimizeWindow()}>
                             <img
-                            src="https://api.iconify.design/mdi:window-minimize.svg"
+                            src="/minimize_icon.svg"
                             alt="minimize"
                             />
                         </button>
                         <button className={styles.titlebarButton} id="titlebar-maximize" onClick={() => maximizeWindow()}>
                             <img
-                            src="https://api.iconify.design/mdi:window-maximize.svg"
+                            src="/maximize_icon.svg"
                             alt="maximize"
                             />
                         </button>
                         <button className={styles.titlebarButton} id="titlebar-close" onClick={() => closeWindow()}>
-                            <img src="https://api.iconify.design/mdi:close.svg" alt="close" />
+                            <img src="/close_icon.svg" alt="close" />
                         </button>
                     </div>
                 </div>
