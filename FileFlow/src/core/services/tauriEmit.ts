@@ -61,10 +61,6 @@ class tauriEmit{
     
     }
 
-    emitRecentItemChange(){
-        emit("recentItemsChange")
-    }
-
     emitUpdateRecent(){
         emit("recentItemChange")
     }

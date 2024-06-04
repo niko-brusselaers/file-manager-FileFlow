@@ -75,28 +75,28 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
         <div className={styles.folderOptionsBar}>
             <div className={styles.folderOptionsBarButtonGroup}>
                 <button className={styles.folderOptionsBarButton} onClick={tauriEmit.emitCreateCommand}>
-                <img src="/create_icon.png" alt="create file" />
+                <img src="/create_icon.png" alt="create item" title='create item'/>
                 </button>
                 <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.name != "") ? "": styles.inactive)}`} onClick={tauriEmit.emitCutCommand}>
-                    <img src="/cut_icon.png" alt="cut file" />
+                    <img src="/cut_icon.png" alt="move item" title='move item'/>
                 </button>
                 <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.name != "") ? "": styles.inactive)}`} onClick={tauriEmit.emitCopyCommand}>
-                    <img src="/copy_icon.png" alt="copy file" />
+                    <img src="/copy_icon.png" alt="copy item"  title='copy item'/>
                 </button>
                 <button className={`${styles.folderOptionsBarButton} ${(pasteItemData ? "": styles.inactive)}`} onClick={tauriEmit.emitPasteCommand}>
-                    <img src="/paste_icon.png" alt="paste file" />
+                    <img src="/paste_icon.png" alt="paste item" title='paste item'/>
                 </button>
                 <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.name != "") ? "": styles.inactive)}`} onClick={tauriEmit.emitDeleteCommand}>
-                    <img src="/delete_icon.png" alt="delete file" />
+                    <img src="/delete_icon.png" alt="delete item" title='delete item'/>
                 </button>
-                <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.name != "") ? "": styles.inactive)}`}>
-                    <img src="/rename_icon.png" alt="rename file"  onClick={tauriEmit.emitRenameCommand}/>
+                <button className={`${styles.folderOptionsBarButton} ${(selectedItems.some(selectedItem => selectedItem.name != "") ? "": styles.inactive)}`} onClick={tauriEmit.emitRenameCommand}>
+                    <img src="/rename_icon.png" alt="rename item"  title='rename item'/>
                 </button>
             </div>
             <div className={styles.folderOptionsBarButtonGroup}>
                 <div className={styles.sortDropDownMenu} onMouseLeave={handleMouseLeave}>
                     <button className={styles.folderOptionsBarButton}  onClick={handleSortDropDownMenuClick}>
-                        <img src="/sort_icon.png" alt="create file" />
+                        <img src="/sort_icon.png" alt="sort items" title='sort items'/>
                     </button>
                     <form ref={sortFormRef} className={styles.dropDownContainer} style={sortDropDownMenyIsOpen ? {display:"flex"} : {display:"none"} } onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                         <div className={styles.radioContainer}>
@@ -130,22 +130,22 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
                  </div>
                 
                 <button className={styles.folderOptionsBarButton} onClick={changeHiddenFiles}>
-                    <img src="/showHidden_icon.png" alt="show hidden file" />
+                    <img src="/showHidden_icon.png" alt="show hidden items"  title="show hidden file"/>
                 </button>
                 <button className={styles.folderOptionsBarButton} onClick={changeViewType}>
-                    <img src="/folderView_icon.png" alt="change view type" />
+                    <img src="/folderView_icon.png" alt="change view type" title="change view type"/>
                 </button>
             </div>
             <div className={styles.folderOptionsBarButtonGroup}>
                 <button className={`${styles.folderOptionsBarButton} ${selectedItems.length ? " " : styles.inactive}`} onClick={() => {openTransferSend()}}>
-                    <img src="/share_icon.png" alt="share" />
+                    <img src="/share_icon.png" alt="share item" title='share item'/>
                 </button>
-                <button className={styles.folderOptionsBarButton}>
+                {/* <button className={styles.folderOptionsBarButton}>
                     <img src="/zipFunction_icon.png" alt="zip" />
                 </button>
                 <button className={styles.folderOptionsBarButton}>
                     <img src="/unzip_icon.png" alt="unzip" />
-                </button>
+                </button> */}
 
             </div>
                

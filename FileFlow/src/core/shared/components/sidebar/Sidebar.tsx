@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styles from './Sidebar.module.scss';
 import { IFile } from '../../types/IFile';
-import { Link } from 'react-router-dom';
+import { Link, useLoaderData } from 'react-router-dom';
 import { documentDir, downloadDir, pictureDir } from '@tauri-apps/api/path';
 import fileManagement from '../../../services/fileManagement';
 import { listen } from '@tauri-apps/api/event';
@@ -16,7 +16,6 @@ function Sidebar() {
     const [downloadDirectory, setDownloadDirectory] = useState<IFile>();
     const [documentDirectory, setDocumentDirectory] = useState<IFile>();
     const HomePage = {name: "Home", path: "",created:new Date(),modified:new Date(),hidden:false, extension: "folder", size: "", edit: false};
-
 
     useEffect(() => {
         setSideBarWidthVar();
@@ -88,6 +87,20 @@ function Sidebar() {
     
     }
 
+    function handleContextMenuRecentClick(event:React.MouseEvent,item:IFile){
+        event.preventDefault();
+        event.stopPropagation();
+        if(!item) return;
+        let data:IContextMenuData = {
+            selectedItems: [item],
+            position: {x:event.clientX, y:event.clientY},
+            contextType: 'sidebarRecent'
+        }
+
+        tauriEmit.emitContextMenuOpen(data);
+    
+    }
+
     function handleContextMenuSideBarFolderClick(event:React.MouseEvent,item?:IFile){
         event.preventDefault();
         event.stopPropagation();
@@ -138,7 +151,7 @@ function Sidebar() {
                 {
                     recentFolders.map((folder, index) => {
                         return (
-                            <Link className={styles.sidebarLink} key={index} title={folder.name} to={`/${folder.name}`} state={folder} onContextMenu={event => handleContextMenuSideBarFolderClick(event,folder)}>
+                            <Link className={styles.sidebarLink} key={index} title={folder.name} to={`/${folder.name}`} state={folder} onContextMenu={event => handleContextMenuRecentClick(event,folder)}>
                                 <img src="/folder_sidebar_icon.png"/>
                                 <p>{folder.name}</p>
                             </Link>

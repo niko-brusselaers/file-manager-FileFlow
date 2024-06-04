@@ -20,14 +20,17 @@ function FolderView() {
   const [hidden, setHidden] = useState<Boolean>();
   const [detailView, setDetailView] = useState<Boolean>(localStorage.getItem("detailView") ? JSON.parse(localStorage.getItem("detailView") || '') : false);
 
+  const loaderData: IFile = useLocation().state;
+  const navigate = useNavigate();
 
+  const loaderDataRef = useRef(loaderData);
+  loaderDataRef.current = loaderData;
   const filesAndFoldersRef = useRef(filesAndFolders);
   filesAndFoldersRef.current = filesAndFolders;
   const selectedItemsRef = useRef(selectedItems);
   selectedItemsRef.current = selectedItems;
 
-  const loaderData: IFile = useLocation().state;
-  const navigate = useNavigate();
+
   
   
   useEffect(() => {     
@@ -47,10 +50,10 @@ function FolderView() {
     listen("rename",()=> renameFileOrFolder())
 
     //listen for the delete command and delete the selected items
-    listen("delete",async() => {console.log("delete"); deleteItems()})
+    listen("delete",() => deleteItems())
 
     //listen for the fs-change event and fetch the files and folders
-    listen("fs-change", () => getFilesAndFolders(loaderData?.path))
+    listen("fs-change", () => getFilesAndFolders(loaderDataRef.current?.path))
 
     //listen for search command and search for the files and folders
     listen("searchDirectory", (event) => {
@@ -99,19 +102,15 @@ function FolderView() {
     } else {
       //get currently watched directory and unwatch it, then watch the new directory
       let watchedDirectory = sessionStorage.getItem("watchedDirectory") ? sessionStorage.getItem("watchedDirectory") || '' : null;
-      if(watchedDirectory) fileManagement.unWatchDirectory(watchedDirectory).then(()=> fileManagement.watchDirectory(loaderData.path));
+      if(watchedDirectory) fileManagement.unWatchDirectory(watchedDirectory).then(()=> fileManagement.watchDirectory(loaderDataRef.current.path));
       else fileManagement.watchDirectory(loaderData.path);
       getFilesAndFolders(loaderData.path);
     }
 
-    console.log(loaderData);
-    console.log(window.location);
-    
-    
   }, [loaderData]);
 
   useEffect(() => {sortItems()}, [sortingConfig,filesAndFolders])
-  useEffect(() => getFilesAndFolders(loaderData?.path), [hidden])
+  useEffect(() => getFilesAndFolders(loaderDataRef.current?.path), [hidden])
 
   //fetch the files and folders in the directory
   function getFilesAndFolders(directoryPath: string){ 
@@ -123,7 +122,7 @@ function FolderView() {
       if (!data?.filesAndFolders && !data?.directoryPath) return;
       setFilesAndFolders(data.filesAndFolders);
       sortItems(data.filesAndFolders);
-      
+
       setSelectedItems([]);
     }).catch((error) => {
       console.error("Error fetching files and folders:", error);
