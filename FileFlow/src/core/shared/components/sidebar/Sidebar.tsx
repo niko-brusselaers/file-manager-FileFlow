@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styles from './Sidebar.module.scss';
 import { IFile } from '../../types/IFile';
-import { Link, useLoaderData } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { documentDir, downloadDir, pictureDir } from '@tauri-apps/api/path';
 import fileManagement from '../../../services/fileManagement';
 import { listen } from '@tauri-apps/api/event';

@@ -93,6 +93,9 @@ function HomePage() {
 
     // Define the scroll event handler outside of the listenForScroll function
     const handleScroll = (event: WheelEvent) => {
+        
+        if(!favoritesContainerRef.current?.contains(event.target as Node)) return;
+        event.stopPropagation();
         favoritesContainerRef.current?.scrollBy({left: event.deltaY * 0.25});
     };
 

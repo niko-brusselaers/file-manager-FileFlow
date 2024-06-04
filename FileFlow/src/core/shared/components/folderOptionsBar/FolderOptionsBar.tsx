@@ -12,7 +12,6 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
     const [sortBy, setSortBy] = useState<string>(localStorage.getItem("sortBy") ? localStorage.getItem("sortBy") || "" : "name");
     const [order, setOrder] = useState<string>(localStorage.getItem("order") ? localStorage.getItem("order") || "" : "ascending");
 
-    const sortFormRef = useRef<HTMLFormElement>(null);
     let timeoutID: NodeJS.Timeout | null = null;
     
     //listen for the updateMoveItem event to update the pasteItemData state
@@ -98,7 +97,7 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
                     <button className={styles.folderOptionsBarButton}  onClick={handleSortDropDownMenuClick}>
                         <img src="/sort_icon.png" alt="sort items" title='sort items'/>
                     </button>
-                    <form ref={sortFormRef} className={styles.dropDownContainer} style={sortDropDownMenyIsOpen ? {display:"flex"} : {display:"none"} } onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                    <form className={styles.dropDownContainer} style={sortDropDownMenyIsOpen ? {display:"flex"} : {display:"none"} } onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                         <div className={styles.radioContainer}>
                             <h4>Sort By</h4>
                             <div className={styles.radioInput}>

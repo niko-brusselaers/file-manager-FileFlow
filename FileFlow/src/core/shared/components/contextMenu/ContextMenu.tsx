@@ -242,7 +242,7 @@ function ContextMenu() {
     function handleUpdateFavorite(){
         let favorites = JSON.parse(localStorage.getItem("favoriteItems") || "[]") as IFile[];
         if(FavouriteAction === "Add") {
-            favorites.push(selectedItems[0]);
+            selectedItems.map((item) => favorites.push(item));
             favorites = favorites.filter((favorite, index, self) => index === self.findIndex((t) => (t.path === favorite.path)));
         } else if(FavouriteAction === "Remove") {
             favorites = favorites.filter((favorite) => favorite.path !== selectedItems[0].path);
@@ -257,9 +257,11 @@ function ContextMenu() {
 
     function handleUpdateRecent(){
         let recent = JSON.parse(localStorage.getItem("recentItems") || "[]") as {file:IFile,count:number}[];
-        console.log(recent);
-        
-        recent = recent.filter((item) => item.file.path !== selectedItems[0].path);
+
+        selectedItems.forEach((selectedItem) => {
+        recent = recent.filter((item) => item.file.path !== selectedItem.path);
+        });
+
         localStorage.setItem("recentItems",JSON.stringify(recent));
         tauriEmit.emitUpdateRecent();
         setActive(false);
