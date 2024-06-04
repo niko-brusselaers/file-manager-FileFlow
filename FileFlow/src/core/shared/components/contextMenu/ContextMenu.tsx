@@ -245,7 +245,9 @@ function ContextMenu() {
             selectedItems.map((item) => favorites.push(item));
             favorites = favorites.filter((favorite, index, self) => index === self.findIndex((t) => (t.path === favorite.path)));
         } else if(FavouriteAction === "Remove") {
-            favorites = favorites.filter((favorite) => favorite.path !== selectedItems[0].path);
+            selectedItems.forEach((selectedItem) => { 
+                favorites = favorites.filter((favorite) => favorite.path !== selectedItem.path);
+             });
         } else{
             return console.error(`Invalid action: ${FavouriteAction}`);
         }
