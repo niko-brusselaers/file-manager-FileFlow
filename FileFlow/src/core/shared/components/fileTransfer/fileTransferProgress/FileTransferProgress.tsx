@@ -68,7 +68,7 @@ function fileTransferProgress() {
             <div className={styles.fileTranferProgressInnerContainer}>
                 <div className={styles.fileTransferProgressData}>
                     <h3>{fileTransferData?.file_name}</h3>
-                    <p>{(code ? `code: ${code}`: "")}</p>
+                    {(code ? <p>code: {code} <img src="/copy_icon.png" alt="" title="copy"/></p>: <p> </p>)}
                 </div>
                 <div className={styles.fileTransferProgressBar}>
                 <div>

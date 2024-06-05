@@ -56,7 +56,7 @@ function NotifactionItem({NotificationData,clearNotification}: {NotificationData
                 </>}
                 {notificationType === "request" && 
                 <div className={styles.transferRequestContainer}>
-                    <p>do you want to accept {fileTransferRequest?.fileDetails.fileName}, {fileTransferRequest?.fileDetails.fileSize} from {fileTransferRequest?.userName}</p>
+                    <p>do you want to accept {fileTransferRequest?.fileDetails.fileName}, {fileTransferRequest?.fileDetails.fileSize} from {fileTransferRequest?.userNameSender}</p>
                     <div>
                         <button className={styles.acceptIcon}>
                             <img src="/check_icon.svg" alt="" onClick={acceptRequest(fileTransferRequest!.code)}/>

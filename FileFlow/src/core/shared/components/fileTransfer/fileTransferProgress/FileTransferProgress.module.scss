@@ -34,6 +34,27 @@
         width: 100%; 
         font-weight: bold;
     }
+
+    img{
+        width: 1rem;
+        margin-left: 2em;
+        padding: .5rem;
+        background-color: transparent;
+        filter: $whiteIcon;
+        border-radius: 30%;
+
+        &:hover{
+            background-color: rgba($secondary,0.2);
+        }
+    
+    }
+
+    p{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
 }
 
 .fileTransferProgressBar{

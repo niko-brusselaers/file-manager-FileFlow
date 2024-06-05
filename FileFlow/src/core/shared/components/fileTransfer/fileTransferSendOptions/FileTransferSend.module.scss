@@ -12,13 +12,16 @@
     height: 80%;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
     overflow: scroll;
     color: $text;
 
     > div{
         padding: 0em 3em;
+    }
 
+     > div:nth-child(2){
+        height: 60%;
     }
 
     .itemDetailsContainer{

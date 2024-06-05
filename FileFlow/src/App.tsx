@@ -9,7 +9,6 @@ import { IFile } from "./core/shared/types/IFile";
 import FileTransferHub from "./core/shared/components/fileTransfer/fileTransferHub/FileTransferHub";
 import FileTransferProgress from "./core/shared/components/fileTransfer/fileTransferProgress/FileTransferProgress";
 import webSocketService from "./core/services/webSocketService";
-import tauriStore from "./core/services/tauriStore";
 import { invoke } from "@tauri-apps/api/core";
 import ContextMenu from "./core/shared/components/contextMenu/ContextMenu";
 import themeManagement from "./core/services/themeManagement";
@@ -38,19 +37,12 @@ function App() {
       setTransferHubDialogOpen(true);
     });
 
-    tauriStore.readKeyFromLocalFile("credentials.bin","userName")
-    .then(async (data) => {
-      if(data != null) return;
-      let userName = await invoke("get_device_name")      
-      if(userName != null) tauriStore.setKeyToLocalFile("credentials.bin","userName",userName)
-      else tauriStore.setKeyToLocalFile("credentials.bin","userName","User")
-    })
 
-    let name = localStorage.getItem("name") ? localStorage.getItem("name") : "";
-    let deviceName = localStorage.getItem("deviceName") ? localStorage.getItem("deviceName") : "";
-
-    if(name === "") localStorage.setItem("name","User")
-    if(deviceName === "") invoke("get_device_name").then((data) => {localStorage.setItem("deviceName",data as string)})
+    let name = localStorage.getItem("name") || "";
+    let deviceName =  localStorage.getItem("deviceName") || "";
+    
+    if(name == "") localStorage.setItem("name","User")
+    if(deviceName == "") invoke("get_device_name").then((data) => {localStorage.setItem("deviceName",data as string)})
 
     webSocketService.connectToWebsocket("https://fileflow-backend.onrender.com/")
     .then((data) => {setWebSocketServer(data)})

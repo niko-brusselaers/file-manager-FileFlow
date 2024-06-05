@@ -9,10 +9,6 @@ import { ITransferRequest } from '../../../types/ITransferRequest';
 
 function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket}:{dialogOpened: boolean, setDialogOpened: Function,selectedItems:IFile[]|null,websocket?:Socket<any>}) {
     const [selectedDestination, setSelectedDestination] = useState<IConnectedDevice>({deviceName:"",publicIPAdress:"",socketId:"",userName:""});
-    const [contact] = useState<IConnectedDevice[]| null>([]);
-    const [filteredContacts, setFilteredContacts] = useState<IConnectedDevice[]| null>(contact);
-    const [recent] = useState<IConnectedDevice[]| null>([]);
-    const [devices] = useState<IConnectedDevice[]| null>([]);
     const [localDevices,setLocalDevices] = useState<IConnectedDevice[]| null>([]);
     const [deviceName] = useState<string>(localStorage.getItem("deviceName") || "")
 
@@ -58,13 +54,6 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket
         websocket?.off("localDisconnect");
     }
 
-    //filter contacts when user types in the input field
-    function filterContacts(filterInput:string){
-        const filterInputLowerCase = filterInput.toLowerCase();
-        const filterContacts = contact?.filter((contact) => contact.userName?.toLowerCase().includes(filterInputLowerCase));
-        if(filterContacts) setFilteredContacts(filterContacts);
-        else setFilteredContacts([]);
-    }
 
     async function sentFile() {
         if(!selectedItems) return;
@@ -84,8 +73,11 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket
                  //send transferFile Request to the selected destination
                 const transferRequest:ITransferRequest={
                     code: data.code,
-                    socketId: selectedDestination?.socketId,
-                    userName: selectedDestination?.userName,
+                    socketIdReceiver: selectedDestination?.socketId,
+                    socketIdSender: websocket?.id || "",
+                    userNameReceiver: selectedDestination?.userName,
+                    userNameSender: localStorage.getItem("name") || "User",
+
                     fileDetails:{
                         fileName: selectedItems[0].name,
                         fileSize: selectedItems[0].size,
@@ -118,20 +110,6 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket
                     </div>
                 </div>
                 <div>
-                    <h2>Share this file</h2>
-                    <input type="text"  placeholder='enter email' className={styles.inputForm} onChange={(event) => filterContacts(event.currentTarget.value)}/>
-                    <div className={styles.selectionItemsContainer}>
-                        {filteredContacts?.map((destination, index) =>
-                             <button className={`${styles.destination} ${destination === selectedDestination ? styles.selectedDestination : ''}`} key={index} onClick={() => {setSelectedDestination(destination)}}>{destination.userName}</button>)}
-                    </div>
-                </div>
-                <div>
-                    <h2>own devices</h2>
-                    <div className={styles.selectionItemsContainer}>
-                        {devices?.map((destination, index) => <button className={`${styles.destination} ${destination === selectedDestination ? styles.selectedDestination : ''}`} key={index}  onClick={() => {setSelectedDestination(destination)}}>{destination.deviceName}</button>)}    
-                    </div>
-                </div>
-                <div >
                     <h2>local devices</h2>
                     <div className={styles.selectionItemsContainer}>
                         {localDevices?.map((destination, index) => <button className={`${styles.destination} ${destination.deviceName === selectedDestination?.deviceName ? styles.selectedDestination : ''}`} key={index}  onClick={() => {setSelectedDestination(destination)}}>{destination.deviceName}</button>)}
