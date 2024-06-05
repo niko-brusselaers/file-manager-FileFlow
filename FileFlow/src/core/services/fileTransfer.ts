@@ -24,6 +24,16 @@ class fileTransfer{
         console.error("Error downloading files:", error);
         }
     }
+
+    async declineRequest(PAKECode:string){
+        try {
+        await invoke("decline_request", {code:PAKECode}).then((res) => {
+            console.log("response:", res);
+        })
+        } catch (error) {
+        console.error("Error declining request:", error);
+        }
+    }
 }
 
 export default new fileTransfer();

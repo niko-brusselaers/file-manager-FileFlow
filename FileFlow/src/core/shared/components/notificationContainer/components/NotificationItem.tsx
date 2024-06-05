@@ -3,6 +3,8 @@ import { INotificationData } from "../../../types/INotificationData";
 import styles from "./NotificationItem.module.scss"
 import { ITransferProgress } from "../../../types/ITransferProgress";
 import { ITransferRequest } from "../../../types/ITransferRequest";
+import fileTransfer from "../../../../services/fileTransfer";
+import tauriStore from "../../../../services/tauriStore";
 
 function NotifactionItem({NotificationData,clearNotification}: {NotificationData: INotificationData, clearNotification: () => void}) {
     const [notificationType,setNoticationType] = useState<string>()
@@ -23,6 +25,22 @@ function NotifactionItem({NotificationData,clearNotification}: {NotificationData
         if(NotificationData.type === "fileTransferSuccess") setNoticationType("message")
     })
 
+    const acceptRequest = (code: string) => () => {
+        // accept the request
+        fileTransfer.downloadFiles(code)
+        clearNotification()
+    }
+
+    const declineRequest = (code: string) => () => {
+        // decline the request
+        fileTransfer.declineRequest(code)
+        tauriStore.removeKeyFromLocalFile("fileTransferRequest",fileTransferRequest!.fileDetails.fileName)
+        clearNotification()
+
+    }
+
+
+
     return ( 
         <div className={styles.notificationItem}>
             <div className={styles.notificationItemHeader}>
@@ -41,10 +59,10 @@ function NotifactionItem({NotificationData,clearNotification}: {NotificationData
                     <p>do you want to accept {fileTransferRequest?.fileDetails.fileName}, {fileTransferRequest?.fileDetails.fileSize} from {fileTransferRequest?.userName}</p>
                     <div>
                         <button className={styles.acceptIcon}>
-                            <img src="/check_icon.svg" alt="" />
+                            <img src="/check_icon.svg" alt="" onClick={acceptRequest(fileTransferRequest!.code)}/>
                         </button>
                         <button className={styles.cancelIcon}>
-                            <img  src="/close_icon.svg" alt="" />
+                            <img  src="/close_icon.svg" alt="" onClick={declineRequest(fileTransferRequest!.code)}/>
                         </button>
                     </div>
                 </div>

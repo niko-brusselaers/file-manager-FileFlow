@@ -38,6 +38,7 @@ pub fn run() {
                 copy_item,
                 send_files,
                 receive_files,
+                decline_request,
                 delete_item
             ])
             .run(tauri::generate_context!())

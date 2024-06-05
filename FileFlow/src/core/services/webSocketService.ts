@@ -4,6 +4,7 @@ import { publicIpv4 } from "public-ip"
 import { ITransferRequest } from "../shared/types/ITransferRequest"
 import { ask } from "@tauri-apps/plugin-dialog"
 import fileTransfer from "./fileTransfer"
+import tauriEmit from "./tauriEmit"
  
 class websocketService{
 
@@ -34,11 +35,7 @@ class websocketService{
 
         socket.on("transferFileRequest",async(data:ITransferRequest)=>{
             console.log(data);
-            ask(`Do you want to accept the file transfer request from ${data.fileDetails.fileName}?`).then(async(response) => {
-                if(response){
-                    await fileTransfer.downloadFiles(data.code)
-                }
-            })
+            tauriEmit.transferFileRequest(data);
         });
 
         return socket;
