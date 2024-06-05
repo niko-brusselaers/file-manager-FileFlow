@@ -65,9 +65,9 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket
                 fileName: selectedItems[0].name,
             }
 
-            emit("openFileTransferProgressDialog",data)
 
             if(selectedDestination?.deviceName === "other") {
+                emit("openFileTransferProgressDialog",data)
                 listenEvent.then((unlisten:UnlistenFn) => unlisten());
             } else{
                  //send transferFile Request to the selected destination
@@ -85,10 +85,17 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket
                     }
                 }
 
-                if(websocket) websocket.emit("transferFileRequest",transferRequest);
+                if(websocket) {
+                    websocket.emit("transferFileRequest",transferRequest)
+                    emit("FileTransferStarted",{fileName: selectedItems[0].name, receiver: selectedDestination?.userName || "unknown"})
+                };
+                
+                
             }
 
             listenEvent.then((unlisten:UnlistenFn) => unlisten())
+
+            setDialogOpened(false)
             
         })
         

@@ -1,28 +1,24 @@
 import { useState } from "react";
 import { INotificationData } from "../../../types/INotificationData";
 import styles from "./NotificationItem.module.scss"
-import { ITransferProgress } from "../../../types/ITransferProgress";
 import { ITransferRequest } from "../../../types/ITransferRequest";
 import fileTransfer from "../../../../services/fileTransfer";
 import tauriStore from "../../../../services/tauriStore";
 
-function NotifactionItem({NotificationData,clearNotification}: {NotificationData: INotificationData, clearNotification: () => void}) {
+function NotifactionItem({NotificationData,clearNotification,setTimeout,clearTimeout}: {NotificationData: INotificationData, clearNotification: () => void,setTimeout: Function,clearTimeout: Function}) {
     const [notificationType,setNoticationType] = useState<string>()
-    const [fileTransferData,setFileTransferData] = useState<ITransferProgress>()
+    const [notificationHeader,setNotificationHeader] = useState<string>("")
     const [fileTransferRequest,setFileTransferRequest] = useState<ITransferRequest>()
-    const progressTypes = ["FileTransferProgress","moveProgress","copyProgress"]
+    const messageTypes = ["fileTransferSuccess","fileTransferStarted"]
 
     useState(() => {
         if(NotificationData.type === "error") setNoticationType("error")
-        if(progressTypes.includes(NotificationData.type)) {
-            setNoticationType("progress")
-            setFileTransferData(NotificationData.transferProgress)
-        }
         if(NotificationData.type === "fileTransferRequest") {
             setNoticationType("request")
             setFileTransferRequest(NotificationData.transferRequest)
         }
-        if(NotificationData.type === "fileTransferSuccess") setNoticationType("message")
+        if(messageTypes.includes(NotificationData.type)) setNoticationType("message")
+        setNotificationHeader(NotificationData.type.split(/(?=[A-Z])/).join(' '))
     })
 
     const acceptRequest = (code: string) => () => {
@@ -42,18 +38,13 @@ function NotifactionItem({NotificationData,clearNotification}: {NotificationData
 
 
     return ( 
-        <div className={styles.notificationItem}>
+        <div className={styles.notificationItem} onMouseEnter={() =>clearTimeout} onMouseLeave={() => setTimeout}>
             <div className={styles.notificationItemHeader}>
-                <h3 className={styles.notificationheaderTitle}>{NotificationData.type}</h3>
+                <h3 className={styles.notificationheaderTitle}>{notificationHeader}</h3>
                 <img className={styles.removeNotification} onClick={clearNotification} src="/close_icon.svg"/>
             </div>
             <div className={styles.noticationItemContent}>
                 {notificationType === "error" && <p>{NotificationData.error}</p>}
-                {notificationType === "progress" && 
-                <>
-                <p>{NotificationData.transferProgress?.file_name}</p>
-                <progress value={fileTransferData?.progress} max={fileTransferData?.file_size}></progress>
-                </>}
                 {notificationType === "request" && 
                 <div className={styles.transferRequestContainer}>
                     <p>do you want to accept {fileTransferRequest?.fileDetails.fileName}, {fileTransferRequest?.fileDetails.fileSize} from {fileTransferRequest?.userNameSender}</p>

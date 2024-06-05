@@ -25,8 +25,6 @@ function HomePage() {
 
         listen("recentItemChange", updateRecentItems);
 
-       
-
         // retrieve favorite and recent items from local storage
         updateFavoriteItems();
         updateRecentItems();
@@ -81,6 +79,10 @@ function HomePage() {
         // Filter out invalid items (i.e., items where the file is undefined)
         updatedItems = updatedItems.filter(item => item !== undefined);
 
+        updatedItems = updatedItems.map((item) => {
+            if(item?.size) item.size = conversion.convertFileSizeIdentifier(parseInt(item.size));
+            return item;
+        });
         //if changes, update local storage
         if(updatedItems.length !== items.length){
             localStorage.setItem("favoriteItems", JSON.stringify(updatedItems));

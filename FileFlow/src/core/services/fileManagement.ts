@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { IFile } from "../shared/types/IFile";
 import conversion from "./conversion";
 import tauriEmit from "./tauriEmit";
+import { emit } from "@tauri-apps/api/event";
 
 
 class fileManagement {
@@ -56,7 +57,9 @@ class fileManagement {
 
         return {filesAndFolders: drives, directoryPath: ""}
         } catch (error) {
-        console.error("Error fetching drives:", error);
+            console.error("Error fetching drives:", error);
+            emit("error", error);
+
         }
     }
 
@@ -101,7 +104,8 @@ class fileManagement {
         let fileOrFolder:IFile = await invoke("check_path", { path: directoryPath })
         return fileOrFolder;
         } catch (error) {
-        console.error( error);
+            console.error( error);
+            emit("error", error);
         }
     }
 
@@ -111,7 +115,8 @@ class fileManagement {
         .catch((error) => {throw error})
         this.updateRecent(directoryPath);
         } catch (error) {
-        console.error("Error opening file:", error);
+            console.error("Error opening file:", error);
+            emit("error", error);
         }
         
     }
@@ -121,7 +126,9 @@ class fileManagement {
         await invoke("create_file", { filePath:filePath, fileName:fileName })
         .catch((error) => {throw error})
         } catch (error) {
-        console.error("Error creating file:", error);
+            console.error("Error creating file:", error);
+            emit("error", error);
+
         }
     }
 
@@ -130,7 +137,9 @@ class fileManagement {
         await invoke("create_folder", { folderPath: folderPath })
         .catch((error) => {throw error})
         } catch (error) {
-        console.error("Error creating folder:", error);
+            console.error("Error creating folder:", error);
+            emit("error", error);
+
         }
     }
 
@@ -139,7 +148,8 @@ class fileManagement {
         await invoke("rename_item", { filePath: filePath,oldName:oldName, newName: newName })
         .catch((error) => {throw error})
         } catch (error) {
-        console.error("Error renaming file or folder:", error);
+            console.error("Error renaming file or folder:", error);
+            emit("error", error);
         }
     }
 
@@ -148,7 +158,9 @@ class fileManagement {
         await invoke("copy_item", { oldPath: filePath, newPath: destinationPath })
         .catch((error) => {throw error})
         } catch (error) {
-        console.error("Error copying file or folder:", error);
+            console.error("Error copying file or folder:", error);
+            emit("error", error);
+
         }
     }
 
@@ -157,7 +169,9 @@ class fileManagement {
         await invoke("move_item", { oldPath: filePath, newPath: destinationPath })
         .catch((error) => {throw error})
         } catch (error) {
-        console.error("Error moving file or folder:", error);
+            console.error("Error moving file or folder:", error);
+            emit("error", error);
+
         }
     }
 
@@ -166,7 +180,8 @@ class fileManagement {
         await invoke("delete_item", { filePath: filePath })
         .catch((error) => {throw error})
         } catch (error) {
-        console.error("Error deleting file or folder:", error);
+            console.error("Error deleting file or folder:", error);
+            emit("error", error);
         }
     }
 
@@ -180,6 +195,8 @@ class fileManagement {
 
         } catch (error) {
             console.error("Error watching directory:", error);
+            emit("error", error);
+
         }
     }
 
@@ -188,7 +205,8 @@ class fileManagement {
         await invoke("unwatch_directory", { path: directoryPath })
         .catch((error) => {throw error})
         } catch (error) {
-        console.error("Error stopping watching directory:", error);
+            console.error("Error stopping watching directory:", error);
+            emit("error", error);
         }
     }
 
@@ -214,6 +232,7 @@ class fileManagement {
             
         } catch (error) {
             console.error("Error searching device:", error);
+            emit("error", error);
         }
     }
 
@@ -223,6 +242,7 @@ class fileManagement {
             return osType;
         } catch (error) {
             console.error("Error getting os type:", error);
+            emit("error", error);
         }
     }
 

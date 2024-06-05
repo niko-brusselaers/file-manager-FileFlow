@@ -1,7 +1,7 @@
 import styles from './FolderOptionsBar.module.scss';
 import { IFile } from '../../types/IFile';
 import { listen } from '@tauri-apps/api/event';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import tauriEmit from '../../../services/tauriEmit';
 
 function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){

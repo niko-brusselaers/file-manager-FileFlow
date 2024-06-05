@@ -14,7 +14,7 @@ pub async fn receive_files(
     code: String,
     download_directory: String,
     app: tauri::AppHandle,
-) -> Result<(), String> {
+) -> Result<String, String> {
     // create server config, relay hints, transit abilities and app config
     let server_config: ServerConfig = ServerConfig {
         rendezvous_url: String::from(APP_CONFIG.rendezvous_url),
@@ -95,9 +95,9 @@ pub async fn receive_files(
         )
         .await;
 
-    let result = result.map_err(|error| error.to_string())?;
+    result.map_err(|error| error.to_string())?;
 
-    Ok(result)
+    Ok(file_name.to_owned())
 }
 
 #[tauri::command]

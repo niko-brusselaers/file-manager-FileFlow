@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
+import { emit } from "@tauri-apps/api/event";
 import { downloadDir } from "@tauri-apps/api/path";
 
 class fileTransfer{
@@ -6,10 +7,11 @@ class fileTransfer{
     async sentFiles(filePath:string){
         try {
         await invoke("send_files", {filePath:filePath}).then((res) => {
-            console.log("response:", res);
+            emit("FileTransferSuccess", {fileName: res,direction:"send"})
         })
         } catch (error) {
-        console.error("Error sending files:", error);
+            console.error("Error sending files:", error);
+            emit("error", error);
         }
     }
 
@@ -18,21 +20,16 @@ class fileTransfer{
             if(!downloadDirectory) downloadDirectory = await downloadDir();
 
         await invoke("receive_files", {code:PAKECode, downloadDirectory:downloadDirectory}).then((res) => {
-            console.log("response:", res);
+            emit("FileTransferSuccess", {fileName: res,direction:"receive"})
         })
         } catch (error) {
-        console.error("Error downloading files:", error);
+            console.error("Error downloading files:", error);
+            emit("error", error);
         }
     }
 
     async declineRequest(PAKECode:string){
-        try {
-        await invoke("decline_request", {code:PAKECode}).then((res) => {
-            console.log("response:", res);
-        })
-        } catch (error) {
-        console.error("Error declining request:", error);
-        }
+        await invoke("decline_request", {code:PAKECode})   
     }
 }
 

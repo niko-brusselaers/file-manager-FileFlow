@@ -9,7 +9,7 @@ use magic_wormhole::{transit, Wormhole};
 use tauri::Manager;
 
 #[tauri::command]
-pub async fn send_files(file_path: &str, app: tauri::AppHandle) -> Result<(), String> {
+pub async fn send_files(file_path: &str, app: tauri::AppHandle) -> Result<String, String> {
     // create server config, relay hints, transit abilities and app config
     let server_config: ServerConfig = ServerConfig {
         rendezvous_url: String::from("ws://relay.magic-wormhole.io:4000/v1"),
@@ -85,5 +85,5 @@ pub async fn send_files(file_path: &str, app: tauri::AppHandle) -> Result<(), St
 
     result.map_err(|error| error.to_string())?;
 
-    Ok(())
+    Ok(file_name.to_owned())
 }
