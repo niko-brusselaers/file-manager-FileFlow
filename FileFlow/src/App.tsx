@@ -13,6 +13,7 @@ import tauriStore from "./core/services/tauriStore";
 import { invoke } from "@tauri-apps/api/core";
 import ContextMenu from "./core/shared/components/contextMenu/ContextMenu";
 import themeManagement from "./core/services/themeManagement";
+import NotificationContainer from "./core/shared/components/notificationContainer/NotificationContainer";
 
 
 
@@ -64,6 +65,7 @@ function App() {
     <>
       <NavigationMenu />
       <ContextMenu/>
+      <NotificationContainer/>
       <div className="applicationContainer">
         <FileTransferSend dialogOpened={transferSendDialogOpen} setDialogOpened={setTransferSendDialogOpen} websocket={webSocketServer}  selectedItems={selectedItem}/>
         <FileTransferHub dialogOpened={transferHubDialogOpen} setDialogOpened={setTransferHubDialogOpen}/>
