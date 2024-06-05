@@ -31,6 +31,8 @@ pub async fn receive_files(
     let transit_abilities = transit::Abilities::ALL_ABILITIES;
     let app_config = gen_app_config(&server_config);
 
+    
+
     let connection = match magic_wormhole::Wormhole::connect_with_code(app_config, Code(code)).await
     {
         Ok(wormhole) => wormhole.1,

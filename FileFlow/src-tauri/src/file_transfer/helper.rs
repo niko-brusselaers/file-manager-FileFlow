@@ -33,10 +33,7 @@ pub fn gen_app_config(server_config: &ServerConfig) -> AppConfig<AppVersion> {
     }
 }
 
-pub fn store_file_transfer_progress(
-    file_progress: FileProgress,
-    app: tauri::AppHandle,
-) -> Result<(), String> {
+pub fn store_file_transfer_progress(file_progress: FileProgress,app: tauri::AppHandle,) -> Result<(), String> {
     // Get the state of the StoreCollection from the app handle and define the path to the store file
     let stores = app.app_handle().state::<StoreCollection<Wry>>();
     let path = PathBuf::from("fileTransfers.bin");
@@ -54,4 +51,3 @@ pub fn store_file_transfer_progress(
 
     Ok(result)
 }
-

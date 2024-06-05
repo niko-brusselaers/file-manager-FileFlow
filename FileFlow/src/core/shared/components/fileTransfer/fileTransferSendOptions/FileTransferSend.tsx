@@ -6,29 +6,22 @@ import { emit, listen,UnlistenFn } from '@tauri-apps/api/event';
 import { Socket } from 'socket.io-client';
 import { IConnectedDevice } from '../../../types/IConnectedDevice';
 import { ITransferRequest } from '../../../types/ITransferRequest';
-import tauriStore from '../../../../services/tauriStore';
 
 function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket}:{dialogOpened: boolean, setDialogOpened: Function,selectedItems:IFile[]|null,websocket?:Socket<any>}) {
-    const [selectedDestination, setSelectedDestination] = useState<IConnectedDevice|null>(null);
+    const [selectedDestination, setSelectedDestination] = useState<IConnectedDevice>({deviceName:"",publicIPAdress:"",socketId:"",userName:""});
     const [contact] = useState<IConnectedDevice[]| null>([]);
     const [filteredContacts, setFilteredContacts] = useState<IConnectedDevice[]| null>(contact);
     const [recent] = useState<IConnectedDevice[]| null>([]);
     const [devices] = useState<IConnectedDevice[]| null>([]);
     const [localDevices,setLocalDevices] = useState<IConnectedDevice[]| null>([]);
-    const [deviceName, setDeviceName] = useState<string>("")
+    const [deviceName] = useState<string>(localStorage.getItem("deviceName") || "")
 
     useEffect(() => {
-        tauriStore.readKeyFromLocalFile<string>("credentials.bin","deviceName")
-        .then((data) => {
-            if(data) setDeviceName(data);
-        })
-        .catch((error) => {throw Error(error)});
-    });
-
-    useEffect(() => {
-        
         if(dialogOpened) requestLocalDevices();
-        else unlistenForLocalDevices();
+        else {
+            unlistenForLocalDevices();
+            setSelectedDestination({deviceName:"",publicIPAdress:"",socketId:"",userName:""});
+        }
     },[dialogOpened])
 
     function requestLocalDevices(){
@@ -102,8 +95,6 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket
 
                 if(websocket) websocket.emit("transferFileRequest",transferRequest);
             }
-            
-           
 
             listenEvent.then((unlisten:UnlistenFn) => unlisten())
             
@@ -141,23 +132,17 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket
                     </div>
                 </div>
                 <div >
-                    <h2>Recent</h2>
-                    <div className={styles.selectionItemsContainer}>
-                        {recent?.map((destination, index) => <button className={`${styles.destination} ${destination === selectedDestination ? styles.selectedDestination : ''}`} key={index}  onClick={() => {setSelectedDestination(destination)}}>{destination.userName}</button>)}
-                    </div>
-                </div>
-                <div >
                     <h2>local devices</h2>
                     <div className={styles.selectionItemsContainer}>
                         {localDevices?.map((destination, index) => <button className={`${styles.destination} ${destination.deviceName === selectedDestination?.deviceName ? styles.selectedDestination : ''}`} key={index}  onClick={() => {setSelectedDestination(destination)}}>{destination.deviceName}</button>)}
                     </div>
                 </div>
                 <div>
-                    <button className={`${styles.otherShareOptionButton} ${selectedDestination?.deviceName === "other" ? styles.selectedDestination : ''}`} 
+                    <button className={selectedDestination?.deviceName === "other" ? styles.otherShareOptionSelected : styles.otherShareOptionButton} 
                             onClick={() => {setSelectedDestination({deviceName:"other",publicIPAdress:"",socketId:"",userName:""})}}>other</button>
                 </div>
                 <div className={styles.dialogButtonsBottomContainer}>
-                    <button onClick={() => {sentFile()}}>Share</button>
+                    <button onClick={() => {sentFile()}} disabled={selectedDestination?.deviceName == ""} className={selectedDestination?.deviceName != "" ? "" : styles.disabled}>Share</button>
                     <button onClick={() => {setDialogOpened(false)}}>Cancel</button>
                 </div>
 

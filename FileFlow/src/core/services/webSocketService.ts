@@ -2,7 +2,6 @@ import { Socket, io } from "socket.io-client"
 import { IConnectedDevice } from "../shared/types/IConnectedDevice"
 import { publicIpv4 } from "public-ip"
 import { ITransferRequest } from "../shared/types/ITransferRequest"
-import tauriStore from "./tauriStore"
 import { ask } from "@tauri-apps/plugin-dialog"
 import fileTransfer from "./fileTransfer"
  
@@ -19,8 +18,9 @@ class websocketService{
         socket.on("connect", async () => {
             
             let deviceData:IConnectedDevice
-            let deviceName = await tauriStore.readKeyFromLocalFile<string>("credentials.bin","deviceName").then((data) => data).catch((error) => {throw Error(error)});
-            let userName = await tauriStore.readKeyFromLocalFile<string>("credentials.bin","userName").then((data) => data).catch((error) => {throw Error(error)});
+            
+            let userName = localStorage.getItem("name") || "";
+            let deviceName = localStorage.getItem("deviceName") || "unkown device";
 
             deviceData = {
                 socketId: socket.id as string,
