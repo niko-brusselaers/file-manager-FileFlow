@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './FileTransferHub.module.scss';
 import FileTransferItem from './components/fileTransferItem/FileTransferItem';
 import AddTransferDialog from './components/addTransferDialog/AddTransferDialog';
@@ -11,14 +11,17 @@ function FileTransferHub({dialogOpened, setDialogOpened}:{dialogOpened: boolean,
     const [transferWithCodeDialogIsOpen, setTransferWithCodeDialogIsOpen] = useState<boolean>(false);
     const [fileTransferRequestDialogIsOpen, setFileTransferRequestDialogIsOpen] = useState<boolean>(false);
 
+    let dialogOpenedRef = useRef<boolean>();
+    dialogOpenedRef.current = dialogOpened;
+
     useEffect(() => getTransferData(),[dialogOpened])
 
     function getTransferData() {
         tauriStore.readLocalFile<ITransferProgress>("fileTransfers.bin").then((data) => { 
 
             if(data) setFileTransferData(data);            
-
-            if(dialogOpened) setTimeout(() => {getTransferData()}, 100)
+            
+            if(dialogOpenedRef.current) setTimeout(() => {getTransferData()}, 100)
 
         })
     }
