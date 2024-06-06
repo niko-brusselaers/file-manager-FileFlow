@@ -13,6 +13,7 @@ function NotificationContainer() {
     const messageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const errorTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+
     useEffect(() => {
         listen("error", (event) => {
             const data = event.payload as string
@@ -33,12 +34,15 @@ function NotificationContainer() {
 
         listen("transferFileRequest", (event) => {
             const data = event.payload as ITransferRequest
+            console.log(data);
             
             // set the notification message
             setNotificationMessage({
-                type: "fileTransferStarted", 
-                transferRequest: data
+                type: "fileTransferRequest", 
+                transferRequest: data,
             })
+            console.log(notificationMessage);
+            
 
             tauriStore.setKeyToLocalFile("fileTransfersRequest.bin",data.fileDetails.fileName, data)
 

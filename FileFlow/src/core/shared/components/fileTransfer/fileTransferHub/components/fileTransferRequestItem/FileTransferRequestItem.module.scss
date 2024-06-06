@@ -1,0 +1,53 @@
+@import "../../../style/fileTransferDialog.module.scss";
+
+.fileTransferRequestItem{
+    display: flex;
+    flex-direction: column;
+    background-color: rgb($tertiary);
+    padding: 1rem 2rem;
+    margin: .5rem 0;
+    
+    .innerContent{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+
+        .detailsConainer *{
+            
+            margin-top: .5rem;
+        }
+
+    }
+
+    .buttonContainer{
+                display: flex;
+                width: 30%;
+                flex-direction: row;
+                align-content: center;
+                justify-content: space-between;
+                align-items: center;
+
+                button{
+                    background-color: transparent;
+                    border: none;
+                    width: 1.75rem;
+                    text-align: center;
+
+                    img{
+                        filter: $whiteIcon;
+                        width: 80%;
+                    
+                    }                    
+                }
+
+                .cancelIcon:hover{
+                        background-color: red;
+                        border-radius: 50%;
+                }
+
+                .acceptIcon:hover{
+                    background-color: green;
+                    border-radius: 50%;
+                }
+            }
+}

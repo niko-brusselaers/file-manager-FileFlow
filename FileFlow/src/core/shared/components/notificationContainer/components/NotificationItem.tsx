@@ -19,20 +19,22 @@ function NotifactionItem({NotificationData,clearNotification,setTimeout,clearTim
         }
         if(messageTypes.includes(NotificationData.type)) setNoticationType("message")
         setNotificationHeader(NotificationData.type.split(/(?=[A-Z])/).join(' '))
+    console.log(NotificationData);
+    
     })
 
-    const acceptRequest = (code: string) => () => {
+    function acceptRequest(code: string){
         // accept the request
         fileTransfer.downloadFiles(code)
         clearNotification()
+        tauriStore.removeKeyFromLocalFile("fileTransferRequest",fileTransferRequest!.fileDetails.fileName)
     }
 
-    const declineRequest = (code: string) => () => {
+    function declineRequest(code: string){
         // decline the request
         fileTransfer.declineRequest(code)
         tauriStore.removeKeyFromLocalFile("fileTransferRequest",fileTransferRequest!.fileDetails.fileName)
         clearNotification()
-
     }
 
 
@@ -50,10 +52,10 @@ function NotifactionItem({NotificationData,clearNotification,setTimeout,clearTim
                     <p>do you want to accept {fileTransferRequest?.fileDetails.fileName}, {fileTransferRequest?.fileDetails.fileSize} from {fileTransferRequest?.userNameSender}</p>
                     <div>
                         <button className={styles.acceptIcon}>
-                            <img src="/check_icon.svg" alt="" onClick={acceptRequest(fileTransferRequest!.code)}/>
+                            <img src="/check_icon.svg" alt="" onClick={() => acceptRequest(fileTransferRequest!.code)}/>
                         </button>
                         <button className={styles.cancelIcon}>
-                            <img  src="/close_icon.svg" alt="" onClick={declineRequest(fileTransferRequest!.code)}/>
+                            <img  src="/close_icon.svg" alt="" onClick={() => declineRequest(fileTransferRequest!.code)}/>
                         </button>
                     </div>
                 </div>

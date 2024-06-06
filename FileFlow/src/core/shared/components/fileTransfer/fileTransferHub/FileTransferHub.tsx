@@ -1,29 +1,15 @@
 import { useEffect, useState } from 'react';
 import styles from './FileTransferHub.module.scss';
-import FileTransferItem from './fileTransferItem/FileTransferItem';
-import AddTransferDialog from './addTransferDialog/AddTransferDialog';
+import FileTransferItem from './components/fileTransferItem/FileTransferItem';
+import AddTransferDialog from './components/addTransferDialog/AddTransferDialog';
 import tauriStore from '../../../../services/tauriStore';
 import { ITransferProgress } from '../../../types/ITransferProgress';
+import FileTransferRequestDialog from './components/fileTransferRequestsDialog/FileTransferRequestDialog';
 
 function FileTransferHub({dialogOpened, setDialogOpened}:{dialogOpened: boolean, setDialogOpened: Function}) {
-    const [dropDownMenuOpen, setDropDownMenuOpen] = useState<boolean>(false);
     const [fileTransferData,setFileTransferData] = useState<ITransferProgress[]>([]);
     const [transferWithCodeDialogIsOpen, setTransferWithCodeDialogIsOpen] = useState<boolean>(false);
-
-    useEffect(() => {
-        document.addEventListener("mousedown", (event) => {
-            //classnames of the elements that should not close the dropdown bar
-            const dropDownTargets = [
-                document.querySelector("."+styles.dropDownButton)?.className,
-            ]            
-            //get the class name of the selected element
-            let selectedClasname = (event.target as HTMLElement).className as string;                
-                
-            if(!dropDownTargets.includes(selectedClasname)) {
-                setDropDownMenuOpen(false)
-            }
-        })
-    },[])
+    const [fileTransferRequestDialogIsOpen, setFileTransferRequestDialogIsOpen] = useState<boolean>(false);
 
     useEffect(() => getTransferData(),[dialogOpened])
 
@@ -41,14 +27,14 @@ function FileTransferHub({dialogOpened, setDialogOpened}:{dialogOpened: boolean,
     return ( 
         <div className={dialogOpened ? styles.fileTransferDialog : "hidden"}>
             <AddTransferDialog transferDialogOpened={transferWithCodeDialogIsOpen} setTransferDialogOpened={setTransferWithCodeDialogIsOpen} />
+            <FileTransferRequestDialog dialogOpened={fileTransferRequestDialogIsOpen} setDialogOpend={setFileTransferRequestDialogIsOpen}/>
             <div className={styles.filetransferViewHub}>
                 <div className={styles.buttonContainer}>
                         <button className={styles.dropDownButton} onClick={() => {setTransferWithCodeDialogIsOpen(true)}}>Add with code</button>
-                        <button className={styles.dropDownButton}>pending requests</button>
-
+                        <button className={styles.dropDownButton} onClick={() => setFileTransferRequestDialogIsOpen(true)}>pending requests</button>
                 </div>
                 <div className={styles.fileTransfersContainer}>
-                    {fileTransferData.map((fileTransferData, index) => <FileTransferItem key={index} fileTransferData={fileTransferData}/>)}
+                    {fileTransferData.length ? fileTransferData.map((fileTransferData, index) => <FileTransferItem key={index} fileTransferData={fileTransferData}/>) : <div className={styles.fileTransferPlaceHolder}><h1>No file transfers have been initiated or completed.</h1></div>}
                 </div>
                 <div className={styles.dialogButtonsBottomContainer}>
                     <button onClick={() => {setDialogOpened(false)}}>Cancel</button>

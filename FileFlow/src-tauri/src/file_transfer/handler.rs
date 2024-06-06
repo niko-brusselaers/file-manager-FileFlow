@@ -37,6 +37,7 @@ pub fn cancel<'a>() -> BoxFuture<'a, ()> {
         let (lock, cvar) = &*notifier;
         let mut started = lock.lock().await;
         while !*started {
+            print!("Cancel futuresdqsdsqdqdqsdsdqdqdqdqd");
             started = cvar.wait(started).await;
         }
     }
