@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{ffi::OsStr, path::PathBuf};
 
 #[tauri::command]
 pub fn get_device_name() -> String {
@@ -9,7 +9,17 @@ pub fn get_device_name() -> String {
 pub async fn gen_available_file_name(file_path: PathBuf) -> String {
     if file_path.exists() {
         let mut file_name = file_path.file_stem().unwrap().to_str().unwrap().to_string();
-        let file_extension = file_path.extension().unwrap().to_str().unwrap().to_string();
+        let file_extension = match file_path.is_dir() {
+            true => String::from("folder"),
+            false => {
+                file_path
+                    .extension()
+                    .unwrap_or(OsStr::new("file"))
+                    .to_string_lossy()
+                    .into_owned()
+            }
+            
+        };
         let parent_path = file_path.parent().unwrap().to_str().unwrap().to_string();
 
         let mut i = 1;
@@ -25,8 +35,13 @@ pub async fn gen_available_file_name(file_path: PathBuf) -> String {
 
         //loop until a unique file name is generated
         loop {
-            let new_file_name = format!("{}({}).{}", file_name, i, file_extension);
-            let new_file_path = format!("{}/{}", parent_path, new_file_name);
+            let new_file_name = match file_extension == "folder" {
+                true => format!("{}({})", file_name, i),
+                false => format!("{}({}){}", file_name, i, file_extension)
+                
+            };
+
+            let new_file_path = format!("{}\\{}", parent_path, new_file_name);
 
             if !PathBuf::from(&new_file_path).exists() {
                 return new_file_path;

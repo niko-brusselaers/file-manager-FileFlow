@@ -239,14 +239,14 @@ function FolderView() {
         // when the moveItem is a copy, copy the items
         case "copy":
             moveItem.items.map(item => {
-                let copyPath = loaderData.path + "\\" + item.name
+                let copyPath = loaderDataRef.current.path + "\\" + item.name
                 fileManagement.copyItem(item.path,copyPath)
             })
             break;
         // when the moveItem is a cut, move the items
         case "cut":
             moveItem.items.map(item => {
-                let copyPath = loaderData.path + "\\" + item.name
+                let copyPath = loaderDataRef.current.path + "\\" + item.name
                 fileManagement.moveItem(item.path,copyPath)
             })
             sessionStorage.removeItem("moveItem")
