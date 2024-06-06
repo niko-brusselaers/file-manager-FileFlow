@@ -207,7 +207,9 @@ class fileManagement {
 
     async searchDevice(query:string){
         try {
-            let searchItems = await invoke("search_device", { query: query })
+            const limit = localStorage.getItem("searchLimit") || 1000
+
+            let searchItems = await invoke("search_device", { query: query, limit:limit })
             .then((response) => response as IFile[])
             .catch((error) => {throw error})
 
@@ -222,6 +224,9 @@ class fileManagement {
                 //set file size
                 fileOrFolder.size = conversion.convertFileSizeIdentifier(parseInt(fileOrFolder.size))
                 return fileOrFolder})
+
+            searchItems.map((fileOrFolder:IFile) => console.log(fileOrFolder));
+            
 
             return searchItems
             

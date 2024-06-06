@@ -31,12 +31,12 @@ function SearchPage() {
     if(selectedItem?.extension != "folder") {
       const parentFolderPath = item.path.replace(`\\${item.name}`,"");
       fileManagement.checkPathIsValid(parentFolderPath).then((response) => {
-        navigate(`/${response?.name}`, {state: response});
+        navigate(`/${response?.name}`, {state: response,replace: true});
       });
       
     } else {
       fileManagement.checkPathIsValid(item.path).then((response) => {
-        navigate(`/${response?.name}`, {state: response});
+        navigate(`/${response?.name}`, {state: response,replace: true});
       });
     }
     

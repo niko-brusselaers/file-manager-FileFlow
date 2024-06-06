@@ -154,7 +154,7 @@ pub fn open_file(path: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn search_device(query: &str) -> Result<Vec<File>,String> {
+pub fn search_device(query: &str,limit:usize) -> Result<Vec<File>,String> {
     let drives = get_drives().map_err(|error| error.to_string())?;
 
     let drive_paths = drives.iter().map(|drive| drive.path.to_str().unwrap().to_string()).collect::<Vec<String>>();
@@ -167,6 +167,7 @@ pub fn search_device(query: &str) -> Result<Vec<File>,String> {
         let search = SearchBuilder::default()
             .search_input(&query)
             .more_locations(drive_paths)
+            .limit(limit)
             .ignore_case()
             .build();
 
