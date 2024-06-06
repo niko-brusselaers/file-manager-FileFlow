@@ -44,7 +44,7 @@ function App() {
     if(name == "") localStorage.setItem("name","User")
     if(deviceName == "") invoke("get_device_name").then((data) => {localStorage.setItem("deviceName",data as string)})
 
-    webSocketService.connectToWebsocket("https://fileflow-backend.onrender.com/")
+    webSocketService.connectToWebsocket("https://fileflow-backend.onrender.com")
     .then((data) => {setWebSocketServer(data)})
     .catch((error) => {throw Error(error)});
     

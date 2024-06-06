@@ -30,6 +30,18 @@ pub fn read_directory(path: String,is_hidden:bool) -> Result<Vec<File>, String> 
                 let created = created.to_rfc3339();
                 let modified = modified.to_rfc3339();
 
+                let extension = match metadata.is_dir() {
+                    true => String::from("folder"),
+                    false => {
+                        entry
+                            .path()
+                            .extension()
+                            .unwrap_or(OsStr::new("file"))
+                            .to_string_lossy()
+                            .into_owned()
+                    }
+                };
+
                 File {
                     name: entry.file_name().to_string_lossy().into_owned(),
                     path: entry.path(),
@@ -37,12 +49,7 @@ pub fn read_directory(path: String,is_hidden:bool) -> Result<Vec<File>, String> 
                     created,
                     modified,
                     hidden,
-                    extension: entry
-                        .path()
-                        .extension()
-                        .unwrap_or(OsStr::new("folder"))
-                        .to_string_lossy()
-                        .into_owned(),
+                    extension
             }
             })
         })
@@ -75,7 +82,7 @@ pub fn get_drives() -> Result<Vec<File>,String> {
 
         let created = created.to_rfc3339();
         let modified = modified.to_rfc3339();
-
+        
         let drive = File {
             name: drive.name().to_string_lossy().into_owned(),
             extension: String::from("drive"),
@@ -104,11 +111,17 @@ pub fn check_path(path: String) -> Result<File, String> {
         .to_string_lossy()
         .to_string();
 
-    let extension = file_path
-        .extension()
-        .unwrap_or(OsStr::new("folder"))
-        .to_string_lossy()
-        .into_owned();
+    let extension = match file_path.is_dir() {
+        true => String::from("folder"),
+        false => {
+            file_path
+                .extension()
+                .unwrap_or(OsStr::new("file"))
+                .to_string_lossy()
+                .into_owned()
+        }
+        
+    };
 
 
     // Convert SystemTime to DateTime
@@ -165,12 +178,23 @@ pub fn search_device(query: &str) -> Result<Vec<File>,String> {
 
             let name = path_buff
                 .file_name()
-                .unwrap_or(OsStr::new("unkown"))
+                .unwrap_or(OsStr::new("file"))
                 .to_string_lossy()
                 .to_string();
 
-            let extension = path_buff.extension().unwrap_or(OsStr::new("folder")).to_string_lossy().into_owned();
-
+            let extension = match path_buff.is_dir() {
+                true => String::from("folder"),
+                false => {
+                    path_buff
+                        .extension()
+                        .unwrap_or(OsStr::new("file"))
+                        .to_string_lossy()
+                        .into_owned()
+                }
+            };
+            
+                
+            
             // Convert SystemTime to DateTime
             let created: DateTime<Utc> = metadata.created().unwrap().into();
             let modified: DateTime<Utc> = metadata.modified().unwrap().into();

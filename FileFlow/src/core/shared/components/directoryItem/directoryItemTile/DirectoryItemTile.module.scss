@@ -27,6 +27,10 @@
                 margin-right: 1em;
             }
         }
+
+        input{
+            background-color: transparent;
+        }
     }
 
     p.fileName{
@@ -75,6 +79,10 @@
 
 } 
 
+
+.hiddenFile{
+    opacity: 0.5;
+}
 
 
 

@@ -67,7 +67,7 @@ function DirectoryItemTile({item, selectedItems, setSelected,edit}: {item:IFile,
 
 
     return (
-        <button className={`${styles.directoryItemTile} ${selectedItems.some(selectedItem => selectedItem.name === item.name) ? styles.isSelectedItem : ""}`} title={item.path} onClick={(event) => setSelectedClick(event,item)} onAuxClick={(event) => setSelectedClick(event,item)}>
+        <button className={`${styles.directoryItemTile} ${selectedItems.some(selectedItem => selectedItem.name === item.name) ? styles.isSelectedItem : ""} ${item.hidden ? styles.hiddenFile : ""}`} title={item.path} onClick={(event) => setSelectedClick(event,item)} onAuxClick={(event) => setSelectedClick(event,item)}>
             <div className={styles.imageContainer}>
                 <img src={setIcon()} className={styles.itemImage}/>
             </div>

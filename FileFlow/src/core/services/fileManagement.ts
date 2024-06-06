@@ -65,7 +65,6 @@ class fileManagement {
 
     async getDirectoryItems(directoryPath: string,isHidden?:Boolean) {        
         try {
-
             let filesAndFolders:IFile[] = await invoke("read_directory", { path: directoryPath, isHidden: isHidden ? isHidden : false})
         
             filesAndFolders = filesAndFolders.map((fileOrFolder:IFile) => {
@@ -187,15 +186,12 @@ class fileManagement {
 
     async watchDirectory(directoryPath:string){
         try {
-            console.log();
-            
             sessionStorage.setItem("watchedDirectory", directoryPath)            
             await invoke("watch_directory", { path: directoryPath })
             .catch((error) => {throw error})
 
         } catch (error) {
             console.error("Error watching directory:", error);
-            emit("error", error);
 
         }
     }
@@ -206,7 +202,6 @@ class fileManagement {
         .catch((error) => {throw error})
         } catch (error) {
             console.error("Error stopping watching directory:", error);
-            emit("error", error);
         }
     }
 

@@ -17,7 +17,7 @@ function FolderView() {
   const [filesAndFolders, setFilesAndFolders] = useState<IFile[]>(() => []);
   const [currentFilesAndFolders, setCurrentFilesAndFolders] = useState<IFile[]>(() => [])
   const [selectedItems, setSelectedItems] = useState<IFile[]>(() => [])
-  const [hidden, setHidden] = useState<Boolean>();
+  const [hidden, setHidden] = useState<Boolean>(localStorage.getItem("hiddenFiles") ? JSON.parse(localStorage.getItem("hiddenFiles") || '') : false);
   const [detailView, setDetailView] = useState<Boolean>(localStorage.getItem("detailView") ? JSON.parse(localStorage.getItem("detailView") || '') : false);
 
   const loaderData: IFile = useLocation().state;
@@ -30,8 +30,6 @@ function FolderView() {
   const selectedItemsRef = useRef(selectedItems);
   selectedItemsRef.current = selectedItems;
 
-
-  
   
   useEffect(() => {     
     //listen for create new file command and create a new file
@@ -104,6 +102,7 @@ function FolderView() {
       let watchedDirectory = sessionStorage.getItem("watchedDirectory") ? sessionStorage.getItem("watchedDirectory") || '' : null;
       if(watchedDirectory) fileManagement.unWatchDirectory(watchedDirectory).then(()=> fileManagement.watchDirectory(loaderDataRef.current.path));
       else fileManagement.watchDirectory(loaderData.path);
+      
       getFilesAndFolders(loaderData.path);
     }
 
@@ -114,15 +113,13 @@ function FolderView() {
 
   //fetch the files and folders in the directory
   function getFilesAndFolders(directoryPath: string){ 
-    //get hidden state from the local storage
-    setHidden(localStorage.getItem("hiddenFiles") ? JSON.parse(localStorage.getItem("hiddenFiles") || '') : false)  
+    //get hidden state from the local storage  
     if(loaderData?.path === "" || !loaderData) return;
     //fetch the files and folders in the directory
     fileManagement.getDirectoryItems(directoryPath, hidden).then((data) => {      
       if (!data?.filesAndFolders && !data?.directoryPath) return;
       setFilesAndFolders(data.filesAndFolders);
       sortItems(data.filesAndFolders);
-
       setSelectedItems([]);
     }).catch((error) => {
       console.error("Error fetching files and folders:", error);
