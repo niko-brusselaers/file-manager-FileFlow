@@ -9,6 +9,7 @@ import fileManagement from "../../services/fileManagement";
 import tauriEmit from "../../services/tauriEmit";
 import { IContextMenuData } from "../../shared/types/IContextMenuData";
 import conversion from "../../services/conversion";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
     const [favoriteFolders, setFavoriteFolders] = useState<IFile[]>([]);
@@ -18,6 +19,8 @@ function HomePage() {
 
     const favoritesContainerRef = useRef<HTMLDivElement>(null);
     const recentContainerRef = useRef<HTMLDivElement>(null);
+
+    const navigate = useNavigate()
 
     useEffect(() => {
 
@@ -32,14 +35,23 @@ function HomePage() {
     },[]);
     
     function setSelected(event:React.MouseEvent,item: IFile) {    
-    
+        console.log(item);
+        const folderTypes = ["folder","drive"];
         if(favoritesContainerRef.current?.contains(event.target as Node)) {
-            setSelectedItemRecent({name: "", path: "",created:new Date(),modified:new Date(),hidden:false, extension: "", size: "", edit: false});
-            setSelectedItemFavorites(item);
+            if(item === selectedItemFavorites && folderTypes.includes(item.extension)) return navigate(`/${item.name}`, {state: item})
+            if(item === selectedItemFavorites && !folderTypes.includes(item.extension)) return fileManagement.openFile(item.path)
+            else {
+                setSelectedItemRecent({name: "", path: "",created:new Date(),modified:new Date(),hidden:false, extension: "", size: "", edit: false});
+                setSelectedItemFavorites(item);
+            }
         }
         if(recentContainerRef.current?.contains(event.target as Node)){
-            setSelectedItemFavorites({name: "", path: "",created:new Date(),modified:new Date(),hidden:false, extension: "", size: "", edit: false});
-            setSelectedItemRecent(item);
+            if(item === selectedItemFavorites && folderTypes.includes(item.extension)) return navigate(`/${item.name}`, {state: item})
+            if(item === selectedItemFavorites && !folderTypes.includes(item.extension)) return fileManagement.openFile(item.path)
+            else{
+                setSelectedItemFavorites({name: "", path: "",created:new Date(),modified:new Date(),hidden:false, extension: "", size: "", edit: false});
+                setSelectedItemRecent(item);
+            }
         };
     };
 
