@@ -5,6 +5,7 @@ import tauriEmit from "../../../services/tauriEmit";
 import { IFile } from "../../types/IFile";
 import { IContextMenuData } from "../../types/IContextMenuData";
 import { useNavigate } from "react-router-dom";
+import fileManagement from "../../../services/fileManagement";
 
 function ContextMenu() {
     const [pasteItemData, setPasteItemData] = useState<{type:string, items:IFile[]} | null>(sessionStorage.getItem("moveItem") ? JSON.parse(sessionStorage.getItem("moveItem") || '') : null);
@@ -229,7 +230,9 @@ function ContextMenu() {
 
     function handleNavigate(event:React.MouseEvent,item:IFile){
         event.preventDefault();
-        navigate(`${item.name}`, {state: item})
+        let folderTypes = ["folder","drive"];
+        if(folderTypes.includes(item.extension)) return navigate(`/${item.name}`, {state: item})
+        else return fileManagement.openFile(item.path)
     };
 
     //check if the paste item is a folder and if the context type is directory view

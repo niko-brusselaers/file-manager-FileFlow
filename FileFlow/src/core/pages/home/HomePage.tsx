@@ -46,8 +46,8 @@ function HomePage() {
             }
         }
         if(recentContainerRef.current?.contains(event.target as Node)){
-            if(item === selectedItemFavorites && folderTypes.includes(item.extension)) return navigate(`/${item.name}`, {state: item})
-            if(item === selectedItemFavorites && !folderTypes.includes(item.extension)) return fileManagement.openFile(item.path)
+            if(item === selectedItemRecent && folderTypes.includes(item.extension)) return navigate(`/${item.name}`, {state: item})
+            if(item === selectedItemRecent && !folderTypes.includes(item.extension)) return fileManagement.openFile(item.path)
             else{
                 setSelectedItemFavorites({name: "", path: "",created:new Date(),modified:new Date(),hidden:false, extension: "", size: "", edit: false});
                 setSelectedItemRecent(item);
