@@ -225,8 +225,6 @@ class fileManagement {
                 fileOrFolder.size = conversion.convertFileSizeIdentifier(parseInt(fileOrFolder.size))
                 return fileOrFolder})
 
-            searchItems.map((fileOrFolder:IFile) => console.log(fileOrFolder));
-            
 
             return searchItems
             

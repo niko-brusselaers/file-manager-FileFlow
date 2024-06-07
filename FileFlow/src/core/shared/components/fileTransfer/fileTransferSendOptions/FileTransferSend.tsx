@@ -30,7 +30,6 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket
             //listen for event to get local devices
             websocket.on("localDevices",(data:IConnectedDevice[]) => {
                 setLocalDevices(data.filter((device) => device.deviceName !== deviceName));
-                console.log(data);
             });
 
             //sent new request for local devices when a device disconnects

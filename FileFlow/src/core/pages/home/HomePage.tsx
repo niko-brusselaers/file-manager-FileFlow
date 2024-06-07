@@ -152,6 +152,7 @@ function HomePage() {
     return ( 
     <div onContextMenu={handleContextMenu} className={styles.homePageView}>
         <h2 className={styles.HomePageTitle}>Favorites</h2>
+        {favoriteFolders.length ? 
         <div className={styles.favoritesContainer} ref={favoritesContainerRef} onMouseEnter={listenForScroll} onMouseLeave={stopListenForScroll}>
             {favoriteFolders.map((folder,index) => {
                 return (
@@ -163,21 +164,32 @@ function HomePage() {
                         key={index}/>
                 )
             })}
+        </div> :
+        <div className={styles.placeHolderContainer}>
+            <h1>favorites will appear here when you add some</h1>
         </div>
+        }
         <h2 className={styles.HomePageTitle}>Recent</h2>
+        {recentItems.length ? 
         <div className={styles.recentContainer} ref={recentContainerRef}>
-            <ContainerDetailViewTop/>
-            {recentItems.map((folder,index) => {
-                return (
-                    <DirectoryItemDetail
-                        item={folder.file}
-                        edit={false}
-                        setSelected={setSelected}
-                        selectedItems={[selectedItemRecent]}
-                        key={index}/>
-                )
-            })}
+            <>
+                <ContainerDetailViewTop/>
+                {recentItems.map((folder,index) => {
+                    return (
+                        <DirectoryItemDetail
+                            item={folder.file}
+                            edit={false}
+                            setSelected={setSelected}
+                            selectedItems={[selectedItemRecent]}
+                            key={index}/>
+                    )
+                })}
+            </>
+        </div>:
+        <div className={styles.placeHolderContainer}>
+            <h1>recent will appear here when browse the directories</h1>
         </div>
+        }
     </div> );
 }
 
