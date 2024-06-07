@@ -167,9 +167,9 @@ function NavigationMenu() {
                 </div>
                 <div className={styles.navBarBottomContainer}>
                     <div className={styles.navigationMenuContainer}>
-                        <button className={styles.navigationMenuButton}><img className={styles.backArrow} src="/arrow.png" alt="back" onClick={() => {history.back()}}/></button>
-                        <button className={styles.navigationMenuButton}><img className={styles.forwardArrow} src="/arrow.png" alt="forward" onClick={() => {history.forward()}}/></button>
-                        <button className={styles.navigationMenuButton}><img className={styles.downArrow} src="/arrow.png" alt="" onClick={async () => {await navigateToParentFolder()}}/></button>
+                        <button className={styles.navigationMenuButton} title="Back" onClick={() => {history.back()}}><img className={styles.backArrow} src="/arrow.png"/></button>
+                        <button className={styles.navigationMenuButton} title="Forward"  onClick={() => {history.forward()}}><img className={styles.forwardArrow} src="/arrow.png" /></button>
+                        <button className={styles.navigationMenuButton} title="Go to parent directory" onClick={async () => {await navigateToParentFolder()}}><img className={styles.downArrow} src="/arrow.png" /></button>
                     </div>
                     <form onSubmit={(event)=>{navigateToPath(event)}} className={styles.navigationPathInput}>
                     <input  type="text"

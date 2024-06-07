@@ -70,11 +70,14 @@
         box-sizing: content-box;
         min-width: 3em;
         max-width: 5em;
-        width: 25%;
         height: 1.25em;
         padding: 0.5em 0;
         background-color: transparent;
         filter: $icon;
+
+        &:hover{
+          background-color: rgba($text, .2);
+        }
 
         .backArrow{
           rotate: 180deg;
@@ -91,6 +94,7 @@
         img{
           height: 100%;
         }
+        
       }
     }
 

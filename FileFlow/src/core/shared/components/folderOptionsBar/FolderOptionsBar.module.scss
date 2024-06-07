@@ -33,9 +33,14 @@
     img{
         justify-content: center;
         align-items: center;
-        max-width: 80%;
-        max-height: 80%;
+        max-width: 70%;
+        max-height: 70%;
         filter: $icon;
+    }
+
+    &:hover{
+        background-color: rgb($secondary);
+        color: rgb($background);
     }
 }
 
