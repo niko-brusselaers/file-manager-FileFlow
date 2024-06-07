@@ -24,6 +24,8 @@
     "store:allow-load",
     "store:allow-entries",
     "store:allow-delete",
+    "store:allow-clear",
+    "store:allow-reset",
     "menu:default",
     "menu:allow-new",
     "menu:allow-popup",

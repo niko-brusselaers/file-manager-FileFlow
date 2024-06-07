@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import styles from './SettingsPage.module.scss';
 import themeManagement from '../../services/themeManagement';
 import UpdateValueDialog from './updateValueDialog/UpdateValueDialog';
+import ConfirmationDialog from './confirmationDialog/ConfirmationDialog';
+import tauriEmit from '../../services/tauriEmit';
+import tauriStore from '../../services/tauriStore';
 
 function SettingsPage() {
     const [name, setName] = useState<string>("");
@@ -10,6 +13,7 @@ function SettingsPage() {
     const [searchLimit, setSearchLimit] = useState<string>("");
     
     const [updateDialogOpened, setUpdateDialogOpened] = useState<boolean>(false);
+    const [confirmationDialogOpened, setConfimationDialogOpened] = useState<boolean>(false);
     const [initialUpdateValue, setInitialUpdateValue] = useState<string>("");
     const [updateType, setUpdateType] = useState<string>("");
     const [warningMessage, setWarningMessage] = useState<string>("");
@@ -34,22 +38,39 @@ function SettingsPage() {
     function updateSettingsValue(event:React.MouseEvent,type: string){
         event.preventDefault();
         setUpdateType(type);
-        setUpdateDialogOpened(true);
         switch(type){
             case "name":
                 setInitialUpdateValue(name);
-
+                setUpdateDialogOpened(true);
                 break;
             case "email":
-                console.log("currently not supported");
-                
+                console.log("currently not supported");   
+                setUpdateDialogOpened(true);
                 break;
-            case "deviceName":
+            case "device name":
                 setInitialUpdateValue(deviceName);
+                setUpdateDialogOpened(true);
                 break;
-            case "searchLimit":
+            case "search limit":
                 setInitialUpdateValue(searchLimit);
+                setUpdateDialogOpened(true);
                 setWarningMessage("putting a high number may crash the app, use with caution");
+                break;
+            case "recent items":
+                setConfimationDialogOpened(true);
+                setWarningMessage("Are you sure you want to clear recent items?");
+                break;
+            case "favorite items":
+                setConfimationDialogOpened(true);
+                setWarningMessage("Are you sure you want to clear favorite items?");
+                break;
+            case "file transfers":
+                setConfimationDialogOpened(true);
+                setWarningMessage("Are you sure you want to clear file transfers?");
+                break;
+            case "file transfers Request":
+                setConfimationDialogOpened(true);
+                setWarningMessage("Are you sure you want to clear file transfers Requests?");
                 break;
             default:
                 console.error(type,"not supported");
@@ -67,11 +88,11 @@ function SettingsPage() {
             case "email":
                 console.log("currently not supported");
                 break;
-            case "deviceName":
+            case "device name":
                 setDeviceName(newValue);
                 localStorage.setItem("deviceName",newValue);
                 break;
-            case "searchLimit":
+            case "search limit":
                 setSearchLimit(newValue);
                 localStorage.setItem("searchLimit",newValue);
                 break;
@@ -83,6 +104,29 @@ function SettingsPage() {
             setUpdateDialogOpened(false);
         } catch (error) {
             
+        }
+    }
+
+    function clearCache(type: string){
+        //TODO: clear cache based on type
+        console.log("clearing cache",type);
+        switch(type){
+            case "recent items":
+                localStorage.setItem("recentItems", "[]");
+                tauriEmit.emitUpdateRecent();
+                break;
+            case "favorite items":
+                localStorage.setItem("favoriteItems", "[]");
+                tauriEmit.emitUpdateFavorite();
+                break;
+            case "file transfers":
+                tauriStore.clearLocalFile("fileTransfers.bin")
+                break;
+            case "file transfers request":
+                tauriStore.clearLocalFile("fileTransfersRequests.bin")
+                break;
+            default:
+                console.error(type,"not supported");
         }
     }
 
@@ -100,7 +144,14 @@ function SettingsPage() {
                 setWarningMessage={setWarningMessage}
                 updateType={updateType}
                 updateValue={updateSettingsItem}/>
-
+            <ConfirmationDialog
+                confirmationDialogOpened={confirmationDialogOpened}
+                setConfimationDialogOpened={setConfimationDialogOpened}
+                warningMessage={warningMessage}
+                setWarningMessage={setWarningMessage}
+                updateType={updateType}
+                clearCache={clearCache}
+            />
             <h2 className={styles.directoryName}>Settings</h2>
 
             <h3 className={styles.settingsCategoryHeader}>Personal information</h3>
@@ -121,26 +172,55 @@ function SettingsPage() {
                     <h3 className={styles.settingsItemTitle}>Device name</h3>
                     <div>
                          <p className={styles.settingsItemText}>{deviceName}</p>
-                        <button onClick={(event) => {updateSettingsValue(event,"deviceName")}}>Edit</button>
+                        <button onClick={(event) => {updateSettingsValue(event,"device name")}}>Edit</button>
                     </div>
                 </div>
                 <div className={styles.settingsItem}>
                     <h3 className={styles.settingsItemTitle}>Search Limit</h3>
                     <div>
                          <p className={styles.settingsItemText}>{searchLimit}</p>
-                        <button onClick={(event) => {updateSettingsValue(event,"searchLimit")}}>Edit</button>
+                        <button onClick={(event) => {updateSettingsValue(event,"search limit")}}>Edit</button>
                     </div>
                 </div>
                 <div className={styles.settingsItem}>
                     <h3 className={styles.settingsItemTitle}>Theme</h3>
                     <div>
-                        <select className={styles.settingsItemSelect} defaultValue={theme} onChange={handleThemeChange}>
+                        <select className={styles.settingsItemSelect} value={theme} onChange={handleThemeChange}>
                             <option value={"light"}>Light</option>
                             <option value={"dark"}>Dark</option>
                             <option value={"device"}>Device preference</option>
                         </select>
                     </div>
                 </div>
+            </div>
+            <h3 className={styles.settingsCategoryHeader}>Cache Settings</h3>
+            <div className={styles.CategoryContainer}>
+
+                <div className={styles.settingsItem}>
+                    <h3 className={styles.settingsItemTitle}>Recent items</h3>
+                    <div>
+                        <button className={styles.clearOption} onClick={event => updateSettingsValue(event,"recent items")}>Clear recent items</button>
+                    </div>
+                </div>
+                <div className={styles.settingsItem}>
+                    <h3 className={styles.settingsItemTitle}>Favorite items</h3>
+                    <div>
+                        <button className={styles.clearOption} onClick={event => updateSettingsValue(event,"favorite items")}>Clear favorite items</button>
+                    </div>
+                </div>
+                <div className={styles.settingsItem}>
+                    <h3 className={styles.settingsItemTitle}>File transfers</h3>
+                    <div>
+                        <button className={styles.clearOption} onClick={event => updateSettingsValue(event,"file transfers")}>Clear file transfers</button>
+                    </div>
+                </div>
+                <div className={styles.settingsItem}>
+                    <h3 className={styles.settingsItemTitle}>File transfers Request</h3>
+                    <div>
+                        <button className={styles.clearOption} onClick={event => updateSettingsValue(event,"file tranfsers request")}>Clear file transfers Requests</button>
+                    </div>
+                </div>
+                
             </div>
         </div> 
     

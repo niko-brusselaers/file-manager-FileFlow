@@ -56,6 +56,17 @@ class tauriStore{
             console.error(error);
         }
     }
+
+    async clearLocalFile(filePath:string) {
+        try {
+            const store = new Store(filePath);
+
+            await store.reset()
+            .catch((error) => {throw Error(error)});             
+        } catch (error) {
+            console.error(error);
+        }
+    }
 }
 
 export default new tauriStore();
