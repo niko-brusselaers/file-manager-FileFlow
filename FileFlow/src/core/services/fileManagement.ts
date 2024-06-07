@@ -104,7 +104,6 @@ class fileManagement {
         return fileOrFolder;
         } catch (error) {
             console.error( error);
-            emit("error", error);
         }
     }
 

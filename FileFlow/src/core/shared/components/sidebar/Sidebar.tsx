@@ -7,6 +7,7 @@ import fileManagement from '../../../services/fileManagement';
 import { listen } from '@tauri-apps/api/event';
 import tauriEmit from '../../../services/tauriEmit';
 import { IContextMenuData } from '../../types/IContextMenuData';
+import conversion from '../../../services/conversion';
 
 function Sidebar() {
     const [recentFolders,setRecentFolders] = useState<IFile[]>([]);
@@ -20,19 +21,12 @@ function Sidebar() {
     useEffect(() => {
         setSideBarWidthVar();
         window.addEventListener('resize', setSideBarWidthVar);
-        listen("updateFavorites", () => {
-            const favoriteFoldersLS = JSON.parse(localStorage.getItem("favoriteItems") || '[]') as IFile[];
-            const folders = favoriteFoldersLS.filter((folder:IFile) => folder.extension === "folder");
-            setFavoriteFolders(folders);
-        });
+        listen("updateFavorites", updateFavoriteItems);
         
-        listen("recentItemChange", getRecentFolders);
+        listen("recentItemChange", updateRecentItems);
 
-        const favoriteFoldersLS = JSON.parse(localStorage.getItem("favoriteItems") || '[]') as IFile[];
-        const folders = favoriteFoldersLS.filter((folder:IFile) => folder.extension === "folder");
-        
-        setFavoriteFolders(folders);
-        getRecentFolders();
+        updateFavoriteItems();
+        updateRecentItems();
         
     },[]);
 
@@ -69,6 +63,68 @@ function Sidebar() {
         
         setRecentFolders(folders);
         return folders
+    }
+
+    // Function to update local storage and state for recent items
+    async function updateRecentItems() {
+        let items = JSON.parse(localStorage.getItem("recentItems") || '[]') as {file:IFile,count:number}[];
+        
+        let updatedItems = await Promise.all(items.map(async (item) => {
+            let file = await fileManagement.checkPathIsValid(item.file.path);
+            if(!file) return 
+            file.size = await conversion.convertFileSizeIdentifier(parseInt(file.size));
+            return {file:file,count:item.count};    
+        }));
+
+        // Filter out invalid items (i.e., items where the file is undefined)
+        updatedItems = updatedItems.filter(item => item !== undefined);
+
+        //if changes, update local storage
+        if(updatedItems.length !== items.length){
+            localStorage.setItem("recentItems", JSON.stringify(updatedItems));
+        }
+
+        // Ensure that updatedItems is an array of {file:IFile,count:number}
+        var recentItems = updatedItems as {file:IFile,count:number}[];
+
+        //filter out items that are not folders or drives
+        recentItems = recentItems.filter((item) => item.file.extension === "folder" || item.file.extension === "drive");
+
+        //only return last 5 items from highest count
+        let folders = items.sort((a,b) => b.count - a.count).map((folder) => folder.file).slice(0,5);
+        
+        setRecentFolders(folders);
+    }
+
+    // Function to update local storage and state for favorite items
+    async function updateFavoriteItems() {
+        let items = JSON.parse(localStorage.getItem("favoriteItems") || '[]') as IFile[];
+        
+        let updatedItems = await Promise.all(items.map(async (item) => {
+            let file = await fileManagement.checkPathIsValid(item.path);
+            if(file) return file;
+        }));
+
+        // Filter out invalid items (i.e., items where the file is undefined)
+        updatedItems = updatedItems.filter(item => item !== undefined);
+
+        updatedItems = updatedItems.map((item) => {
+            if(item?.size) item.size = conversion.convertFileSizeIdentifier(parseInt(item.size));
+            return item;
+        });
+        //if changes, update local storage
+        if(updatedItems.length !== items.length){
+            localStorage.setItem("favoriteItems", JSON.stringify(updatedItems));
+        }
+
+        // Ensure that updatedItems is an array of IFile
+        let favoriteItems = updatedItems as IFile[];
+
+        //filter out items that are not folders or drives
+        favoriteItems = favoriteItems.filter((item) => item.extension === "folder" || item.extension === "drive");
+
+        
+        setFavoriteFolders(favoriteItems);
     }
 
    

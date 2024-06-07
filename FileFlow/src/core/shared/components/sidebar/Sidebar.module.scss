@@ -31,6 +31,8 @@
     margin: 1em 0 .5em;
     align-self: flex-start;
     padding: 0 1em;
+     
+    
 }
 
 .sidebarLink{
@@ -42,6 +44,7 @@
     width: 90%;
     align-items: center;
     text-decoration: none;
+    word-break: break-all;
     
     &:hover{
         background-image: url("/sidebar_button_background.png");
