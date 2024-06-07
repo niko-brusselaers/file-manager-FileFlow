@@ -37,6 +37,11 @@ function App() {
       setTransferHubDialogOpen(true);
     });
 
+    //listen if inspecter view is enabled and enable abilitiy to open the inspecter
+    const inspecterView = localStorage.getItem("inspecterView") || "false";
+    if(inspecterView === "true") listen("inspecterView", () => {
+      setInspecterView(true);
+    })
 
     let name = localStorage.getItem("name") || "";
     let deviceName =  localStorage.getItem("deviceName") || "";

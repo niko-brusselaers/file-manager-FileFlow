@@ -37,7 +37,6 @@ function UpdateValueDialog({initialValue,warningMessage,setWarningMessage,update
                     <button onClick={closeDialog}>Cancel</button>
                 </div>
             </form>
-            
         </div>
      );
 }

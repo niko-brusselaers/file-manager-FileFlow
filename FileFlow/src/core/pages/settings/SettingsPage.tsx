@@ -11,6 +11,7 @@ function SettingsPage() {
     const [deviceName, setDeviceName] = useState<string>("");
     const [theme, setTheme] = useState<string>();
     const [searchLimit, setSearchLimit] = useState<string>("");
+    const [errorLogging, setErrorLogging] = useState<string>("");
     
     const [updateDialogOpened, setUpdateDialogOpened] = useState<boolean>(false);
     const [confirmationDialogOpened, setConfimationDialogOpened] = useState<boolean>(false);
@@ -26,6 +27,8 @@ function SettingsPage() {
         setTheme(localStorage.getItem("theme") || "device")
 
         setSearchLimit(localStorage.getItem("searchLimit") || "1000")
+
+        setErrorLogging(localStorage.getItem("errorLogging") || "false")
     },[])
 
 
@@ -130,6 +133,11 @@ function SettingsPage() {
         }
     }
 
+    function handleErrorLoggingChange(event:React.ChangeEvent<HTMLSelectElement>){
+        setErrorLogging(event.target.value);
+        localStorage.setItem("errorLogging",event.target.value);
+    }
+
     
 
 
@@ -221,6 +229,18 @@ function SettingsPage() {
                     </div>
                 </div>
                 
+            </div>
+            <h3 className={styles.settingsCategoryHeader}>Developer Settings</h3>
+            <div className={styles.CategoryContainer}>
+                <div className={styles.settingsItem}>
+                    <h3 className={styles.settingsItemTitle}>developer error logging</h3>
+                    <div>
+                        <select className={styles.settingsItemSelect} value={errorLogging} onChange={handleErrorLoggingChange}>
+                            <option value={"true"}>Enabled</option>
+                            <option value={"false"}>Disabled</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div> 
     

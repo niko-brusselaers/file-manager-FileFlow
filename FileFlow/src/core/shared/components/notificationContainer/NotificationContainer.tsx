@@ -22,6 +22,15 @@ function NotificationContainer() {
             setNotificationErrorTimeout();
         })
 
+        const errorLogging = localStorage.getItem("errorLogging") || "false";
+        if(errorLogging === "true") listen("debugError", (event) => {
+            const data = event.payload as string
+            setNotificationError({type: "error", error: data});
+
+            setNotificationErrorTimeout();
+        })
+
+
         listen("FileTransferStarted", (event) => {
             const data = event.payload as {fileName:string, receiver: string}
 
