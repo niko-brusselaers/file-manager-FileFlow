@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import styles from "./UpdateValueDialog.module.scss";
 
-function UpdateValueDialog({initialValue,updateType,updateValue,dialogOpened,setDialogOpened}: {initialValue: string,updateType:string, updateValue: Function,dialogOpened:boolean, setDialogOpened: Function}) {
+function UpdateValueDialog({initialValue,warningMessage,setWarningMessage,updateType,updateValue,dialogOpened,setDialogOpened}: {initialValue: string,warningMessage:string,setWarningMessage:Function,updateType:string, updateValue: Function,dialogOpened:boolean, setDialogOpened: Function}) {
     const [value, setValue] = useState<string>("");
     const [transferDialogOpened, setTransferDialogOpened] = useState<boolean>(false);
 
@@ -23,12 +23,14 @@ function UpdateValueDialog({initialValue,updateType,updateValue,dialogOpened,set
     function closeDialog(){
         setDialogOpened(false);
         setValue("");
+        setWarningMessage("");
     }
 
     return ( 
         <div className={(transferDialogOpened ? styles.addTransferDialogContainer : "hidden")}>
             <form onSubmit={handleUpdate} className={styles.dialogInnerContainer}>
                 <h3>edit {updateType}</h3>
+                <p>{warningMessage}</p>
                 <input type="text"value={value} onChange={(event) => {setValue(event.target.value);}} />
                 <div className={styles.dialogButtonsBottomContainer}>
                     <button onClick={handleUpdate}>Update</button>

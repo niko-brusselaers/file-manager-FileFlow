@@ -5,20 +5,23 @@ import UpdateValueDialog from './updateValueDialog/UpdateValueDialog';
 
 function SettingsPage() {
     const [name, setName] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
     const [deviceName, setDeviceName] = useState<string>("");
-    const [theme, setTheme] = useState<string>(localStorage.getItem("theme") ? localStorage.getItem("theme") || "device" : "device");
+    const [theme, setTheme] = useState<string>();
+    const [searchLimit, setSearchLimit] = useState<string>("");
     
     const [updateDialogOpened, setUpdateDialogOpened] = useState<boolean>(false);
     const [initialUpdateValue, setInitialUpdateValue] = useState<string>("");
     const [updateType, setUpdateType] = useState<string>("");
+    const [warningMessage, setWarningMessage] = useState<string>("");
 
     useEffect(() => {
-        localStorage.getItem("name") ? setName(localStorage.getItem("name") || "") : setName("")
+        setName(localStorage.getItem("name") || "")
 
-        localStorage.getItem("email") ? setEmail(localStorage.getItem("email") || "") : setEmail("")
+        setDeviceName(localStorage.getItem("deviceName") || "")
 
-        localStorage.getItem("deviceName") ? setDeviceName(localStorage.getItem("deviceName") || "") : setDeviceName("")
+        setTheme(localStorage.getItem("theme") || "device")
+
+        setSearchLimit(localStorage.getItem("searchLimit") || "1000")
     },[])
 
 
@@ -44,6 +47,13 @@ function SettingsPage() {
             case "deviceName":
                 setInitialUpdateValue(deviceName);
                 break;
+            case "searchLimit":
+                setInitialUpdateValue(searchLimit);
+                setWarningMessage("putting a high number may crash the app, use with caution");
+                break;
+            default:
+                console.error(type,"not supported");
+                
         }
     }
 
@@ -60,6 +70,13 @@ function SettingsPage() {
             case "deviceName":
                 setDeviceName(newValue);
                 localStorage.setItem("deviceName",newValue);
+                break;
+            case "searchLimit":
+                setSearchLimit(newValue);
+                localStorage.setItem("searchLimit",newValue);
+                break;
+            default:
+                console.error(updateType,"not supported");
                 break;
             }
 
@@ -79,6 +96,8 @@ function SettingsPage() {
                 dialogOpened={updateDialogOpened} 
                 setDialogOpened={setUpdateDialogOpened}  
                 initialValue={initialUpdateValue} 
+                warningMessage={warningMessage}
+                setWarningMessage={setWarningMessage}
                 updateType={updateType}
                 updateValue={updateSettingsItem}/>
 
@@ -94,14 +113,6 @@ function SettingsPage() {
                         <button onClick={(event) => {updateSettingsValue(event,"name")}}>Edit</button>
                     </div>
                 </div>
-
-                <div className={styles.settingsItem}>
-                    <h3 className={styles.settingsItemTitle}>Email</h3>
-                    <div>
-                         <p className={styles.settingsItemText}>{email}</p>
-                        <button onClick={(event) => {updateSettingsValue(event,"email")}}>Edit</button>
-                    </div>
-                </div>
             </div>
 
             <h3 className={styles.settingsCategoryHeader}>General Settings</h3>
@@ -111,6 +122,13 @@ function SettingsPage() {
                     <div>
                          <p className={styles.settingsItemText}>{deviceName}</p>
                         <button onClick={(event) => {updateSettingsValue(event,"deviceName")}}>Edit</button>
+                    </div>
+                </div>
+                <div className={styles.settingsItem}>
+                    <h3 className={styles.settingsItemTitle}>Search Limit</h3>
+                    <div>
+                         <p className={styles.settingsItemText}>{searchLimit}</p>
+                        <button onClick={(event) => {updateSettingsValue(event,"searchLimit")}}>Edit</button>
                     </div>
                 </div>
                 <div className={styles.settingsItem}>

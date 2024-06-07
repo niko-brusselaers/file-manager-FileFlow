@@ -207,7 +207,7 @@ class fileManagement {
 
     async searchDevice(query:string){
         try {
-            const limit = localStorage.getItem("searchLimit") || 1000
+            const limit = parseInt(localStorage.getItem("searchLimit") || "1000")
 
             let searchItems = await invoke("search_device", { query: query, limit:limit })
             .then((response) => response as IFile[])
