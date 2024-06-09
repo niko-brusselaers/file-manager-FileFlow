@@ -13,7 +13,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    overflow: scroll;
+    overflow: auto;
     color: $text;
 
     > div{
@@ -25,7 +25,7 @@
     }
 
     .itemDetailsContainer{
-        border-bottom: rgb($tertiary) 1px solid;
+        border-bottom: $primary 1px solid;
         padding-bottom: 1em;
         display: flex;
         align-items: center;
@@ -67,18 +67,11 @@
         
         width: 100%;
         min-height: 1em;
-        max-height: 5em;
+        max-height: 5rem;
         margin-top: 0.5em;
         margin-left: -0.25em;
-        overflow: scroll;
+        overflow: auto;
 
-        &::-webkit-scrollbar {
-        width: 2px;
-        }
-
-        &::-webkit-scrollbar-thumb{
-            background-color: rgb($primary);
-        }
     }
 
     .destination{
@@ -88,9 +81,19 @@
         border-radius: 20px;
         margin: 0.25em;
         background-color: rgb($tertiary);
+
+        &:hover{
+            background-image: url("/sidebar_button_background.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: rgb($secondary);
+        }
     }
 
     .selectedDestination{
+        background-image: url("/sidebar_button_background.png");
+        background-repeat: no-repeat;
+        background-position: center;
         background-color: rgb($secondary);
         color: white;
     }
@@ -99,13 +102,17 @@
         width: 100%;
         height: 2em;
         border: 1.5px solid rgb($secondary);
+        background-color: transparent;
         color: $secondary;
-        background-color: rgb($background);
+       
         border-radius: 20px;
 
         &:hover{
-                background-color: rgb($secondary);
                 color: invert($text);
+                background-image: url("/sidebar_button_background.png");
+                background-repeat: no-repeat;
+                background-position: center;
+                background-color: rgb($secondary);
         }
     }
 
@@ -114,6 +121,9 @@
         height: 2em;
         border: none;
         border-radius: 20px;
+        background-image: url("/sidebar_button_background.png");
+        background-repeat: no-repeat;
+        background-position: center;
         background-color: rgb($secondary);
         color: white;
     }
@@ -132,6 +142,9 @@
 
             &:hover{
                 background-color: rgb($secondary);
+                background-image: url("/sidebar_button_background.png");
+                background-repeat: no-repeat;
+                background-position: center;
                 color: invert($text);
             }
         }
@@ -153,5 +166,17 @@ background-color: rgb($primary);
 color: $whiteIcon;
 }
 
+.placeHolderContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 5rem;
+    margin: .5rem 0 1.5rem;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: rgb($tertiary);
+}
     
     

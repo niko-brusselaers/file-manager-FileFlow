@@ -116,10 +116,25 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket
                     </div>
                 </div>
                 <div>
-                    <h2>local devices</h2>
-                    <div className={styles.selectionItemsContainer}>
-                        {localDevices?.map((destination, index) => <button className={`${styles.destination} ${destination.deviceName === selectedDestination?.deviceName ? styles.selectedDestination : ''}`} key={index}  onClick={() => {setSelectedDestination(destination)}}>{destination.deviceName}</button>)}
+                    <h2>recents</h2>
+                    <div className={styles.placeHolderContainer}>
+                        <h3>Coming soon</h3>
                     </div>
+                    <h2>personal devices</h2>
+                    <div className={styles.placeHolderContainer}>
+                        <h3>Coming soon</h3>
+                    </div>
+                    
+                    <h2>local devices</h2>
+                    {localDevices?.length ? 
+                        <div className={styles.selectionItemsContainer}>
+                        {localDevices?.map((destination, index) => <button className={`${styles.destination} ${destination.deviceName === selectedDestination?.deviceName ? styles.selectedDestination : ''}`} key={index}  onClick={() => {setSelectedDestination(destination)}}>{destination.deviceName}</button>)}
+                        </div> : 
+                         <div className={styles.placeHolderContainer}>
+                            <h3>Searching for nearby devices</h3>
+                         </div>
+                        }
+                    
                 </div>
                 <div>
                     <button className={selectedDestination?.deviceName === "other" ? styles.otherShareOptionSelected : styles.otherShareOptionButton} 
