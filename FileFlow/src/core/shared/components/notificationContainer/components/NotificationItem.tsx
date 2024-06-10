@@ -9,7 +9,7 @@ function NotifactionItem({NotificationData,clearNotification,setTimeout,clearTim
     const [notificationType,setNoticationType] = useState<string>()
     const [notificationHeader,setNotificationHeader] = useState<string>("")
     const [fileTransferRequest,setFileTransferRequest] = useState<ITransferRequest>()
-    const messageTypes = ["fileTransferSuccess","fileTransferStarted"]
+    const messageTypes = ["fileTransferSuccess","fileTransferStarted","message"]
 
     useState(() => {
         if(NotificationData.type === "error") setNoticationType("error")

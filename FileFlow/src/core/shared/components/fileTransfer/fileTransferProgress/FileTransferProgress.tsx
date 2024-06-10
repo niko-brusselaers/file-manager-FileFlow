@@ -4,6 +4,7 @@ import tauriStore from "../../../../services/tauriStore";
 import conversion from "../../../../services/conversion";
 import { listen } from "@tauri-apps/api/event";
 import { ITransferProgress } from "../../../types/ITransferProgress"; 
+import tauriEmit from "../../../../services/tauriEmit";
 
 function fileTransferProgress() {
     const [fileTransferData,setFileTransferData] = useState<ITransferProgress>();
@@ -63,12 +64,17 @@ function fileTransferProgress() {
     setDialogOpened(false);
     }
 
+    function copyCodeToClipboard(code:string){
+        navigator.clipboard.writeText(code);
+        tauriEmit.emitNotification("code copied to clipboard");
+    }
+
     return ( 
         <div className={dialogOpened ? styles.fileTransferDialog : "hidden"}>
             <div className={styles.fileTranferProgressInnerContainer}>
                 <div className={styles.fileTransferProgressData}>
                     <h3>{fileTransferData?.file_name}</h3>
-                    {(code ? <p>code: {code} <img src="/copy_icon.png" alt="" title="copy"/></p>: <p> </p>)}
+                    {(code ? <p>code: {code} <img src="/copy_icon.png" alt="" title="copy" onClick={() => copyCodeToClipboard(code)}/></p>: <p> </p>)}
                 </div>
                 <div className={styles.fileTransferProgressBar}>
                 <div>

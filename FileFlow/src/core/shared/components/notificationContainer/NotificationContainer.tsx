@@ -39,6 +39,8 @@ function NotificationContainer() {
                 type: "fileTransferStarted", 
                 message: `File ${data.fileName} is being sent to ${data.receiver}`
             })
+
+            setNotificationMessageTimeout();
         })
 
         listen("transferFileRequest", (event) => {
@@ -69,6 +71,19 @@ function NotificationContainer() {
                 type: "fileTransferSuccess", 
                 message: message
             })
+
+            setNotificationMessageTimeout();
+        })
+
+        listen("notification", (event) => {
+            const data = event.payload as INotificationData
+            setNotificationMessage({
+                type: "message", 
+                message: data.message
+            })
+
+            console.log(data);
+            
 
             setNotificationMessageTimeout();
         })

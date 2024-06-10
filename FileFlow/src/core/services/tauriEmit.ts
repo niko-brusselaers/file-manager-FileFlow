@@ -69,7 +69,10 @@ class tauriEmit{
     transferFileRequest(data:ITransferRequest){
         emit("transferFileRequest",data)
     }
-
+    
+    emitNotification(message:string){
+        emit("notification",{message:message})
+    }
 }
 
 export default new tauriEmit();
