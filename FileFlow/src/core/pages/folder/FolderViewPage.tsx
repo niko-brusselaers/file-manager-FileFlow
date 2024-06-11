@@ -177,6 +177,8 @@ function FolderView() {
       case "size":
         sortedItems.sort((a,b) => conversion.convertFileSizeToNumber(a.size) - conversion.convertFileSizeToNumber(b.size));
         break;
+      case "updated":
+        sortedItems.sort((a,b) => new Date(a.modified).getTime() - new Date(b.modified).getTime());
     }
 
     if(sortingConfig.order === "descending") sortedItems.reverse();

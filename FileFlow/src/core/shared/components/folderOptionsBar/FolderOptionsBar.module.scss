@@ -3,7 +3,7 @@
 .folderOptionsBar{
     display: flex;
     position: fixed;
-    z-index: 0;
+    z-index: 1;
     align-items: center;
     top: var(--navBarHeight);
     left: calc(var(--sideBarWidth) -1px);
@@ -50,14 +50,17 @@
 
 
     .dropDownContainer{
-        position: absolute;
-        top: 2em;
-        width: 15em;
+        position: fixed;
+        z-index: 9999;
+        top: 10rem;
+        width: 18rem;
+        height: 20rem;
         background-color: rgb($background);
         color: rgb($text);
         -webkit-box-shadow: 0.5px 0.5px 20px -8px rgba($background,0.75);
         -moz-box-shadow: 0.5px 0.5px 20px -8px rgba($background,0.75);
         box-shadow: 0.5px 0.5px 20px -8px rgba($background,0.75);
+        z-index: 20;
 
         .radioContainer{
             display: flex;

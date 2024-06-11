@@ -27,9 +27,8 @@
     grid-auto-flow: column;
     gap: 1.25em;
     width: calc(100% - 6rem);
-    height: 15rem;
+    height: 22rem;
     overflow-x: scroll;
-    overflow-y: visible;
 
 }
 
@@ -47,7 +46,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: calc(100% - 6rem - var);
+    min-width: max-content;
+    width: calc(100% - 6rem - var(--sideBarWidth));
     margin: 1rem 3rem;
     height: 15rem; 
 }

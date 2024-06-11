@@ -3,7 +3,6 @@
 .ItemDetailTopView{
     display: flex;
     position: sticky;
-    z-index: 1;
     top: 0;
     flex-direction: row;
     align-items: center;
@@ -15,7 +14,7 @@
     color: $text;
     
     &:hover{
-        background-color: inherit;
+        background-color: rgb($background);
         color: $text;
     }
 
@@ -37,6 +36,7 @@
     .itemDetails{
         margin-left:5%;
         width: 100%;
+        height: 100%;
         display: grid;
         grid-template-columns: 2fr repeat(3, 1fr) 2fr;
         grid-template-rows: 1fr;
@@ -46,7 +46,20 @@
 
         *{
             width: 100%;
+            height: 100%;
             text-align: left;
+           
+        }
+
+        .fileInfoTextLast,.fileTypeText,.fileName{
+            background-color: transparent;
+            border: none;
+
+            &:hover{
+                background-color: rgba($tertiary,.8);
+                color: invert($text);
+            } 
+            
         }
 
         .fileInfoTextLast{ 
@@ -59,8 +72,4 @@
 
 }
 
-.isSelectedItem{
-        background-color: rgba($tertiary,.8);
-        color: black;
 
-} 

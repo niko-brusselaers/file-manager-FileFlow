@@ -113,6 +113,10 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
                                 <label htmlFor="type">Type</label>
                                 <input type="radio" name="sortBy" id="type" defaultChecked={sortBy === "type"} value={"type"}  onChange={(event) => setSortBy(event.target.value)}/>
                             </div>
+                             <div  className={styles.radioInput}>
+                                <label htmlFor="updated">Updated</label>
+                                <input type="radio" name="sortBy" id="updated" defaultChecked={sortBy === "updated"} value={"updated"}  onChange={(event) => setSortBy(event.target.value)}/>
+                            </div>
 
                         </div>
                         <div className={styles.radioContainer}>
