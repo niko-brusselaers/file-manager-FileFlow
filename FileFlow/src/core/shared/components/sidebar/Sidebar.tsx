@@ -55,16 +55,6 @@ function Sidebar() {
             document.documentElement.style.setProperty('--sideBarWidth', sideBarWidth + "px");
     };
 
-    function getRecentFolders(){
-        let items = JSON.parse(localStorage.getItem("recentItems") || '[]') as {file:IFile,count:number}[];
-
-        //only return last 5 items from highest count
-        let folders = items.sort((a,b) => b.count - a.count).map((folder) => folder.file).slice(0,5);
-        
-        setRecentFolders(folders);
-        return folders
-    }
-
     // Function to update local storage and state for recent items
     async function updateRecentItems() {
         let items = JSON.parse(localStorage.getItem("recentItems") || '[]') as {file:IFile,count:number}[];

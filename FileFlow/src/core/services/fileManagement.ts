@@ -101,6 +101,17 @@ class fileManagement {
     async checkPathIsValid(directoryPath:string){
         try {
         let fileOrFolder:IFile = await invoke("check_path", { path: directoryPath })
+
+        //format created and modified date
+        let createdDate = new Date(fileOrFolder.created);
+        let createdDateString = createdDate.toISOString();
+        fileOrFolder.created = `${createdDateString.slice(2,10).split('-').reverse().join('/')}` + ' - ' + `${createdDateString.slice(11,16)}`;
+        
+        let modifiedDate = new Date(fileOrFolder.modified);
+        let modifiedDateString = modifiedDate.toISOString();
+        fileOrFolder.modified = `${modifiedDateString.slice(2,10).split('-').reverse().join('/')}` + ' - ' + `${modifiedDateString.slice(11,16)}`;
+
+
         return fileOrFolder;
         } catch (error) {
             console.error( error);

@@ -166,7 +166,7 @@ function HomePage() {
             })}
         </div> :
         <div className={styles.placeHolderContainer}>
-            <h1>favorites will appear here when you add some</h1>
+            <h3>favorites will appear here when you add some</h3>
         </div>
         }
         <h2 className={styles.HomePageTitle}>Recent</h2>
@@ -187,7 +187,7 @@ function HomePage() {
             </>
         </div>:
         <div className={styles.placeHolderContainer}>
-            <h1>recent will appear here when browse the directories</h1>
+            <h3>recent will appear here when browsing the directories</h3>
         </div>
         }
     </div> );

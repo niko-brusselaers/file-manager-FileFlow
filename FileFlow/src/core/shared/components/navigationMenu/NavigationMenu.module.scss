@@ -169,8 +169,16 @@
       }
 
       .dropdownMenuImage{
-        height: 2em;
-        width: 2em;
+        width: 2rem;
+        margin-top: .25rem;
+        aspect-ratio: 1/1;
+        
+        &:hover{
+          cursor: pointer;
+          background-color: rgba(white,.3);
+        
+        }
+        
       }
     }
 
