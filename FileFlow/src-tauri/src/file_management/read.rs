@@ -1,4 +1,5 @@
 use super::types::File;
+use std::path::Path;
 use std::{ffi::OsStr,fs, path::PathBuf};
 use rust_search::SearchBuilder;
 use sysinfo::Disks;
@@ -100,10 +101,31 @@ pub fn get_drives() -> Result<Vec<File>,String> {
 }
 
 #[tauri::command]
+pub fn calculate_folder_size(folder_path: &Path) -> Result<u64, String> {
+    let mut total_size = 0;
+
+    fn calculate_size(path: &Path, total_size: &mut u64) -> std::io::Result<()> {
+        if path.is_dir() {
+            for entry in fs::read_dir(path)? {
+                let entry = entry?;
+                let path = entry.path();
+                calculate_size(&path, total_size)?;
+            }
+        } else {
+            *total_size += fs::metadata(path)?.len();
+        }
+        Ok(())
+    }
+
+    calculate_size(folder_path, &mut total_size).map_err(|error| error.to_string())?;
+    Ok(total_size)
+}
+
+#[tauri::command]
 pub fn check_path(path: String) -> Result<File, String> {
     let file_path = std::path::Path::new(&path);
 
-    let metadata= file_path.metadata().map_err(|error| error.to_string())?;
+    let metadata = file_path.metadata().map_err(|error| error.to_string())?;
 
     let name = file_path
         .file_name()
@@ -111,24 +133,24 @@ pub fn check_path(path: String) -> Result<File, String> {
         .to_string_lossy()
         .to_string();
 
-    let extension = match file_path.is_dir() {
-        true => String::from("folder"),
-        false => {
-            file_path
-                .extension()
-                .unwrap_or(OsStr::new("file"))
-                .to_string_lossy()
-                .into_owned()
-        }
-        
+    let extension = if file_path.is_dir() {
+        String::from("folder")
+    } else {
+        file_path
+            .extension()
+            .unwrap_or(OsStr::new("file"))
+            .to_string_lossy()
+            .into_owned()
     };
 
-
     // Convert SystemTime to DateTime
-    let created: DateTime<Utc> = metadata.created().unwrap().into();
-    let modified: DateTime<Utc> = metadata.modified().unwrap().into();
+    let created: DateTime<Utc> = metadata.created().map_err(|error| error.to_string())?.into();
+    let modified: DateTime<Utc> = metadata.modified().map_err(|error| error.to_string())?.into();
 
     let hidden = get_hidden_property(PathBuf::from(path.clone())).map_err(|error| error.to_string())?;
+
+    // Calculate size
+    let size = metadata.len();
 
     // Convert DateTime to a string in RFC 3339 format
     let created = created.to_rfc3339();
@@ -138,10 +160,10 @@ pub fn check_path(path: String) -> Result<File, String> {
         name,
         extension,
         path: PathBuf::from(file_path),
-        size: metadata.len(),
+        size,
         created,
         modified,
-        hidden
+        hidden,
     };
 
     Ok(file)

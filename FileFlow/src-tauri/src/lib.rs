@@ -60,6 +60,7 @@ pub fn run() {
                 search_device,
                 open_file,
                 check_path,
+                calculate_folder_size,
                 create_file,
                 create_folder,
                 rename_item,

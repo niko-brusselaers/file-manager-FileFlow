@@ -39,6 +39,8 @@ function NotificationContainer() {
                 type: "fileTransferStarted", 
                 message: `File ${data.fileName} is being sent to ${data.receiver}`
             })
+
+            setNotificationMessageTimeout();
         })
 
         listen("transferFileRequest", (event) => {

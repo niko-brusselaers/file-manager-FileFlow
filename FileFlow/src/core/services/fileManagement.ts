@@ -118,6 +118,16 @@ class fileManagement {
         }
     }
 
+    async getFolderSize(directoryPath:string){
+        try {
+            let folderSize = await invoke("calculate_folder_size", { folderPath: directoryPath })
+            .catch((error) => {throw error});
+            return folderSize as number;
+        } catch (error) {
+            console.error( error);
+        }
+    }
+
     async openFile(directoryPath:string) {
         try {
         await invoke("open_file", { path: directoryPath })

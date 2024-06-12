@@ -8,6 +8,7 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
     const [pasteItemData, setPasteItemData] = useState<{type:string, items:IFile[]} | null>(sessionStorage.getItem("moveItem") ? JSON.parse(sessionStorage.getItem("moveItem") || '') : null);
     const [detailView, setDetailView] = useState<Boolean>(localStorage.getItem("detailView") ? JSON.parse(localStorage.getItem("detailView") || '') : false);
     const [hidden, setHidden] = useState<Boolean| null>(localStorage.getItem("hiddenFiles") ? JSON.parse(localStorage.getItem("hiddenFiles") || '') :  false);
+    const [shareEnabled, setShareEnabled] = useState<Boolean>(false);
     const [sortDropDownMenyIsOpen, setSortDropDownMenuIsOpen] = useState<boolean>(false);
     const [sortBy, setSortBy] = useState<string>(localStorage.getItem("sortBy") ? localStorage.getItem("sortBy") || "" : "name");
     const [order, setOrder] = useState<string>(localStorage.getItem("order") ? localStorage.getItem("order") || "" : "ascending");
@@ -21,6 +22,12 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
             setPasteItemData(sessionStorage.getItem("moveItem") ? JSON.parse(sessionStorage.getItem("moveItem") || '') : null);
         });
     },[])
+
+    useEffect(() => {
+        if(selectedItems.length > 0 && selectedItems[0].extension !== "folder") return setShareEnabled(true)
+        else return setShareEnabled(false)
+        
+    },[selectedItems])
 
     //listen for the contextMenu event to update the position state
     useEffect(() => {
@@ -141,7 +148,7 @@ function FolderOptionsBar({selectedItems}: {selectedItems: IFile[]}){
                 </button>
             </div>
             <div className={styles.folderOptionsBarButtonGroup}>
-                <button className={`${styles.folderOptionsBarButton} ${selectedItems.length ? " " : styles.inactive}`} onClick={() => {openTransferSend()}}>
+                <button className={`${styles.folderOptionsBarButton} ${shareEnabled ? " " : styles.inactive}`} onClick={() => {openTransferSend()}}>
                     <img src="/share_icon.png" alt="share item" title='share item'/>
                 </button>
                 {/* <button className={styles.folderOptionsBarButton}>

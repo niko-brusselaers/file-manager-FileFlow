@@ -6,17 +6,29 @@ import { emit, listen,UnlistenFn } from '@tauri-apps/api/event';
 import { Socket } from 'socket.io-client';
 import { IConnectedDevice } from '../../../types/IConnectedDevice';
 import { ITransferRequest } from '../../../types/ITransferRequest';
+import fileManagement from '../../../../services/fileManagement';
+import conversion from '../../../../services/conversion';
 
 function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket}:{dialogOpened: boolean, setDialogOpened: Function,selectedItems:IFile[]|null,websocket?:Socket<any>}) {
     const [selectedDestination, setSelectedDestination] = useState<IConnectedDevice>({deviceName:"",publicIPAdress:"",socketId:"",userName:""});
     const [localDevices,setLocalDevices] = useState<IConnectedDevice[]| null>([]);
     const [deviceName] = useState<string>(localStorage.getItem("deviceName") || "")
+    const [selectedItemsSize,setSelectedItemsSize] = useState<string>("Loading...");
 
     useEffect(() => {
-        if(dialogOpened) requestLocalDevices();
+        if(dialogOpened) {
+            requestLocalDevices();
+            if(selectedItems?.[0].extension === "folder") fileManagement.getFolderSize(selectedItems[0].path).then((size) => {
+                if(size) setSelectedItemsSize(conversion.convertFileSizeIdentifier(size));
+            });
+            else {
+                if(selectedItems?.[0].size) setSelectedItemsSize(selectedItems?.[0].size);
+            }
+        }
         else {
             unlistenForLocalDevices();
             setSelectedDestination({deviceName:"",publicIPAdress:"",socketId:"",userName:""});
+            setSelectedItemsSize("Loading...");
         }
     },[dialogOpened])
 
@@ -79,7 +91,7 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket
 
                     fileDetails:{
                         fileName: selectedItems[0].name,
-                        fileSize: selectedItems[0].size,
+                        fileSize: selectedItemsSize,
                         fileType: selectedItems[0].extension,
                     }
                 }
@@ -108,24 +120,24 @@ function FileTransferSend({dialogOpened, setDialogOpened,selectedItems,websocket
                 <div className={styles.itemDetailsContainer}>
                     <img src="/file_icon.png" alt="" />
                     <div>
-                        <h2>{selectedItems?.[0]?.name}</h2>
+                        <h3>{selectedItems?.[0]?.name}</h3>
                         <div className={styles.fileSubDetailsContainer}>
                             <p>{selectedItems?.[0]?.extension}</p>
-                            <p>{selectedItems?.[0]?.size}</p>
+                            <p>{selectedItemsSize}</p>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <h2>recents</h2>
+                    <h3>recents</h3>
                     <div className={styles.placeHolderContainer}>
-                        <h3>Coming soon</h3>
+                        <h4>Coming soon</h4>
                     </div>
-                    <h2>personal devices</h2>
+                    <h3>personal devices</h3>
                     <div className={styles.placeHolderContainer}>
-                        <h3>Coming soon</h3>
+                        <h4>Coming soon</h4>
                     </div>
                     
-                    <h2>local devices</h2>
+                    <h3>local devices</h3>
                     {localDevices?.length ? 
                         <div className={styles.selectionItemsContainer}>
                         {localDevices?.map((destination, index) => <button className={`${styles.destination} ${destination.deviceName === selectedDestination?.deviceName ? styles.selectedDestination : ''}`} key={index}  onClick={() => {setSelectedDestination(destination)}}>{destination.deviceName}</button>)}
