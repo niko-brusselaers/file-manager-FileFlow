@@ -34,7 +34,7 @@ function FileTransferRequestDialog({dialogOpened,setDialogOpend}:{dialogOpened: 
                     
                  : 
                     <div className={styles.fileTransferPlaceHolder}>
-                        <h1>You have no pending file transfer requests</h1>
+                        <h3>You have no pending file transfer requests</h3>
                     </div>}
 
                 <div className={styles.dialogButtonsBottomContainer}>

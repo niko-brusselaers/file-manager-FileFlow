@@ -166,7 +166,7 @@ function SettingsPage() {
             <div className={styles.CategoryContainer}>
 
                 <div className={styles.settingsItem}>
-                    <h3 className={styles.settingsItemTitle}>Name</h3>
+                    <h4 className={styles.settingsItemTitle}>Name</h4>
                     <div>
                          <p className={styles.settingsItemText}>{name}</p>
                         <button onClick={(event) => {updateSettingsValue(event,"name")}}>Edit</button>
@@ -177,21 +177,21 @@ function SettingsPage() {
             <h3 className={styles.settingsCategoryHeader}>General Settings</h3>
             <div className={styles.CategoryContainer}>
                 <div className={styles.settingsItem}>
-                    <h3 className={styles.settingsItemTitle}>Device name</h3>
+                    <h4 className={styles.settingsItemTitle}>Device name</h4>
                     <div>
                          <p className={styles.settingsItemText}>{deviceName}</p>
                         <button onClick={(event) => {updateSettingsValue(event,"device name")}}>Edit</button>
                     </div>
                 </div>
                 <div className={styles.settingsItem}>
-                    <h3 className={styles.settingsItemTitle}>Search Limit</h3>
+                    <h4 className={styles.settingsItemTitle}>Search Limit</h4>
                     <div>
                          <p className={styles.settingsItemText}>{searchLimit}</p>
                         <button onClick={(event) => {updateSettingsValue(event,"search limit")}}>Edit</button>
                     </div>
                 </div>
                 <div className={styles.settingsItem}>
-                    <h3 className={styles.settingsItemTitle}>Theme</h3>
+                    <h4 className={styles.settingsItemTitle}>Theme</h4>
                     <div>
                         <select className={styles.settingsItemSelect} value={theme} onChange={handleThemeChange}>
                             <option value={"light"}>Light</option>
@@ -205,35 +205,35 @@ function SettingsPage() {
             <div className={styles.CategoryContainer}>
 
                 <div className={styles.settingsItem}>
-                    <h3 className={styles.settingsItemTitle}>Recent items</h3>
+                    <h4 className={styles.settingsItemTitle}>Recent items</h4>
                     <div>
                         <button className={styles.clearOption} onClick={event => updateSettingsValue(event,"recent items")}>Clear recent items</button>
                     </div>
                 </div>
                 <div className={styles.settingsItem}>
-                    <h3 className={styles.settingsItemTitle}>Favorite items</h3>
+                    <h4 className={styles.settingsItemTitle}>Favorite items</h4>
                     <div>
                         <button className={styles.clearOption} onClick={event => updateSettingsValue(event,"favorite items")}>Clear favorite items</button>
                     </div>
                 </div>
                 <div className={styles.settingsItem}>
-                    <h3 className={styles.settingsItemTitle}>File transfers</h3>
+                    <h4 className={styles.settingsItemTitle}>File transfers</h4>
                     <div>
                         <button className={styles.clearOption} onClick={event => updateSettingsValue(event,"file transfers")}>Clear file transfers</button>
                     </div>
                 </div>
                 <div className={styles.settingsItem}>
-                    <h3 className={styles.settingsItemTitle}>File transfers Request</h3>
+                    <h4 className={styles.settingsItemTitle}>File transfers Request</h4>
                     <div>
                         <button className={styles.clearOption} onClick={event => updateSettingsValue(event,"file tranfsers request")}>Clear file transfers Requests</button>
                     </div>
                 </div>
                 
             </div>
-            <h3 className={styles.settingsCategoryHeader}>Developer Settings</h3>
+            <h3 className={styles.settingsCategoryHeader}>Advanced Settings</h3>
             <div className={styles.CategoryContainer}>
                 <div className={styles.settingsItem}>
-                    <h3 className={styles.settingsItemTitle}>developer error logging</h3>
+                    <h4 className={styles.settingsItemTitle}>developer error logging</h4>
                     <div>
                         <select className={styles.settingsItemSelect} value={errorLogging} onChange={handleErrorLoggingChange}>
                             <option value={"true"}>Enabled</option>

@@ -22,4 +22,3 @@ pub async fn create_folder(folder_path: String) -> Result<(), String> {
 
     Ok(result)
 }
-

@@ -2,6 +2,7 @@
 
 .notificationItem{
     width: 20rem;
+    animation: fadeIn .5s;
 }
 
 .notificationItemHeader{
@@ -13,8 +14,6 @@
     padding: .25rem .25rem 0;
 
     .notificationheaderTitle{
-        font-size: 12pt;
-        font-weight: 500;
         color: rgb($text);
         margin-right: 1rem;
     
@@ -82,3 +81,13 @@
     }
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to{
+        opacity: 1;
+
+    }
+}

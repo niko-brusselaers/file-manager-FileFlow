@@ -42,7 +42,7 @@ function NotifactionItem({NotificationData,clearNotification,setTimeout,clearTim
     return ( 
         <div className={styles.notificationItem} onMouseEnter={() =>clearTimeout} onMouseLeave={() => setTimeout}>
             <div className={styles.notificationItemHeader}>
-                <h3 className={styles.notificationheaderTitle}>{notificationHeader}</h3>
+                <h4 className={styles.notificationheaderTitle}>{notificationHeader}</h4>
                 <img className={styles.removeNotification} onClick={clearNotification} src="/close_icon.svg"/>
             </div>
             <div className={styles.noticationItemContent}>

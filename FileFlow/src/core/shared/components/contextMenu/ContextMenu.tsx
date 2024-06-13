@@ -102,6 +102,7 @@ function ContextMenu() {
             setRenameActive(false);
             setDeleteActive(false);
             setUpdateFavoriteActive(false);
+            setFileShareActive(false);
             
         }
 
@@ -112,7 +113,8 @@ function ContextMenu() {
             setCopyActive(true);
             setRenameActive(true);
             setDeleteActive(true);
-            setFileShareActive(true);    
+            if(data.selectedItems[0].extension === "folder") setFileShareActive(false);
+            else setFileShareActive(true);
             
             setupFavorites(data.selectedItems)
         
@@ -124,7 +126,9 @@ function ContextMenu() {
             setCopyActive(true);
             setRenameActive(false);
             setDeleteActive(true);
-            setFileShareActive(true);
+
+            if(data.selectedItems[0].extension === "folder") setFileShareActive(false);
+            else setFileShareActive(true);
 
 
             setupFavorites(data.selectedItems)

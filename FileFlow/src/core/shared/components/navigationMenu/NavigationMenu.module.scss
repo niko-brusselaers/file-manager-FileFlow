@@ -1,7 +1,6 @@
 @import "../../style/variables.scss";
 
 .titlebar {
-  position: sticky;
   flex-direction: column;
   display: flex;
   z-index: 3;
@@ -10,7 +9,6 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1;
   background-image: url("/topmenu_background.png");
   background-size: auto;
   
@@ -144,6 +142,7 @@
         position: absolute;
         width: 7em;
         right: 1rem;
+        z-index: 6;
         background-color: rgb($tertiary);
         -webkit-box-shadow: 0.5px 0.5px 20px -8px rgba($background,0.75);
         -moz-box-shadow: 0.5px 0.5px 20px -8px rgba($background,0.75);
@@ -169,8 +168,16 @@
       }
 
       .dropdownMenuImage{
-        height: 2em;
-        width: 2em;
+        width: 2rem;
+        margin-top: .25rem;
+        aspect-ratio: 1/1;
+        
+        &:hover{
+          cursor: pointer;
+          background-color: rgba(white,.3);
+        
+        }
+        
       }
     }
 

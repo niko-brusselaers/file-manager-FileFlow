@@ -43,6 +43,8 @@ pub fn run() {
 
     let result = panic::catch_unwind(|| {
         tauri::Builder::default()
+            .plugin(tauri_plugin_log::Builder::new().build())
+
             .setup(|app| {
                 *APP_HANDLE.lock().unwrap() = Some(app.handle().clone());
                 Ok(())
@@ -60,6 +62,7 @@ pub fn run() {
                 search_device,
                 open_file,
                 check_path,
+                calculate_folder_size,
                 create_file,
                 create_folder,
                 rename_item,

@@ -3,7 +3,6 @@
 .ItemDetailTopView{
     display: flex;
     position: sticky;
-    z-index: 1;
     top: 0;
     flex-direction: row;
     align-items: center;
@@ -15,14 +14,10 @@
     color: $text;
     
     &:hover{
-        background-color: inherit;
+        background-color: rgb($background);
         color: $text;
     }
 
-    p{
-        font-weight: bold;
-        font-size: 16pt;
-    }
 
     .itemName *{
         text-align: left;
@@ -31,7 +26,6 @@
     .imageContainer{
         width: 3rem;
         padding: 0.5rem;
-        
         img{
             width: 60%;
             height: auto;
@@ -39,8 +33,9 @@
     }
 
     .itemDetails{
-        margin-left:5%;
+        margin-left:4.5%;
         width: 100%;
+        height: 100%;
         display: grid;
         grid-template-columns: 2fr repeat(3, 1fr) 2fr;
         grid-template-rows: 1fr;
@@ -50,7 +45,24 @@
 
         *{
             width: 100%;
+            height: 100%;
             text-align: left;
+           
+        }
+
+        .fileInfoTextLast,.fileTypeText,.fileName{
+            background-color: transparent;
+            border: none;
+            border-left: 1px solid rgba($text,0.7);
+            padding-left: 0.25rem;
+            opacity: 0.6;
+
+
+            &:hover{
+                background-color: rgba($tertiary,.8);
+                color: invert($text);
+            } 
+            
         }
 
         .fileInfoTextLast{ 
@@ -63,8 +75,4 @@
 
 }
 
-.isSelectedItem{
-        background-color: rgba($tertiary,.8);
-        color: black;
 
-} 

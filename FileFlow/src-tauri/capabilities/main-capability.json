@@ -29,6 +29,7 @@
     "menu:default",
     "menu:allow-new",
     "menu:allow-popup",
-    "menu:allow-set-as-app-menu"
+    "menu:allow-set-as-app-menu",
+    "log:default"
   ]
 }
