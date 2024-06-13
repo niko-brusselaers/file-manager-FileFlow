@@ -1,8 +1,9 @@
 {
   "productName": "fileflow",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "identifier": "com.example.fileflow",
   "build": {
+    
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "npm run build",
@@ -26,6 +27,7 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
