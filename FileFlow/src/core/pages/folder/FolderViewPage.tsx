@@ -188,11 +188,22 @@ function FolderView() {
 
   //create a new file
   async function createNewFile(){
+
+
+    //format created and modified date
+    let createdDate = new Date().toISOString();;
+    createdDate = `${createdDate.slice(2,10).split('-').reverse().join('/')}` + ' - ' + `${createdDate.slice(11,16)}`;
+
+    let modifiedDate = new Date().toISOString();;
+    modifiedDate = `${modifiedDate.slice(2,10).split('-').reverse().join('/')}` + ' - ' + `${modifiedDate.slice(11,16)}`;
+
+
+
     const newFile: IFile = {
       name: "newFile",
       path: loaderData.path,
-      created: new Date(),
-      modified: new Date(),
+      created: createdDate,
+      modified: modifiedDate,
       hidden: false,
       extension: "",
       size: "",

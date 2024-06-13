@@ -18,7 +18,8 @@ function ContainerDetailViewTop() {
 
         if( !validSortByValues.includes(sortBy)) return console.error(`Invalid sortBy value: ${sortBy}. Must be one of: ${validSortByValues.join(", ")}`);
         let newSortingconfig = {sortBy: sortBy, order: "ascending"};
-        if (sortingConfig.sortBy === sortBy) newSortingconfig.order = "descending";
+        if (sortingConfig.sortBy === sortBy && sortingConfig.order === "ascending") newSortingconfig.order = "descending";
+        else newSortingconfig.order = "ascending";
         setSortingConfig(newSortingconfig);
         tauriEmit.emitSortFiles(sortBy, newSortingconfig.order);
     }

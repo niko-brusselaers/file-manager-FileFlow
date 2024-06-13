@@ -1,15 +1,16 @@
 use async_std::channel::{bounded, Sender};
-use tauri::Manager;
+use lazy_static::lazy_static;
+use notify::{RecommendedWatcher, RecursiveMode, Watcher};
+use notify_debouncer_full::DebouncedEvent;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use std::{path, thread};
-use notify::{RecommendedWatcher, Watcher, RecursiveMode};
-use lazy_static::lazy_static;
-use notify_debouncer_full::DebouncedEvent;
+use tauri::Manager;
 
 lazy_static! {
     static ref WATCHER: Arc<Mutex<Option<RecommendedWatcher>>> = Arc::new(Mutex::new(None));
-    static ref TX: Arc<Mutex<Option<Sender<Result<DebouncedEvent, notify::Error>>>>> = Arc::new(Mutex::new(None));
+    static ref TX: Arc<Mutex<Option<Sender<Result<DebouncedEvent, notify::Error>>>>> =
+        Arc::new(Mutex::new(None));
 }
 
 #[tauri::command]
@@ -21,16 +22,20 @@ pub async fn watch_directory(path: String, app: tauri::AppHandle) -> Result<(), 
 
     // Create a watcher object, delivering debounced events.
     let tx = TX.lock().unwrap().clone().unwrap();
-    let mut new_watcher = notify::recommended_watcher(move |res: Result<notify::Event, notify::Error>| {
-        let send = tx.send(res.map(|e| DebouncedEvent::from(e)));
-        if let Err(e) = async_std::task::block_on(send) {
-            eprintln!("Error sending event: {:?}", e.to_string());
-        }
-    }).map_err(|e| e.to_string())?;
+    let mut new_watcher =
+        notify::recommended_watcher(move |res: Result<notify::Event, notify::Error>| {
+            let send = tx.send(res.map(|e| DebouncedEvent::from(e)));
+            if let Err(e) = async_std::task::block_on(send) {
+                eprintln!("Error sending event: {:?}", e.to_string());
+            }
+        })
+        .map_err(|e| e.to_string())?;
     let path = PathBuf::from(path);
 
     // below will be monitored for changes.
-    new_watcher.watch(&path, RecursiveMode::Recursive).map_err(|e| e.to_string())?;
+    new_watcher
+        .watch(&path, RecursiveMode::Recursive)
+        .map_err(|e| e.to_string())?;
 
     // Store the watcher in the Mutex
     *WATCHER.lock().unwrap() = Some(new_watcher);
@@ -43,7 +48,7 @@ pub async fn watch_directory(path: String, app: tauri::AppHandle) -> Result<(), 
                     let event_type = "";
                     let _ = app.emit("fs-change", event_type);
                     ()
-                },
+                }
                 Err(e) => eprintln!("Error receiving event: {:?}", e),
             }
         }

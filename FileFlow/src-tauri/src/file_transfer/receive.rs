@@ -31,8 +31,6 @@ pub async fn receive_files(
     let transit_abilities = transit::Abilities::ALL_ABILITIES;
     let app_config = gen_app_config(&server_config);
 
-    
-
     let connection = match magic_wormhole::Wormhole::connect_with_code(app_config, Code(code)).await
     {
         Ok(wormhole) => wormhole.1,
@@ -101,7 +99,7 @@ pub async fn receive_files(
 }
 
 #[tauri::command]
-pub async fn decline_request(code: String) -> Result<(), String>{
+pub async fn decline_request(code: String) -> Result<(), String> {
     // create server config, relay hints, transit abilities and app config
     let server_config: ServerConfig = ServerConfig {
         rendezvous_url: String::from(APP_CONFIG.rendezvous_url),
@@ -117,8 +115,6 @@ pub async fn decline_request(code: String) -> Result<(), String>{
 
     let transit_abilities = transit::Abilities::ALL_ABILITIES;
     let app_config = gen_app_config(&server_config);
-
-    
 
     let connection = match magic_wormhole::Wormhole::connect_with_code(app_config, Code(code)).await
     {
@@ -138,8 +134,10 @@ pub async fn decline_request(code: String) -> Result<(), String>{
         _ => return Err(String::from("Error while downloading file")),
     };
 
-    receive_request.reject().await.map_err(|error| error.to_string())?;
+    receive_request
+        .reject()
+        .await
+        .map_err(|error| error.to_string())?;
 
     Ok(())
-
 }

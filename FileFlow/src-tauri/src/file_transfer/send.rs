@@ -42,13 +42,17 @@ pub async fn send_files(file_path: &str, app: tauri::AppHandle) -> Result<String
 
     //get code from server welcome and emit to frontend
     let code = server_welcome.code;
-    app.emit("fileTransferCode", code.to_string()).map_err(|error| error.to_string())?;
+    app.emit("fileTransferCode", code.to_string())
+        .map_err(|error| error.to_string())?;
 
     //store start of sending progress
     // Create a FileProgress struct to store the file transfer progress
     let file_progress = FileProgress {
         file_name: String::from(&file_name),
-        file_size: std::path::Path::new(file_path).metadata().map_err(|error| error.to_string())?.len(),
+        file_size: std::path::Path::new(file_path)
+            .metadata()
+            .map_err(|error| error.to_string())?
+            .len(),
         progress: 0,
         direction: String::from("Send"),
     };
