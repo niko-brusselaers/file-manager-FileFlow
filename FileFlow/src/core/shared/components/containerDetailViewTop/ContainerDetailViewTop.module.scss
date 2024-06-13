@@ -26,7 +26,6 @@
     .imageContainer{
         width: 3rem;
         padding: 0.5rem;
-        
         img{
             width: 60%;
             height: auto;
@@ -34,7 +33,7 @@
     }
 
     .itemDetails{
-        margin-left:5%;
+        margin-left:4.5%;
         width: 100%;
         height: 100%;
         display: grid;
@@ -54,6 +53,10 @@
         .fileInfoTextLast,.fileTypeText,.fileName{
             background-color: transparent;
             border: none;
+            border-left: 1px solid rgba($text,0.7);
+            padding-left: 0.25rem;
+            opacity: 0.6;
+
 
             &:hover{
                 background-color: rgba($tertiary,.8);

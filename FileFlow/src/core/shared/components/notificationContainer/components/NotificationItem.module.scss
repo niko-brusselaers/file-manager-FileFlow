@@ -2,6 +2,7 @@
 
 .notificationItem{
     width: 20rem;
+    animation: fadeIn .5s;
 }
 
 .notificationItemHeader{
@@ -80,3 +81,13 @@
     }
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to{
+        opacity: 1;
+
+    }
+}

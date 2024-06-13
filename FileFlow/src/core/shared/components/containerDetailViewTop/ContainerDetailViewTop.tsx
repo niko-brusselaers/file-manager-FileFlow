@@ -32,7 +32,7 @@ function ContainerDetailViewTop() {
                 <div className={styles.itemName}>
                         <button className={styles.fileName} onClick={() => updateSortingConfig("name")}>Name</button>
                 </div>
-                 <button className={styles.fileTypeText} onClick={() => updateSortingConfig("type")}>Updated</button>
+                 <button className={styles.fileTypeText} onClick={() => updateSortingConfig("type")}>Last updated</button>
                  <button className={styles.fileTypeText} onClick={() => updateSortingConfig("size")}>Type</button>
                  <button className={styles.fileTypeText} onClick={() => updateSortingConfig("updated")}>Size</button>
 

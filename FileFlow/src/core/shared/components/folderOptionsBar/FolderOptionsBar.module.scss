@@ -51,10 +51,9 @@
 
     .dropDownContainer{
         position: fixed;
-        z-index: 9999;
+        z-index: 3;
         top: 10rem;
         width: 18rem;
-        height: 20rem;
         background-color: rgb($background);
         color: rgb($text);
         -webkit-box-shadow: 0.5px 0.5px 20px -8px rgba($background,0.75);
