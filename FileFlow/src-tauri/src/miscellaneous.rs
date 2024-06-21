@@ -7,7 +7,14 @@ pub fn get_device_name() -> String {
 }
 
 pub async fn gen_available_file_name(file_path: PathBuf) -> String {
-    if file_path.exists() {
+    let new_file_path = if std::env::consts::OS == "windows" {
+        file_path.to_str().unwrap().replace("/", "\\")
+    } else {
+        file_path.to_str().unwrap().replace("\\", "/")
+    };
+
+
+    if PathBuf::from(&new_file_path).exists() {
         let mut file_name = file_path.file_stem().unwrap().to_str().unwrap().to_string();
         let file_extension = match file_path.is_dir() {
             true => String::from("folder"),
@@ -37,7 +44,13 @@ pub async fn gen_available_file_name(file_path: PathBuf) -> String {
                 false => format!("{}({}){}", file_name, i, file_extension),
             };
 
-            let new_file_path = format!("{}\\{}", parent_path, new_file_name);
+            let path_separator = if std::env::consts::OS == "windows" {
+                "\\"
+            } else {
+                "/"
+            };
+
+            let new_file_path = format!("{}{}{}", parent_path, path_separator, new_file_name);
 
             if !PathBuf::from(&new_file_path).exists() {
                 return new_file_path;
@@ -46,9 +59,10 @@ pub async fn gen_available_file_name(file_path: PathBuf) -> String {
             i += 1;
         }
     } else {
-        file_path.to_string_lossy().into_owned()
+        new_file_path
     }
 }
+
 #[tauri::command]
 pub fn get_os_type() -> String {
     let os = std::env::consts::OS;

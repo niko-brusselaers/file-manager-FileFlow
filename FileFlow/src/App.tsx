@@ -13,7 +13,8 @@ import { invoke } from "@tauri-apps/api/core";
 import ContextMenu from "./core/shared/components/contextMenu/ContextMenu";
 import themeManagement from "./core/services/themeManagement";
 import NotificationContainer from "./core/shared/components/notificationContainer/NotificationContainer";
-
+import { documentDir, downloadDir, pictureDir,resolve } from "@tauri-apps/api/path";
+import fileManagement from "./core/services/fileManagement";
 
 
 
@@ -22,6 +23,13 @@ function App() {
   const [transferHubDialogOpen, setTransferHubDialogOpen] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<IFile[]|null>(null);
   const [webSocketServer, setWebSocketServer] = useState<any>(null);
+
+  useEffect(() => {
+
+    pictureDir().then((path) => console.info("Pictures path", path))
+    downloadDir().then((path) => console.info("Download path", path))
+    documentDir().then((path) => console.info("Documents path", path))
+  },[])
 
   useEffect(() => {
 

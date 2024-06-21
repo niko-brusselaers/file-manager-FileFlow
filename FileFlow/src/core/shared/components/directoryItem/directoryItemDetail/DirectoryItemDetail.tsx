@@ -40,7 +40,9 @@ function DirectoryItemDetail({item, selectedItems, setSelected,edit}: {item:IFil
     function renameItem(){        
         let path = selectedItems[0].path.split("\\")
         path.pop()
-        let parentDirectory = path.join("\\")
+        let parentDirectory = selectedItems[0].path.replace(selectedItems[0].name,"")
+        console.log(selectedItems[0])
+        
         fileManagement.renameItem(parentDirectory, selectedItems[0].name, newFileName)
     }
 
@@ -53,7 +55,7 @@ function DirectoryItemDetail({item, selectedItems, setSelected,edit}: {item:IFil
 
     function updateItem(){
         try{
-            console.log(item.extension !== "");
+            console.log(newFileName)
             
             if(!EditMode) return
             if(newFileName === "") return

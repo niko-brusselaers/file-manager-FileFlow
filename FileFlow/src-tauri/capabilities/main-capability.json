@@ -30,6 +30,8 @@
     "menu:allow-new",
     "menu:allow-popup",
     "menu:allow-set-as-app-menu",
-    "log:default"
+    "log:default",
+    "fs:default",
+    "fs:allow-create"
   ]
 }
